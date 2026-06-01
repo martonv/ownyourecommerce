@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir \"c:\\\\Users\\\\marto\\\\OneDrive\\\\Desktop\\\\ownyourecommerce\")",
+      "PowerShell(npm install --silent 2>&1)",
+      "PowerShell(npm run build 2>&1)",
+      "PowerShell(npm run dev)"
+    ]
+  }
+}

@@ -1,0 +1,170 @@
+---
+const year = new Date().getFullYear();
+
+const cols = [
+  {
+    title: 'Product',
+    links: [
+      { href: '#features', label: 'Features' },
+      { href: '#integrations', label: 'Integrations' },
+      { href: '#comparison', label: 'Compare' },
+    ],
+  },
+  {
+    title: 'Company',
+    links: [
+      { href: '#process', label: 'Process' },
+      { href: '#faq', label: 'FAQ' },
+      { href: '#contact', label: 'Contact' },
+    ],
+  },
+  {
+    title: 'Trust',
+    links: [
+      { href: '#', label: 'Privacy' },
+      { href: '#', label: 'Terms' },
+      { href: '#', label: 'Security' },
+    ],
+  },
+];
+---
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <div class="brand-block">
+      <a href="#top" class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" width="22" height="22">
+            <defs>
+              <linearGradient id="footerG" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#5e6ad2"/>
+                <stop offset="100%" stop-color="#8b5cf6"/>
+              </linearGradient>
+            </defs>
+            <rect width="32" height="32" rx="8" fill="url(#footerG)"/>
+            <path d="M9 11 L9 21 L13 21 L13 17 L19 17 L19 21 L23 21 L23 11 L19 11 L19 13 L13 13 L13 11 Z" fill="#fff"/>
+          </svg>
+        </span>
+        <span class="brand-name">Own Your eCommerce</span>
+      </a>
+      <p class="brand-tag">
+        Custom stores. No monthly fees. Forever yours.
+      </p>
+      <div class="status">
+        <span class="dot"></span>
+        All systems operational
+      </div>
+    </div>
+
+    <div class="cols">
+      {cols.map((c) => (
+        <div class="col">
+          <div class="col-title">{c.title}</div>
+          <ul>
+            {c.links.map((l) => (
+              <li><a href={l.href}>{l.label}</a></li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <div class="container footer-base">
+    <div class="copy">© {year} Own Your eCommerce. All rights reserved.</div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+    padding: 64px 0 28px;
+  }
+  .footer-inner {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 48px;
+    padding-bottom: 48px;
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .brand-name { font-size: 0.95rem; }
+  .brand-tag {
+    margin-top: 14px;
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    max-width: 32ch;
+    line-height: 1.55;
+  }
+  .status {
+    margin-top: 18px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    padding: 6px 10px;
+    background: var(--bg-subtle);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+  }
+  .status .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--success);
+    box-shadow: 0 0 0 3px rgba(16,185,129,0.2);
+  }
+  .cols { display: contents; }
+  .col-title {
+    font-size: 0.78rem;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 14px;
+    font-weight: 500;
+  }
+  .col ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .col a {
+    font-size: 0.92rem;
+    color: var(--text-secondary);
+    transition: color 0.15s var(--ease);
+  }
+  .col a:hover { color: var(--text); }
+
+  .footer-base {
+    padding-top: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 0.82rem;
+    color: var(--text-tertiary);
+  }
+
+  @media (max-width: 800px) {
+    .footer-inner {
+      grid-template-columns: 1fr 1fr;
+      gap: 36px;
+    }
+    .brand-block { grid-column: 1 / -1; }
+  }
+  @media (max-width: 480px) {
+    .footer-inner { grid-template-columns: 1fr; }
+  }
+</style>

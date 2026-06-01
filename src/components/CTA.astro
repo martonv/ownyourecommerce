@@ -1,0 +1,178 @@
+---
+---
+
+<section class="section cta" id="contact">
+  <div class="container">
+    <div class="cta-card" data-reveal>
+      <div class="cta-aurora" aria-hidden="true"></div>
+      <div class="cta-inner">
+        <span class="eyebrow">Get started</span>
+        <h2>Stop paying rent on your <span class="text-gradient">own storefront</span></h2>
+        <p class="lead">
+          Tell us about your store, your stack, and where you want to be in twelve months.
+          We'll come back with a fixed scope, a fixed price, and the math on what you'd save.
+        </p>
+
+        <form class="cta-form" id="contactForm">
+          <label class="field">
+            <span>Your name</span>
+            <input type="text" name="name" placeholder="Jane Doe" required />
+          </label>
+          <label class="field">
+            <span>Work email</span>
+            <input type="email" name="email" placeholder="jane@yourstore.com" required />
+          </label>
+          <label class="field full">
+            <span>Current platform and rough monthly revenue</span>
+            <input type="text" name="ctx" placeholder="e.g. Shopify Plus, ~$120k/mo" />
+          </label>
+          <label class="field full">
+            <span>What do you want built?</span>
+            <textarea name="msg" rows="3" placeholder="A custom store with Helcim checkout, FedEx rates, QuickBooks sync, and a B2B portal..."></textarea>
+          </label>
+          <div class="cta-actions">
+            <button type="submit" class="btn btn-accent btn-lg send-btn">
+              Send request
+              <svg class="arrow" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75">
+                <path d="M3 8h10M9 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <span class="micro">No sales calls. A real reply within 1 business day.</span>
+          </div>
+          <p class="sent" hidden>Thanks. We'll be in touch within 1 business day.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const form = document.getElementById('contactForm') as HTMLFormElement | null;
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const sent = form.querySelector('.sent') as HTMLElement | null;
+    const btn = form.querySelector('.send-btn') as HTMLButtonElement | null;
+    if (sent) sent.hidden = false;
+    if (btn) {
+      btn.textContent = 'Sent. Talk soon';
+      btn.disabled = true;
+    }
+  });
+</script>
+
+<style>
+  .cta { background: var(--bg); }
+  .cta-card {
+    position: relative;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-xl);
+    background: linear-gradient(180deg, var(--surface) 0%, var(--bg-subtle) 100%);
+    padding: clamp(36px, 6vw, 64px);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+  }
+  .cta-aurora {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .cta-aurora::before {
+    content: '';
+    position: absolute;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: var(--aurora-opacity);
+    background: radial-gradient(circle, var(--aurora-1) 0%, transparent 70%);
+    top: -180px; right: -120px;
+  }
+  .cta-aurora::after {
+    content: '';
+    position: absolute;
+    width: 420px; height: 420px;
+    border-radius: 50%;
+    filter: blur(70px);
+    opacity: calc(var(--aurora-opacity) * 0.8);
+    background: radial-gradient(circle, var(--aurora-2) 0%, transparent 70%);
+    bottom: -160px; left: -140px;
+  }
+  .cta-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+  }
+  .cta-inner h2 { max-width: 18ch; }
+  .cta-inner .lead { text-align: center; }
+
+  .cta-form {
+    margin-top: 28px;
+    width: 100%;
+    max-width: 620px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    text-align: left;
+  }
+  .field.full { grid-column: 1 / -1; }
+  .field span {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+  .field input,
+  .field textarea {
+    font-family: inherit;
+    font-size: 0.92rem;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    padding: 10px 12px;
+    outline: none;
+    transition: border-color 0.15s var(--ease), box-shadow 0.15s var(--ease);
+    resize: vertical;
+  }
+  .field input:focus,
+  .field textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-soft);
+  }
+  .field input::placeholder,
+  .field textarea::placeholder {
+    color: var(--text-tertiary);
+  }
+  .cta-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+  }
+  .micro {
+    font-size: 0.8rem;
+    color: var(--text-tertiary);
+  }
+  .sent {
+    grid-column: 1 / -1;
+    color: var(--success);
+    font-size: 0.88rem;
+    margin: 6px 0 0;
+  }
+
+  @media (max-width: 600px) {
+    .cta-form { grid-template-columns: 1fr; }
+  }
+</style>

@@ -1,0 +1,152 @@
+---
+const features = [
+  {
+    title: 'Built for you. Owned by you.',
+    body: 'One flat build fee. You own the code, the design, and the domain. No subscriptions, no licensing tiers, no platform telling you what you can and can\'t do.',
+    icon: 'key',
+  },
+  {
+    title: 'Zero plugins. Custom everything.',
+    body: 'Every feature is hand built to fit your business, not stitched together from a dozen apps that conflict, break, and renew without warning.',
+    icon: 'sparkle',
+  },
+  {
+    title: 'Lower credit card fees.',
+    body: 'We integrate Helcim payment processing directly. Interchange plus pricing means you pay materially less than Stripe, Shopify Payments, or Square on every transaction.',
+    icon: 'card',
+  },
+  {
+    title: 'Live FedEx and UPS tracking.',
+    body: 'Native shipping API integration. Live rates at checkout, automated label generation, and tracking events that update customers without a single plugin.',
+    icon: 'truck',
+  },
+  {
+    title: 'Accounting that just flows.',
+    body: 'Direct integration with QuickBooks, Xero, or whatever stack you run. Orders, refunds, fees, and tax flow into your books automatically. No CSV exports.',
+    icon: 'book',
+  },
+  {
+    title: '99.999% uptime, hosted your way.',
+    body: 'Deployed to enterprise grade hosting and CDN. We work with Cloudflare, AWS, Vercel, Netlify, or whichever DNS host you already use. DDoS protection and SSL included.',
+    icon: 'shield',
+  },
+  {
+    title: 'Continuous development.',
+    body: 'Your store keeps evolving long after launch. New features, optimizations, and bug fixes shipped continuously by the same team that built it.',
+    icon: 'pulse',
+  },
+  {
+    title: 'Migrate without losing a sale.',
+    body: 'We handle the full move from Wix, Shopify, BigCommerce, or WooCommerce. Products, customers, orders, SEO, and redirects. Zero downtime, zero data loss.',
+    icon: 'arrow',
+  },
+];
+---
+
+<section class="section features" id="features">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <span class="eyebrow">What you get</span>
+      <h2>Every feature, custom. <span class="text-gradient">Every cent, yours.</span></h2>
+      <p class="lead" style="text-align:center;">
+        We replace the rent first stack with software built around your business.
+        No app store. No surprise renewals. No platform deciding what you can build next.
+      </p>
+    </div>
+
+    <div class="grid">
+      {features.map((f) => (
+        <article class="feat card" data-reveal>
+          <div class={`feat-icon icon-${f.icon}`} aria-hidden="true">
+            {f.icon === 'key' && (
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6">
+                <circle cx="8" cy="15" r="4"/>
+                <path d="M10.5 12.5L20 3M16 7l3 3" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            )}
+            {f.icon === 'sparkle' && (
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6">
+                <path d="M12 3v6M12 15v6M3 12h6M15 12h6M5.6 5.6l4.2 4.2M14.2 14.2l4.2 4.2M18.4 5.6l-4.2 4.2M9.8 14.2l-4.2 4.2" stroke-linecap="round"/>
+              </svg>
+            )}
+            {f.icon === 'card' && (
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6">
+                <rect x="3" y="6" width="18" height="13" rx="2"/>
+                <path d="M3 11h18M7 16h3" stroke-linecap="round"/>
+              </svg>
+            )}
+            {f.icon === 'truck' && (
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6">
+                <path d="M3 7h11v9H3zM14 11h4l3 3v2h-7z" stroke-linejoin="round"/>
+                <circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/>
+              </svg>
+            )}
+            {f.icon === 'book' && (
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6">
+                <path d="M4 5a2 2 0 012-2h12v18H6a2 2 0 01-2-2zM8 7h7M8 11h7M8 15h5" stroke-linecap="round"/>
+              </svg>
+            )}
+            {f.icon === 'shield' && (
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6">
+                <path d="M12 3l8 3v5c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z" stroke-linejoin="round"/>
+                <path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            )}
+            {f.icon === 'pulse' && (
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6">
+                <path d="M3 12h4l2-6 4 12 2-6h6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            )}
+            {f.icon === 'arrow' && (
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6">
+                <path d="M4 12h15M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            )}
+          </div>
+          <h3>{f.title}</h3>
+          <p>{f.body}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .features { background: var(--bg); }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .feat {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .feat h3 {
+    font-size: 1.05rem;
+    font-weight: 600;
+  }
+  .feat p {
+    font-size: 0.92rem;
+    line-height: 1.55;
+  }
+  .feat-icon {
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border: 1px solid var(--accent-border);
+  }
+
+  @media (max-width: 960px) {
+    .grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 560px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>

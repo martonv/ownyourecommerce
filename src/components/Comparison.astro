@@ -1,0 +1,133 @@
+---
+const rows = [
+  { label: 'Monthly platform fee',     them: '$29 to $2,000+/mo',  us: '$0' },
+  { label: 'Required plugins/apps',    them: '$50 to $500+/mo',     us: '$0' },
+  { label: 'Code ownership',           them: 'Locked to platform', us: 'You own everything' },
+  { label: 'Theme and feature limits', them: 'Template bound',     us: 'Unlimited' },
+  { label: 'Credit card processing',   them: '2.9% + 30¢',          us: 'Helcim, materially lower' },
+  { label: 'Shipping integrations',    them: 'Paid app required',   us: 'FedEx and UPS built in' },
+  { label: 'Accounting sync',          them: 'Paid app required',   us: 'Direct API integration' },
+  { label: 'Hosting and CDN',          them: 'Bundled, opaque',    us: 'Works with any DNS host you use' },
+  { label: 'Page speed control',       them: 'Limited',             us: 'Subsecond by default' },
+  { label: 'Migrate away later',       them: 'Extremely painful',  us: 'Already yours. Nothing to migrate.' },
+];
+---
+
+<section class="section comp" id="comparison">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <span class="eyebrow">The honest math</span>
+      <h2>What you stop paying when <span class="text-gradient">you own the store</span></h2>
+      <p class="lead" style="text-align:center;">
+        A Shopify Plus store with the usual stack of apps quietly costs $500 to $3,000+
+        every month before you've sold anything. We replace that whole stack. Once.
+      </p>
+    </div>
+
+    <div class="comp-card" data-reveal>
+      <div class="comp-head">
+        <div class="comp-cell label">&nbsp;</div>
+        <div class="comp-cell them">
+          <span class="comp-tag tag-them">Shopify / Wix / BigCommerce</span>
+        </div>
+        <div class="comp-cell us">
+          <span class="comp-tag tag-us">Own Your eCommerce</span>
+        </div>
+      </div>
+
+      {rows.map((r, i) => (
+        <div class={`comp-row${i % 2 === 0 ? ' alt' : ''}`}>
+          <div class="comp-cell label">{r.label}</div>
+          <div class="comp-cell them">
+            <svg class="x" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M4 4l8 8M12 4l-8 8" stroke-linecap="round"/>
+            </svg>
+            <span>{r.them}</span>
+          </div>
+          <div class="comp-cell us">
+            <svg class="check" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 8.5l3.5 3.5L13 5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>{r.us}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .comp { background: var(--bg-subtle); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+  .comp-card {
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .comp-head, .comp-row {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    align-items: center;
+  }
+  .comp-head {
+    background: var(--bg-subtle);
+    border-bottom: 1px solid var(--border);
+  }
+  .comp-row.alt { background: var(--bg-muted); }
+  .comp-row + .comp-row, .comp-head + .comp-row {
+    border-top: 1px solid var(--border);
+  }
+  .comp-cell {
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.92rem;
+  }
+  .comp-cell.label {
+    color: var(--text);
+    font-weight: 500;
+  }
+  .comp-cell.them { color: var(--text-secondary); }
+  .comp-cell.us { color: var(--text); font-weight: 500; }
+  .comp-cell .x { color: var(--danger); flex-shrink: 0; }
+  .comp-cell .check { color: var(--success); flex-shrink: 0; }
+
+  .comp-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 500;
+  }
+  .tag-them {
+    background: var(--neg-bg);
+    color: var(--neg-fg);
+    border: 1px solid var(--neg-border);
+  }
+  .tag-us {
+    background: var(--accent-soft);
+    color: var(--accent);
+    border: 1px solid var(--accent-border);
+  }
+
+  @media (max-width: 720px) {
+    .comp-head, .comp-row {
+      grid-template-columns: 1fr 1fr;
+    }
+    .comp-cell.label {
+      grid-column: 1 / -1;
+      padding-bottom: 4px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      font-size: 0.78rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .comp-row + .comp-row, .comp-head + .comp-row { border-top-width: 1px; }
+    .comp-cell { padding: 12px 16px; font-size: 0.88rem; }
+  }
+</style>

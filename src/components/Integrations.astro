@@ -1,0 +1,145 @@
+---
+const row1 = [
+  'Klaviyo', 'Mailchimp', 'HubSpot', 'Salesforce', 'Gorgias',
+  'Zendesk', 'Intercom', 'Yotpo', 'Loox', 'Trustpilot',
+  'ReCharge', 'Smile.io', 'LoyaltyLion',
+];
+const row2 = [
+  'Helcim', 'Stripe', 'PayPal', 'Klarna', 'Afterpay',
+  'Affirm', 'FedEx', 'UPS', 'USPS', 'ShipStation',
+  'ShipBob', 'QuickBooks', 'Xero',
+];
+const row3 = [
+  'NetSuite', 'Avalara', 'TaxJar', 'Google Analytics', 'Meta Ads',
+  'TikTok', 'Algolia', 'Loop Returns', 'Printful', 'Zapier',
+  'Slack', 'Omnisend', 'Postscript', 'Attentive',
+];
+---
+
+<section class="section integrations" id="integrations">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <span class="eyebrow">Integrations</span>
+      <h2>Integrates with the <span class="text-gradient">tools you use</span></h2>
+      <p class="lead" style="text-align:center;">
+        Every CRM, ESP, helpdesk, payment processor, carrier, and accounting platform
+        your store already runs on. No app store. No per app monthly fees. Direct API integrations,
+        built into the foundation of your site.
+      </p>
+    </div>
+  </div>
+
+  <div class="float-rows" data-reveal>
+    <div class="row dir-left">
+      <div class="track">
+        {row1.map((name) => <span class="pill">{name}</span>)}
+        {row1.map((name) => <span class="pill" aria-hidden="true">{name}</span>)}
+      </div>
+    </div>
+
+    <div class="row dir-right">
+      <div class="track">
+        {row2.map((name) => <span class="pill">{name}</span>)}
+        {row2.map((name) => <span class="pill" aria-hidden="true">{name}</span>)}
+      </div>
+    </div>
+
+    <div class="row dir-left slow">
+      <div class="track">
+        {row3.map((name) => <span class="pill">{name}</span>)}
+        {row3.map((name) => <span class="pill" aria-hidden="true">{name}</span>)}
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="int-footnote" data-reveal>
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="8" cy="8" r="6.5"/>
+        <path d="M8 5v3.5M8 11v.5" stroke-linecap="round"/>
+      </svg>
+      Don't see what you use? If it has an API, we can integrate it.
+    </div>
+  </div>
+</section>
+
+<style>
+  .integrations {
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 0%, var(--accent-soft), transparent 70%),
+      var(--bg);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: clamp(60px, 8vw, 100px) 0 clamp(80px, 10vw, 120px);
+  }
+
+  .float-rows {
+    margin: 12px 0 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    overflow: hidden;
+    width: 100%;
+    mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+  }
+  .row {
+    display: flex;
+    overflow: hidden;
+  }
+  .track {
+    display: flex;
+    gap: 10px;
+    width: max-content;
+    will-change: transform;
+    animation: scroll-left 220s linear infinite;
+  }
+  .row.dir-right .track {
+    animation-name: scroll-right;
+    animation-duration: 260s;
+  }
+  .row.slow .track { animation-duration: 280s; }
+
+  .row:hover .track { animation-play-state: paused; }
+
+  .pill {
+    flex-shrink: 0;
+    padding: 6px 22px;
+    color: var(--text-secondary);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    letter-spacing: -0.025em;
+    line-height: 1;
+    white-space: nowrap;
+    transition: color 0.18s var(--ease);
+    cursor: default;
+    user-select: none;
+  }
+  .pill:hover {
+    color: var(--text);
+  }
+
+  @keyframes scroll-left {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  @keyframes scroll-right {
+    0%   { transform: translateX(-50%); }
+    100% { transform: translateX(0); }
+  }
+
+  .int-footnote {
+    margin-top: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-tertiary);
+    font-size: 0.875rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .track { animation: none !important; }
+  }
+</style>

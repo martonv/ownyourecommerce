@@ -1,0 +1,143 @@
+---
+const stats = [
+  { value: '$0', label: 'Monthly fees' },
+  { value: '100%', label: 'Code ownership' },
+  { value: '99.999%', label: 'Hosting uptime' },
+  { value: '0', label: 'Required plugins' },
+];
+---
+
+<section class="hero" id="top">
+  <div class="aurora" aria-hidden="true"></div>
+  <div class="grid-bg" aria-hidden="true"></div>
+
+  <div class="container hero-inner">
+    <a href="#features" class="badge" data-reveal>
+      <span class="dot"></span>
+      Built for store owners who are done renting their business
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M6 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+
+    <h1 data-reveal>
+      Own your eCommerce.
+      <br />
+      <span class="text-gradient">Forever.</span>
+    </h1>
+
+    <p class="lead" data-reveal>
+      We build custom eCommerce sites with zero monthly fees, total ownership of
+      the code, and complete control of every pixel. One flat build fee. No
+      subscriptions. No lock in. No plugins stacked on plugins.
+    </p>
+
+    <div class="hero-cta" data-reveal>
+      <a href="#contact" class="btn btn-primary btn-lg">
+        Get a custom quote
+        <svg class="arrow" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+      <a href="#features" class="btn btn-secondary btn-lg">See what's included</a>
+    </div>
+
+    <ul class="hero-stats" data-reveal>
+      {stats.map((s) => (
+        <li>
+          <div class="stat-v">{s.value}</div>
+          <div class="stat-l">{s.label}</div>
+        </li>
+      ))}
+    </ul>
+
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    padding: clamp(28px, 4vw, 48px) 0 clamp(12px, 2vw, 20px);
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .hero-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 28px;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 12px 6px 10px;
+    border: 1px solid var(--border-strong);
+    background: var(--surface-raised);
+    border-radius: 999px;
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    transition: all 0.18s var(--ease);
+    backdrop-filter: blur(8px);
+  }
+  .badge:hover {
+    border-color: var(--accent);
+    color: var(--text);
+    transform: translateY(-1px);
+  }
+  .badge .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-soft);
+  }
+
+  h1 {
+    max-width: 18ch;
+    margin: 0 auto;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .hero-stats {
+    list-style: none;
+    margin: 28px 0 0;
+    padding: 22px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 22px;
+    width: 100%;
+    max-width: 760px;
+    border: 1px solid var(--border);
+    background: var(--surface-raised);
+    backdrop-filter: blur(8px);
+    border-radius: var(--radius-lg);
+  }
+  .hero-stats li { text-align: center; }
+  .stat-v {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.5rem, 2.2vw, 1.875rem);
+    letter-spacing: -0.025em;
+    color: var(--text);
+  }
+  .stat-l {
+    font-size: 0.8125rem;
+    color: var(--text-tertiary);
+    margin-top: 4px;
+    letter-spacing: 0.01em;
+  }
+
+  @media (max-width: 880px) {
+    .hero-stats { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>

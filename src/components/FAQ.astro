@@ -1,0 +1,131 @@
+---
+const faqs = [
+  {
+    q: 'Why is there no monthly fee?',
+    a: 'Because you\'re paying us to build software, not to rent it. A Shopify or Wix subscription is a recurring license to use someone else\'s platform. We build a site that belongs to you outright, hosted on infrastructure you control. There\'s nothing to subscribe to.',
+  },
+  {
+    q: 'What does "you own the code" actually mean?',
+    a: 'You get the full Git repository, the design files, the deployment configuration, and the domain. If you walked away tomorrow, you could host the same site anywhere, hire any developer, and keep operating. No permission required.',
+  },
+  {
+    q: 'Why no plugins?',
+    a: 'Plugins are a tax. They duplicate functionality, conflict with each other, slow down your store, renew on their own schedules, and break when their authors abandon them. We build the features you need directly into your codebase, where they\'re fast and accountable to one team. Ours.',
+  },
+  {
+    q: 'How much does Helcim actually save me?',
+    a: 'Helcim uses interchange plus pricing. On a typical $500k/yr store, that\'s commonly $3,000 to $8,000+ per year less than Shopify Payments or Stripe, and the savings grow as your volume grows. We\'ll show you the math against your current processor before you commit.',
+  },
+  {
+    q: 'What about FedEx and UPS integration?',
+    a: 'We integrate directly with the FedEx Web Services and UPS Developer APIs. Live rate calculation at checkout, label generation, address validation, and live tracking webhooks that update customers and your dashboard automatically.',
+  },
+  {
+    q: 'Which accounting platforms do you integrate with?',
+    a: 'QuickBooks Online, QuickBooks Desktop, and Xero are the most common. Orders, refunds, payment processor fees, sales tax, and shipping income all flow into your books automatically. No CSV exports, no manual reconciliation.',
+  },
+  {
+    q: 'Which host do you deploy to?',
+    a: 'Whichever one you want. We work with Cloudflare, AWS, Vercel, Netlify, DigitalOcean, and most other DNS or hosting providers. If you already have a host you trust, we deploy there. If not, we\'ll recommend one based on your traffic and where your customers are. Your domain stays in your account, on your nameservers.',
+  },
+  {
+    q: 'How is 99.999% uptime possible?',
+    a: 'We deploy to a global edge network with automatic failover, DDoS protection, and SSL. Major providers like Cloudflare, AWS, and Vercel all publish SLAs at 99.999%, which is roughly 26 seconds of downtime per month. We tune the setup to whichever provider you use.',
+  },
+  {
+    q: 'How long does a build take?',
+    a: 'Storefront builds typically launch in 6 to 10 weeks. Larger commerce builds with custom workflows and B2B logic run 10 to 16 weeks. We give you a fixed timeline up front, with weekly reviews.',
+  },
+  {
+    q: 'What if I need new features after launch?',
+    a: 'We offer ongoing engineering retainers where we add features, integrations, and optimizations every month. Or you can hire us project by project. Or you can hand the codebase to your own team. Your call, every time.',
+  },
+  {
+    q: 'Can you migrate me from Shopify, Wix, BigCommerce, or WooCommerce?',
+    a: 'Yes. Products, customers, orders, content, SEO redirects, and historical data. We sequence the migration so your old store stays live until the new one is fully tested. Zero downtime, zero lost orders.',
+  },
+];
+---
+
+<section class="section faq" id="faq">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <span class="eyebrow">Questions</span>
+      <h2>The things people <span class="text-gradient">actually ask us</span></h2>
+    </div>
+
+    <div class="faq-list">
+      {faqs.map((f, i) => (
+        <details class="faq-item" data-reveal open={i === 0}>
+          <summary>
+            <span class="q">{f.q}</span>
+            <span class="chev" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75">
+                <path d="M4 6l4 4 4-4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </summary>
+          <div class="a">{f.a}</div>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq { background: var(--bg-subtle); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .faq-list {
+    max-width: 760px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .faq-item {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    overflow: hidden;
+    transition: border-color 0.18s var(--ease), box-shadow 0.18s var(--ease);
+  }
+  .faq-item:hover {
+    border-color: var(--border-strong);
+  }
+  .faq-item[open] {
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-sm);
+  }
+  summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    color: var(--text);
+    font-size: 0.98rem;
+    font-weight: 500;
+  }
+  summary::-webkit-details-marker { display: none; }
+  .q { flex: 1; }
+  .chev {
+    display: inline-flex;
+    width: 28px;
+    height: 28px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    color: var(--text-secondary);
+    transition: transform 0.2s var(--ease), background 0.15s var(--ease);
+  }
+  .faq-item[open] .chev { transform: rotate(180deg); }
+  summary:hover .chev { background: var(--bg-muted); color: var(--text); }
+  .a {
+    padding: 0 20px 20px;
+    color: var(--text-secondary);
+    font-size: 0.92rem;
+    line-height: 1.6;
+    max-width: 64ch;
+  }
+</style>
