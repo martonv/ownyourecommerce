@@ -1,0 +1,143 @@
+---
+import LegalLayout from '../layouts/LegalLayout.astro';
+import { site } from '../data/site';
+
+const toc = [
+  { id: 'agreement', label: 'Agreement' },
+  { id: 'services', label: 'Services and client agreements' },
+  { id: 'using-the-site', label: 'Using the site' },
+  { id: 'our-content', label: 'Our content' },
+  { id: 'estimates', label: 'Estimates and examples' },
+  { id: 'what-you-send', label: 'What you send us' },
+  { id: 'third-parties', label: 'Third-party services' },
+  { id: 'disclaimers', label: 'Disclaimers' },
+  { id: 'liability', label: 'Limitation of liability' },
+  { id: 'indemnity', label: 'Indemnity' },
+  { id: 'governing-law', label: 'Governing law' },
+  { id: 'changes', label: 'Changes' },
+  { id: 'contact', label: 'Contact' },
+];
+const host = Astro.site?.host;
+const mail = `mailto:${site.email}`;
+const state = site.governingState;
+---
+
+<LegalLayout
+  title="Terms of Service"
+  description="The terms that apply when you use the Own Your eCommerce website."
+  updated="2026-09-10"
+  toc={toc}
+>
+  <h2 id="agreement">Agreement</h2>
+  <p>
+    These terms apply to your use of {host} (the "site"), which is operated by {site.legalName} ("we",
+    "us", "our"). By using the site, you agree to these terms and to our <a href="/privacy">Privacy Policy</a>.
+    If you don't agree, please don't use the site.
+  </p>
+
+  <h2 id="services">Services and client agreements</h2>
+  <p>
+    The site describes the custom eCommerce design, development, hosting setup, and support services we
+    offer. Any work we do for you is governed by a separate written agreement, such as a signed proposal or
+    statement of work, which sets out the scope, price, timeline, and who owns what. If that agreement
+    conflicts with these terms, the agreement wins. Nothing on the site is an offer you can accept just by
+    using it.
+  </p>
+
+  <h2 id="using-the-site">Using the site</h2>
+  <p>You're welcome to use the site to learn about our services and to contact us. You agree not to:</p>
+  <ul>
+    <li>use the site in a way that breaks the law or infringes anyone's rights;</li>
+    <li>try to gain unauthorized access to the site, our systems, or anyone else's data;</li>
+    <li>disrupt the site, for example by overloading it or introducing malware;</li>
+    <li>scrape or copy the site in bulk, or use it to build a competing service;</li>
+    <li>send spam or submit false or misleading information through our forms.</li>
+  </ul>
+
+  <h2 id="our-content">Our content</h2>
+  <p>
+    The site's text, design, graphics, logo, and code belong to us or our licensors and are protected by
+    intellectual property laws. You may view the site and share links to it, but you may not copy, modify,
+    or republish its content without our written permission, except as the law allows.
+  </p>
+  <p>
+    Other company and product names mentioned on the site, such as Shopify, Wix, Helcim, FedEx, UPS,
+    QuickBooks, and Xero, are trademarks of their respective owners. Mentioning them doesn't mean they
+    endorse us or that we're partners.
+  </p>
+
+  <h2 id="estimates">Estimates and examples</h2>
+  <p>
+    Savings estimates, fees, timelines, uptime figures, and other numbers on the site are general
+    information based on typical projects and publicly available provider pricing. They aren't quotes or
+    guarantees. Your actual costs and results depend on your business and will be set out in your proposal.
+  </p>
+  <p>
+    The dashboards, customer names, orders, and figures shown on the site are illustrative examples, not
+    real customers or data.
+  </p>
+
+  <h2 id="what-you-send">What you send us</h2>
+  <p>
+    You're responsible for the information you send us, and you confirm you have the right to share it.
+    Please don't send confidential information until we've agreed how it will be protected, for example
+    under a non-disclosure agreement. Our <a href="/privacy">Privacy Policy</a> explains how we handle
+    personal information.
+  </p>
+
+  <h2 id="third-parties">Third-party services</h2>
+  <p>
+    The site links to and relies on services run by other companies, such as payment processors, shipping
+    carriers, hosting providers, and our form and font providers. We don't control them and aren't
+    responsible for their content, policies, or availability. Your use of them is governed by their own
+    terms.
+  </p>
+
+  <h2 id="disclaimers">Disclaimers</h2>
+  <p>
+    We work hard to keep the site accurate and available, but it's provided "as is" and "as available". To
+    the fullest extent the law allows, we disclaim all warranties, express or implied, including warranties
+    of merchantability, fitness for a particular purpose, and non-infringement. We don't promise that the
+    site will be error-free, uninterrupted, or free of harmful components.
+  </p>
+
+  <h2 id="liability">Limitation of liability</h2>
+  <p>
+    To the fullest extent the law allows, {site.legalName} isn't liable for any indirect, incidental,
+    special, consequential, or punitive damages, or for lost profits, revenue, or data, arising from your
+    use of the site. Our total liability for any claim relating to the site is limited to US$100. Some
+    places don't allow these limits, so they may not all apply to you. This section doesn't change the
+    liability terms of a signed client agreement.
+  </p>
+
+  <h2 id="indemnity">Indemnity</h2>
+  <p>
+    If you misuse the site or break these terms, you agree to cover the reasonable costs, including legal
+    fees, that we incur as a result, to the extent the law allows.
+  </p>
+
+  <h2 id="governing-law">Governing law</h2>
+  {state ? (
+    <p>
+      These terms are governed by the laws of the State of {state} and applicable US federal law, without
+      regard to conflict-of-law rules. Any dispute relating to the site will be handled exclusively in the
+      state or federal courts located in {state}, and you and we consent to their jurisdiction.
+    </p>
+  ) : (
+    <p>
+      These terms are governed by the laws of the US state in which {site.legalName} is organized and
+      applicable US federal law, without regard to conflict-of-law rules. Any dispute relating to the site
+      will be handled exclusively in the state or federal courts located in that state, and you and we
+      consent to their jurisdiction.
+    </p>
+  )}
+
+  <h2 id="changes">Changes</h2>
+  <p>
+    We may update these terms from time to time. The "Last updated" date at the top shows when they last
+    changed. If you keep using the site after an update, you accept the new terms.
+  </p>
+
+  <h2 id="contact">Contact</h2>
+  <p>Questions about these terms? Email <a href={mail}>{site.email}</a>.</p>
+</LegalLayout>

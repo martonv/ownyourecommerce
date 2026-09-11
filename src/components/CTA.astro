@@ -1,4 +1,5 @@
 ---
+import { site } from '../data/site';
 ---
 
 <section class="section cta" id="contact">
@@ -7,39 +8,53 @@
       <div class="cta-aurora" aria-hidden="true"></div>
       <div class="cta-inner">
         <span class="eyebrow">Get started</span>
-        <h2>Stop paying rent on your <span class="text-gradient">own storefront</span></h2>
+        <h2>Stop paying rent on your <span class="text-accent">own storefront</span></h2>
         <p class="lead">
           Tell us about your store, your stack, and where you want to be in twelve months.
           We'll come back with a fixed scope, a fixed price, and the math on what you'd save.
         </p>
 
-        <form class="cta-form" id="contactForm">
+        <form
+          class="cta-form"
+          id="contactForm"
+          action={`https://formspree.io/f/${site.formspreeId}`}
+          method="POST"
+          data-fallback-email={site.email}
+        >
+          <input type="hidden" name="_subject" value={`New project inquiry from ${Astro.site?.host}`} />
           <label class="field">
             <span>Your name</span>
-            <input type="text" name="name" placeholder="Jane Doe" required />
+            <input type="text" name="name" autocomplete="name" placeholder="Jane Doe" required />
           </label>
           <label class="field">
             <span>Work email</span>
-            <input type="email" name="email" placeholder="jane@yourstore.com" required />
+            <input type="email" name="email" autocomplete="email" placeholder="jane@yourstore.com" required />
           </label>
           <label class="field full">
             <span>Current platform and rough monthly revenue</span>
-            <input type="text" name="ctx" placeholder="e.g. Shopify Plus, ~$120k/mo" />
+            <input type="text" name="platform" placeholder="e.g. Shopify Plus, ~$120k/mo" />
           </label>
           <label class="field full">
             <span>What do you want built?</span>
-            <textarea name="msg" rows="3" placeholder="A custom store with Helcim checkout, FedEx rates, QuickBooks sync, and a B2B portal..."></textarea>
+            <textarea name="message" rows="3" placeholder="A custom store with Helcim checkout, FedEx rates, QuickBooks sync, and a B2B portal..."></textarea>
+          </label>
+          <label class="honeypot" aria-hidden="true">
+            Leave this field empty
+            <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" />
           </label>
           <div class="cta-actions">
             <button type="submit" class="btn btn-accent btn-lg send-btn">
-              Send request
-              <svg class="arrow" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75">
+              <span class="send-label">Send request</span>
+              <svg class="arrow" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
                 <path d="M3 8h10M9 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </button>
             <span class="micro">No sales calls. A real reply within 1 business day.</span>
           </div>
-          <p class="sent" hidden>Thanks. We'll be in touch within 1 business day.</p>
+          <p class="form-status" role="status" aria-live="polite" hidden></p>
+          <p class="consent">
+            We only use your details to reply to your request. See our <a href="/privacy">privacy policy</a>.
+          </p>
         </form>
       </div>
     </div>
@@ -48,14 +63,39 @@
 
 <script>
   const form = document.getElementById('contactForm') as HTMLFormElement | null;
-  form?.addEventListener('submit', (e) => {
+  const btn = form?.querySelector('.send-btn') as HTMLButtonElement | null;
+  const label = form?.querySelector('.send-label') as HTMLElement | null;
+  const status = form?.querySelector('.form-status') as HTMLElement | null;
+
+  const showStatus = (message: string, tone: 'ok' | 'error') => {
+    if (!status) return;
+    status.textContent = message;
+    status.dataset.tone = tone;
+    status.hidden = false;
+  };
+
+  form?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const sent = form.querySelector('.sent') as HTMLElement | null;
-    const btn = form.querySelector('.send-btn') as HTMLButtonElement | null;
-    if (sent) sent.hidden = false;
-    if (btn) {
-      btn.textContent = 'Sent. Talk soon';
-      btn.disabled = true;
+    if (!btn || !label || !status) return;
+    btn.disabled = true;
+    label.textContent = 'Sending…';
+    status.hidden = true;
+
+    try {
+      const res = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { Accept: 'application/json' },
+      });
+      if (!res.ok) throw new Error(`Form endpoint responded ${res.status}: ${await res.text()}`);
+      form.reset();
+      label.textContent = 'Sent. Talk soon';
+      showStatus("Thanks. We'll be in touch within 1 business day.", 'ok');
+    } catch (err) {
+      console.error(err);
+      btn.disabled = false;
+      label.textContent = 'Send request';
+      showStatus(`Sorry, your message didn't send. Please try again, or email us at ${form.dataset.fallbackEmail}.`, 'error');
     }
   });
 </script>
@@ -153,6 +193,13 @@
   .field textarea::placeholder {
     color: var(--text-tertiary);
   }
+  .honeypot {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
   .cta-actions {
     grid-column: 1 / -1;
     display: flex;
@@ -161,15 +208,35 @@
     flex-wrap: wrap;
     margin-top: 4px;
   }
+  .send-btn:disabled {
+    opacity: 0.7;
+    cursor: default;
+    transform: none;
+  }
+  .send-btn:disabled .arrow { display: none; }
   .micro {
     font-size: 0.8rem;
     color: var(--text-tertiary);
   }
-  .sent {
+  .form-status {
     grid-column: 1 / -1;
-    color: var(--success);
+    margin: 2px 0 0;
     font-size: 0.88rem;
-    margin: 6px 0 0;
+    text-align: left;
+  }
+  .form-status[data-tone='ok'] { color: var(--success); }
+  .form-status[data-tone='error'] { color: var(--danger); }
+  .consent {
+    grid-column: 1 / -1;
+    margin: 0;
+    font-size: 0.78rem;
+    color: var(--text-tertiary);
+    text-align: left;
+  }
+  .consent a {
+    color: var(--text-secondary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
   }
 
   @media (max-width: 600px) {

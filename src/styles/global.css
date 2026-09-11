@@ -24,11 +24,15 @@
   --text-inverse: #ffffff;
 
   /* Accent */
-  --accent: #5e6ad2;
-  --accent-strong: #4f5bc7;
-  --accent-soft: rgba(94, 106, 210, 0.08);
-  --accent-border: rgba(94, 106, 210, 0.18);
-  --accent-glow: rgba(94, 106, 210, 0.18);
+  --accent: #16a34a;
+  --accent-strong: #15803d;
+  --accent-soft: rgba(22, 163, 74, 0.08);
+  --accent-border: rgba(22, 163, 74, 0.18);
+  --accent-glow: rgba(22, 163, 74, 0.18);
+
+  /* Logo colors (brand/BRAND.md) */
+  --oye-ink: #000000;
+  --oye-dot: #16a34a;
 
   /* Status */
   --success: #10b981;
@@ -45,8 +49,8 @@
   --chrome-url-bg: #ffffff;
 
   /* Aurora glow palette */
-  --aurora-1: #c7d2fe;
-  --aurora-2: #ddd6fe;
+  --aurora-1: #bbf7d0;
+  --aurora-2: #dcfce7;
   --aurora-opacity: 0.55;
 
   /* Button primary */
@@ -96,11 +100,14 @@
   --text-tertiary: #71717a;
   --text-inverse: #09090b;
 
-  --accent: #8b8fff;
-  --accent-strong: #a5a8ff;
-  --accent-soft: rgba(139, 143, 255, 0.12);
-  --accent-border: rgba(139, 143, 255, 0.28);
-  --accent-glow: rgba(139, 143, 255, 0.28);
+  --accent: #16a34a;
+  --accent-strong: #22c55e;
+  --accent-soft: rgba(22, 163, 74, 0.12);
+  --accent-border: rgba(22, 163, 74, 0.28);
+  --accent-glow: rgba(22, 163, 74, 0.28);
+
+  --oye-ink: #ffffff;
+  --oye-dot: #22c55e;
 
   --neg-bg: rgba(239, 68, 68, 0.08);
   --neg-fg: #fca5a5;
@@ -109,8 +116,8 @@
   --chrome-bg: #1a1a20;
   --chrome-url-bg: #0e0e12;
 
-  --aurora-1: #4338ca;
-  --aurora-2: #6d28d9;
+  --aurora-1: #15803d;
+  --aurora-2: #166534;
   --aurora-opacity: 0.35;
 
   --btn-primary-bg: #27272a;
@@ -385,11 +392,8 @@ p { margin: 0; color: var(--text-secondary); }
 
 /* ===== Utility ===== */
 
-.text-gradient {
-  background: linear-gradient(135deg, var(--text) 0%, var(--accent) 60%, #a78bfa 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+.text-accent {
+  color: var(--accent);
 }
 
 .muted { color: var(--text-secondary); }
@@ -447,7 +451,20 @@ p { margin: 0; color: var(--text-secondary); }
   transition: transform 0.18s var(--ease), background 0.18s var(--ease);
 }
 .cookie-fab:hover { transform: translateY(-2px); }
-.cookie-fab svg { width: 22px; height: 22px; }
+.cookie-fab svg {
+  width: 28px;
+  height: 28px;
+  transition: transform 0.3s var(--ease);
+}
+.cookie-fab:hover svg { transform: rotate(-16deg); }
+.cookie-dough {
+  fill: #e0a458;
+  stroke: #c68a3e;
+  stroke-width: 0.75;
+  stroke-linejoin: round;
+}
+.cookie-crumbs { fill: #e0a458; }
+.cookie-chips { fill: #5b3a22; }
 
 .cookie-pop {
   position: fixed;
@@ -481,6 +498,11 @@ p { margin: 0; color: var(--text-secondary); }
   color: var(--text-secondary);
   line-height: 1.55;
   margin: 0 0 14px;
+}
+.cookie-pop p a {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 .cookie-row {
   display: flex;
@@ -546,13 +568,13 @@ p { margin: 0; color: var(--text-secondary); }
 }
 
 /* Soften bright pastels in dark mode (hero product cards, customer avatars) */
-:root[data-theme="dark"] .g1 { background: linear-gradient(135deg, #312e81, #1e1b4b) !important; }
-:root[data-theme="dark"] .g2 { background: linear-gradient(135deg, #4c1d95, #2e1065) !important; }
-:root[data-theme="dark"] .g3 { background: linear-gradient(135deg, #1e3a8a, #1e293b) !important; }
-:root[data-theme="dark"] .g4 { background: linear-gradient(135deg, #312e81, #831843) !important; }
+:root[data-theme="dark"] .g1 { background: linear-gradient(135deg, #14532d, #052e16) !important; }
+:root[data-theme="dark"] .g2 { background: linear-gradient(135deg, #166534, #14532d) !important; }
+:root[data-theme="dark"] .g3 { background: linear-gradient(135deg, #14532d, #27272a) !important; }
+:root[data-theme="dark"] .g4 { background: linear-gradient(135deg, #166534, #052e16) !important; }
 :root[data-theme="dark"] .customers .avatar {
-  background: linear-gradient(135deg, #312e81, #4c1d95) !important;
-  color: #e0e7ff !important;
+  background: linear-gradient(135deg, #14532d, #166534) !important;
+  color: #dcfce7 !important;
 }
 
 /* Belt-and-suspenders: force dark backgrounds on themed sections */
@@ -619,6 +641,6 @@ p { margin: 0; color: var(--text-secondary); }
 }
 :root[data-theme="dark"] .integrations {
   background:
-    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(139,143,255,0.12), transparent 70%),
+    radial-gradient(ellipse 80% 60% at 50% 0%, var(--accent-soft), transparent 70%),
     #08080b !important;
 }

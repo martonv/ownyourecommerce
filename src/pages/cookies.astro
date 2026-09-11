@@ -1,0 +1,101 @@
+---
+import LegalLayout from '../layouts/LegalLayout.astro';
+import { site } from '../data/site';
+
+const toc = [
+  { id: 'what-we-store', label: 'What we store' },
+  { id: 'third-parties', label: 'Third-party services' },
+  { id: 'analytics', label: 'Analytics' },
+  { id: 'your-choices', label: 'Your choices' },
+  { id: 'changes', label: 'Changes' },
+  { id: 'contact', label: 'Contact' },
+];
+const mail = `mailto:${site.email}`;
+---
+
+<LegalLayout
+  title="Cookie Policy"
+  description="What the Own Your eCommerce website stores in your browser, and how to control it."
+  updated="2026-09-10"
+  toc={toc}
+>
+  <div class="callout">
+    <p>
+      <strong>The short version:</strong> this site doesn't use advertising cookies or cross-site trackers,
+      and it doesn't run analytics. It saves two small preferences in your browser so it can remember
+      choices you make. That's all.
+    </p>
+  </div>
+
+  <h2 id="what-we-store">What we store on your device</h2>
+  <p>
+    Instead of cookies, the site uses your browser's local storage, which works in a similar way but is
+    never sent to our servers. Each item is saved only when you make a choice, and it's used only to
+    remember that choice.
+  </p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Purpose</th>
+          <th scope="col">Kept until</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>theme</code></td>
+          <td>Remembers whether you picked the light or dark theme.</td>
+          <td>You clear your browser data</td>
+        </tr>
+        <tr>
+          <td><code>cookies-allowed</code></td>
+          <td>Remembers your choice in the cookie preferences panel.</td>
+          <td>You clear your browser data</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="third-parties">Third-party services</h2>
+  <ul>
+    <li>
+      <strong>Google Fonts.</strong> The site's fonts load from Google's servers (fonts.googleapis.com and
+      fonts.gstatic.com). Google receives your IP address and browser details when they load but doesn't use
+      cookies for this. See the <a href="https://policies.google.com/privacy">Google Privacy Policy</a>.
+    </li>
+    <li>
+      <strong>Formspree.</strong> If you send the contact form, your message goes to Formspree, which
+      delivers it to us. Nothing is loaded from Formspree until you press send.
+    </li>
+  </ul>
+
+  <h2 id="analytics">Analytics</h2>
+  <p>
+    We don't use analytics tools today. If we add them, they'll stay off unless you switch them on in the
+    cookie preferences panel, we'll respect Global Privacy Control signals, and we'll update this policy
+    first.
+  </p>
+
+  <h2 id="your-choices">Your choices</h2>
+  <ul>
+    <li>Use the cookie button in the bottom-right corner of any page to review your preferences.</li>
+    <li>
+      Clear the saved items at any time in your browser settings, usually under "Clear browsing data" or
+      "Site data". The site will go back to its defaults.
+    </li>
+    <li>
+      Block cookies and local storage in your browser entirely if you prefer. The site will still work; it
+      just won't remember your theme.
+    </li>
+  </ul>
+
+  <h2 id="changes">Changes</h2>
+  <p>If we change what the site stores, we'll update this page and the "Last updated" date at the top.</p>
+
+  <h2 id="contact">Contact</h2>
+  <p>
+    Questions about cookies or privacy? Email <a href={mail}>{site.email}</a>, or read our
+    <a href="/privacy">Privacy Policy</a>.
+  </p>
+</LegalLayout>

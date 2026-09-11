@@ -1,0 +1,101 @@
+---
+import LegalLayout from '../layouts/LegalLayout.astro';
+import { site } from '../data/site';
+
+const toc = [
+  { id: 'approach', label: 'Our approach' },
+  { id: 'this-site', label: 'This website' },
+  { id: 'stores-we-build', label: 'Stores we build' },
+  { id: 'payments', label: 'Payments' },
+  { id: 'access', label: 'Access and ownership' },
+  { id: 'reporting', label: 'Reporting a vulnerability' },
+];
+const mail = `mailto:${site.email}?subject=${encodeURIComponent('Security report')}`;
+---
+
+<LegalLayout
+  title="Security"
+  eyebrow="Trust"
+  description="How Own Your eCommerce protects this site and the stores we build, and how to report a vulnerability."
+  updated="2026-09-10"
+  toc={toc}
+>
+  <h2 id="approach">Our approach</h2>
+  <p>
+    Many store breaches start with an outdated plugin, a shared password, or third-party code nobody
+    reviewed. We avoid those by design: custom code instead of plugins, as few moving parts as possible, and
+    accounts that stay in your name.
+  </p>
+
+  <h2 id="this-site">This website</h2>
+  <ul>
+    <li>Served over encrypted HTTPS connections.</li>
+    <li>Built as a static site, so there's no database, login, or server-side code for attackers to target.</li>
+    <li>
+      No analytics, advertising, or chat scripts. The only outside services it uses are Google Fonts for its
+      typefaces and Formspree to deliver the contact form.
+    </li>
+  </ul>
+
+  <h2 id="stores-we-build">Stores we build</h2>
+  <p>Every store is built for its owner, but these practices apply to every project:</p>
+  <ul>
+    <li>
+      <strong>No plugin sprawl.</strong> Features are built into your codebase, so there's no marketplace
+      code with its own update schedule and vulnerabilities.
+    </li>
+    <li>
+      <strong>Encrypted everywhere.</strong> HTTPS on every page, plus DDoS protection from your hosting
+      provider's edge network.
+    </li>
+    <li>
+      <strong>Secrets out of the code.</strong> API keys for payments, shipping, and accounting live in your
+      host's encrypted environment settings, never in the repository.
+    </li>
+    <li>
+      <strong>Tracked changes.</strong> Every change goes through version control, so it's reviewed,
+      recorded, and can be rolled back.
+    </li>
+    <li>
+      <strong>Kept current.</strong> On an ongoing retainer, we apply security updates to your store's
+      frameworks and libraries.
+    </li>
+  </ul>
+
+  <h2 id="payments">Payments</h2>
+  <p>
+    Card payments go through PCI DSS compliant processors such as Helcim. We use the processor's secure
+    payment fields, so card numbers go straight to the processor and are never sent through or stored on
+    your store's servers. That keeps most of the PCI compliance burden with the processor.
+  </p>
+
+  <h2 id="access">Access and ownership</h2>
+  <ul>
+    <li>
+      Your domain, hosting, payment, and shipping accounts are registered to you. We use our own logins with
+      only the access we need, and you can revoke it at any time.
+    </li>
+    <li>We use two-factor authentication on every account we use to work on client projects.</li>
+    <li>When a project ends, or whenever you ask, we hand everything over and remove our access.</li>
+  </ul>
+
+  <h2 id="reporting">Reporting a vulnerability</h2>
+  <p>
+    If you think you've found a security issue in this site or a store we built, email
+    <a href={mail}>{site.email}</a> with a description, steps to reproduce it, and any relevant URLs or
+    screenshots.
+  </p>
+  <p>When testing, please:</p>
+  <ul>
+    <li>give us reasonable time to fix the issue before sharing it publicly;</li>
+    <li>don't access, change, or delete data that isn't yours, and stop once you've confirmed the issue;</li>
+    <li>don't run denial-of-service, spam, or social engineering tests.</li>
+  </ul>
+  <p>
+    We'll confirm we received your report, keep you updated while we fix it, and credit you if you'd like.
+    We won't take legal action against good-faith research that follows these guidelines.
+  </p>
+  <p>
+    Our contact details are also published in <a href="/.well-known/security.txt"><code>security.txt</code></a>.
+  </p>
+</LegalLayout>

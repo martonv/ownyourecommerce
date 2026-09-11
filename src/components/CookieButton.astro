@@ -1,27 +1,34 @@
 ---
 ---
 
-<button class="cookie-fab" id="cookieFab" aria-label="Cookie preferences" aria-haspopup="dialog" aria-expanded="false">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
-    <path d="M12 3a9 9 0 109 9 4 4 0 01-5 5 4 4 0 01-4 4z" stroke-linecap="round" stroke-linejoin="round" />
-    <circle cx="9" cy="9.5" r="0.9" fill="currentColor" stroke="none"/>
-    <circle cx="14.5" cy="8" r="0.9" fill="currentColor" stroke="none"/>
-    <circle cx="8.5" cy="14" r="0.9" fill="currentColor" stroke="none"/>
-    <circle cx="13" cy="13.5" r="0.9" fill="currentColor" stroke="none"/>
-    <circle cx="16" cy="12" r="0.9" fill="currentColor" stroke="none"/>
+<button class="cookie-fab" id="cookieFab" type="button" aria-label="Cookie preferences" aria-haspopup="dialog" aria-expanded="false" aria-controls="cookiePop">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path class="cookie-dough" d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5z" />
+    <g class="cookie-chips">
+      <circle cx="8" cy="8.5" r="1.4" />
+      <circle cx="12.5" cy="12.5" r="1.3" />
+      <circle cx="16.8" cy="15.8" r="1.4" />
+      <circle cx="10.8" cy="17.2" r="1.3" />
+      <circle cx="6.6" cy="13.6" r="1.2" />
+    </g>
+    <g class="cookie-crumbs">
+      <circle cx="20.4" cy="4.6" r="0.8" />
+      <circle cx="22.2" cy="7.6" r="0.55" />
+    </g>
   </svg>
 </button>
 
 <div class="cookie-pop" id="cookiePop" role="dialog" aria-labelledby="cookiePopTitle" aria-hidden="true">
   <h4 id="cookiePopTitle">Cookie preferences</h4>
   <p>
-    We use a small set of cookies to keep this site running smoothly and to understand which pages are
-    helpful. You can turn them off below. Your choice is saved on this device.
+    This site only saves your theme and this choice on your device. We don't run analytics or ad
+    trackers, and if we ever add analytics, they'll stay off unless you allow them here.
+    <a href="/cookies">Read the cookie policy</a>.
   </p>
   <div class="cookie-row">
-    <span class="label">Allow cookies</span>
-    <label class="switch" aria-label="Toggle cookies">
-      <input type="checkbox" id="cookieToggle" checked />
+    <span class="label">Allow analytics cookies</span>
+    <label class="switch" aria-label="Allow analytics cookies">
+      <input type="checkbox" id="cookieToggle" />
       <span class="track"></span>
       <span class="knob"></span>
     </label>
