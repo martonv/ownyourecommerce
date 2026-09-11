@@ -1,0 +1,306 @@
+---
+import DashboardView from './DashboardView.astro';
+import OrdersView from './OrdersView.astro';
+import InventoryView from './InventoryView.astro';
+import ProductionView from './ProductionView.astro';
+import CrmView from './CrmView.astro';
+import { business, orders, products } from './data';
+import './demo.css';
+
+const tabs = [
+  { key: 'dashboard', label: 'Dashboard', icon: 'M4 11l8-7 8 7v9a1 1 0 01-1 1h-4v-6h-6v6H5a1 1 0 01-1-1z' },
+  { key: 'orders', label: 'Orders', icon: 'M6 7h12l-1 12H7zM9 7V5a3 3 0 016 0v2', badge: orders.filter((o) => o.status === 'unfulfilled').length },
+  { key: 'inventory', label: 'Inventory', icon: 'M4 7l8-4 8 4-8 4zM4 7v10l8 4V11M20 7v10l-8 4' },
+  { key: 'production', label: 'Production', icon: 'M3 20h18M5 20V10l5 3v-3l5 3v-3l4 2.5V20' },
+  { key: 'crm', label: 'Customers', icon: 'M9 11a3.5 3.5 0 100-7 3.5 3.5 0 000 7zM3 20c.7-3.2 3.1-5 6-5s5.3 1.8 6 5M16 4.3a3.5 3.5 0 010 6.4M18 15.2c1.6.7 2.6 2.3 3 4.8' },
+];
+
+const catalog = products.map(({ sku, name, price }) => ({ sku, name, price }));
+---
+
+<section class="section demo-section" id="demo">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <span class="eyebrow">Interactive demo</span>
+      <h2>Try a <span class="text-accent">sample admin</span></h2>
+      <p class="lead" style="text-align:center;">
+        Click around. This is the kind of back office we build: storefront orders, inventory, production, and
+        customers in one system. It runs on sample data, so nothing you do here is saved.
+      </p>
+    </div>
+
+    <div class="demo" data-demo data-catalog={JSON.stringify(catalog)} data-reveal>
+      <div class="demo-top">
+        <div class="demo-brand"><span class="demo-mark" aria-hidden="true">J</span>{business}</div>
+        <div class="demo-title" data-demo-title>Dashboard</div>
+        <div class="demo-actions">
+          <span class="demo-live"><span class="demo-dot"></span>Sample data</span>
+          <button type="button" class="dv-btn" data-demo-reset>Reset</button>
+        </div>
+      </div>
+
+      <div class="demo-body">
+        <div class="demo-nav" role="tablist" aria-label="Sample admin">
+          {tabs.map((t, i) => (
+            <button
+              type="button"
+              role="tab"
+              id={`demo-tab-${t.key}`}
+              aria-controls={`demo-panel-${t.key}`}
+              aria-selected={i === 0 ? 'true' : 'false'}
+              tabindex={i === 0 ? 0 : -1}
+              data-demo-tab={t.key}
+              data-label={t.label}
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d={t.icon} />
+              </svg>
+              <span>{t.label}</span>
+              {t.badge !== undefined && <span class="demo-badge" data-count="toFulfill">{t.badge}</span>}
+            </button>
+          ))}
+        </div>
+
+        <div class="demo-main">
+          <DashboardView />
+          <OrdersView />
+          <InventoryView />
+          <ProductionView />
+          <CrmView />
+        </div>
+      </div>
+    </div>
+
+    <p class="demo-foot" data-reveal>
+      Every screen, field, and rule in your system is built around how you work.
+      <a href="#contact">Tell us what yours needs</a>.
+    </p>
+  </div>
+</section>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-demo]');
+  if (root) initDemo(root);
+
+  function initDemo(root: HTMLElement) {
+    const main = root.querySelector<HTMLElement>('.demo-main')!;
+    const title = root.querySelector<HTMLElement>('[data-demo-title]')!;
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+    const catalog: { sku: string; name: string; price: number }[] = JSON.parse(root.dataset.catalog || '[]');
+    const shoppers = ['Noah Patel', 'Grace Kim', 'Leo Martins', 'Ava Brooks', 'Mia Laurent'];
+    const initialHtml = main.innerHTML;
+    let nextOrder = 3042;
+    let revenueToday = 0;
+
+    const one = <T extends HTMLElement>(sel: string, scope: ParentNode = main) => scope.querySelector<T>(sel);
+    const all = <T extends HTMLElement>(sel: string, scope: ParentNode = main) => [...scope.querySelectorAll<T>(sel)];
+    const money = (n: number) => `$${n.toLocaleString('en-US')}`;
+    const setCount = (key: string, value: string | number) =>
+      all(`[data-count="${key}"]`, root).forEach((el) => (el.textContent = String(value)));
+
+    const flash = (el: Element) => {
+      el.classList.remove('is-flash');
+      void (el as HTMLElement).offsetWidth;
+      el.classList.add('is-flash');
+    };
+
+    const log = (text: string) => {
+      const list = one('[data-activity]');
+      if (!list) return;
+      const li = document.createElement('li');
+      li.className = 'is-flash';
+      li.append(Object.assign(document.createElement('span'), { textContent: text }));
+      li.append(Object.assign(document.createElement('time'), { textContent: 'Just now' }));
+      list.prepend(li);
+      while (list.children.length > 6) list.lastElementChild?.remove();
+    };
+
+    const show = (view: string, focus = false) => {
+      tabs.forEach((tab) => {
+        const on = tab.dataset.demoTab === view;
+        tab.setAttribute('aria-selected', String(on));
+        tab.tabIndex = on ? 0 : -1;
+        if (on) {
+          title.textContent = tab.dataset.label ?? '';
+          // On phones the tabs scroll sideways; keep the active one in view.
+          const nav = tab.parentElement!;
+          if (nav.scrollWidth > nav.clientWidth) {
+            nav.scrollLeft += tab.getBoundingClientRect().left - nav.getBoundingClientRect().left - 8;
+          }
+          if (focus) tab.focus();
+        }
+      });
+      all('[data-panel]').forEach((panel) => (panel.hidden = panel.dataset.panel !== view));
+    };
+
+    const refresh = () => {
+      setCount('toFulfill', all('[data-order][data-status="unfulfilled"]').length);
+      setCount('lowStock', all('[data-inv-row]').filter((r) => Number(r.dataset.available) < Number(r.dataset.reorder)).length);
+      setCount('jobs', all('[data-stage-col]:not([data-stage-col="3"]) [data-wo]').length);
+      setCount('pipeline', money(all('[data-deal-col]:not([data-deal-col="3"]) [data-deal]').reduce((sum, d) => sum + Number(d.dataset.value), 0)));
+      all('[data-stage-col], [data-deal-col]').forEach((col) => {
+        const count = one('[data-stage-count]', col);
+        if (count) count.textContent = String(col.querySelectorAll('.kb-card').length);
+      });
+    };
+
+    const setStock = (sku: string, delta: number) => {
+      const row = one(`[data-inv-row][data-sku="${sku}"]`);
+      if (!row) return;
+      const available = Math.max(0, Number(row.dataset.available) + delta);
+      const low = available < Number(row.dataset.reorder);
+      row.dataset.available = String(available);
+      one('[data-available-text]', row)!.textContent = String(available);
+      const chip = one('[data-stock-status]', row)!;
+      chip.textContent = low ? 'Reorder' : 'In stock';
+      chip.className = `chip ${low ? 'is-warn' : 'is-ok'}`;
+      one('[data-action="receive"]', row)!.hidden = !low;
+      flash(row);
+    };
+
+    const applyOrderFilter = () => {
+      const filter = one('[data-action="filter-orders"][aria-pressed="true"]')?.dataset.filter ?? 'all';
+      all('[data-order]').forEach((row) => (row.hidden = filter !== 'all' && row.dataset.status !== filter));
+    };
+
+    const filterInventory = () => {
+      const q = one<HTMLInputElement>('[data-inv-search]')!.value.trim().toLowerCase();
+      const wh = one<HTMLSelectElement>('[data-inv-wh]')!.value;
+      let shown = 0;
+      all('[data-inv-row]').forEach((row) => {
+        const match = (!q || row.dataset.search!.includes(q)) && (wh === 'all' || row.dataset.wh === wh);
+        row.hidden = !match;
+        if (match) shown++;
+      });
+      one('[data-inv-empty]')!.hidden = shown > 0;
+    };
+
+    const simulateOrder = () => {
+      const product = catalog[Math.floor(Math.random() * catalog.length)];
+      const customer = shoppers[nextOrder % shoppers.length];
+      const row = one<HTMLTemplateElement>('[data-order-template]')!.content.firstElementChild!.cloneNode(true) as HTMLElement;
+      row.dataset.order = String(nextOrder);
+      row.dataset.sku = product.sku;
+      row.dataset.qty = '1';
+      one('[data-f="id"]', row)!.textContent = `#${nextOrder}`;
+      one('[data-f="customer"]', row)!.textContent = customer;
+      one('[data-f="items"]', row)!.textContent = `1 × ${product.name}`;
+      one('[data-f="total"]', row)!.textContent = money(product.price);
+      one('.dv-th', one('[data-orders]')!)!.after(row);
+      revenueToday += product.price;
+      setCount('revenue', money(revenueToday));
+      log(`Order #${nextOrder} placed by ${customer}`);
+      nextOrder++;
+      applyOrderFilter();
+    };
+
+    const fulfill = (row: HTMLElement) => {
+      row.dataset.status = 'fulfilled';
+      const chip = one('[data-order-status]', row)!;
+      chip.textContent = 'Fulfilled';
+      chip.className = 'chip is-ok';
+      one('[data-action="fulfill"]', row)?.remove();
+      setStock(row.dataset.sku!, -Number(row.dataset.qty));
+      log(`Order #${row.dataset.order} fulfilled and stock deducted`);
+      applyOrderFilter();
+    };
+
+    const receive = (row: HTMLElement) => {
+      const qty = Number(row.dataset.reorder) * 2;
+      setStock(row.dataset.sku!, qty);
+      log(`Received ${qty} × ${one('.strong', row)!.textContent} into ${row.dataset.wh}`);
+    };
+
+    const advance = (card: HTMLElement, colAttr: 'stageCol' | 'dealCol') => {
+      const col = card.closest<HTMLElement>(colAttr === 'stageCol' ? '[data-stage-col]' : '[data-deal-col]')!;
+      const next = Number(col.dataset[colAttr]) + 1;
+      const target = one(`[data-${colAttr === 'stageCol' ? 'stage' : 'deal'}-col="${next}"]`);
+      if (!target) return;
+      one('.kb-list', target)!.append(card);
+      flash(card);
+      const stage = one('.kb-head span', target)!.textContent;
+      if (colAttr === 'dealCol') {
+        log(`${one('.strong', card)!.textContent} moved to ${stage}`);
+        return;
+      }
+      log(`${card.dataset.wo} moved to ${stage}`);
+      if (next !== 3) return;
+      if (card.dataset.for) {
+        const order = one(`[data-order="${card.dataset.for}"]`);
+        const chip = order && one('[data-order-status]', order);
+        if (order && chip) {
+          order.dataset.status = 'ready';
+          chip.textContent = 'Ready to ship';
+          chip.className = 'chip is-ok';
+        }
+        log(`Order #${card.dataset.for} is ready to ship`);
+      } else {
+        setStock(card.dataset.sku!, Number(card.dataset.qty));
+      }
+    };
+
+    const selectContact = (btn: HTMLElement) => {
+      all('[data-action="contact"]').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      all('[data-contact-panel]').forEach((p) => (p.hidden = p.dataset.contactPanel !== btn.dataset.contact));
+    };
+
+    const reset = () => {
+      main.innerHTML = initialHtml;
+      nextOrder = 3042;
+      revenueToday = Number(one('[data-count="revenue"]')!.textContent!.replace(/\D/g, ''));
+      show('dashboard');
+      refresh();
+    };
+
+    root.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      const tab = target.closest<HTMLElement>('[role="tab"]');
+      if (tab) return show(tab.dataset.demoTab!);
+      if (target.closest('[data-demo-reset]')) return reset();
+      const btn = target.closest<HTMLElement>('[data-action]');
+      if (!btn) return;
+      switch (btn.dataset.action) {
+        case 'goto': show(btn.dataset.view!); break;
+        case 'simulate-order': simulateOrder(); break;
+        case 'filter-orders':
+          all('[data-action="filter-orders"]').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+          applyOrderFilter();
+          break;
+        case 'fulfill': fulfill(btn.closest<HTMLElement>('[data-order]')!); break;
+        case 'receive': receive(btn.closest<HTMLElement>('[data-inv-row]')!); break;
+        case 'advance': advance(btn.closest<HTMLElement>('[data-wo]')!, 'stageCol'); break;
+        case 'advance-deal': advance(btn.closest<HTMLElement>('[data-deal]')!, 'dealCol'); break;
+        case 'contact': selectContact(btn); break;
+      }
+      refresh();
+    });
+
+    root.addEventListener('input', (e) => {
+      if ((e.target as HTMLElement).matches('[data-inv-search], [data-inv-wh]')) filterInventory();
+    });
+
+    root.querySelector('[role="tablist"]')!.addEventListener('keydown', (e) => {
+      const key = (e as KeyboardEvent).key;
+      const i = tabs.indexOf(document.activeElement as HTMLButtonElement);
+      const step = key === 'ArrowDown' || key === 'ArrowRight' ? 1 : key === 'ArrowUp' || key === 'ArrowLeft' ? -1 : 0;
+      if (i < 0 || !step) return;
+      e.preventDefault();
+      show(tabs[(i + step + tabs.length) % tabs.length].dataset.demoTab!, true);
+    });
+
+    // Links elsewhere on the page, e.g. <a href="#demo" data-demo-open="inventory">, open a specific tab.
+    document.addEventListener('click', (e) => {
+      const opener = (e.target as HTMLElement).closest<HTMLElement>('[data-demo-open]');
+      if (!opener) return;
+      e.preventDefault();
+      show(opener.dataset.demoOpen!);
+      document.getElementById('demo')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    revenueToday = Number(one('[data-count="revenue"]')!.textContent!.replace(/\D/g, ''));
+
+    // Deep link: /?demo=inventory#demo opens a specific tab.
+    const requested = new URLSearchParams(location.search).get('demo');
+    if (requested && tabs.some((tab) => tab.dataset.demoTab === requested)) show(requested);
+  }
+</script>

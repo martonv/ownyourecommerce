@@ -1,0 +1,65 @@
+---
+import { dealStages, deals, contacts, money } from './data';
+
+const pipeline = deals.filter((d) => d.stage < dealStages.length - 1).reduce((sum, d) => sum + d.value, 0);
+const initials = (name: string) => name.split(' ').map((part) => part[0]).slice(0, 2).join('');
+---
+
+<div class="demo-view" role="tabpanel" id="demo-panel-crm" aria-labelledby="demo-tab-crm" data-panel="crm" hidden>
+  <div class="dv-head">
+    <div>
+      <h3>Customers</h3>
+      <p>Contacts, companies, and deals, tied to real orders.</p>
+    </div>
+    <span class="chip is-info">Open pipeline <strong data-count="pipeline">{money(pipeline)}</strong></span>
+  </div>
+
+  <div class="kb">
+    {dealStages.map((stage, i) => (
+      <div class="kb-col" data-deal-col={i}>
+        <div class="kb-head"><span>{stage}</span><span class="kb-count" data-stage-count>{deals.filter((d) => d.stage === i).length}</span></div>
+        <div class="kb-list">
+          {deals.filter((d) => d.stage === i).map((d) => (
+            <div class="kb-card" data-deal={d.id} data-value={d.value}>
+              <div class="strong">{d.company}</div>
+              <div class="sub">{d.contact}</div>
+              <div class="kb-foot">
+                <span class="num">{money(d.value)}</span>
+                <button type="button" class="dv-btn" data-action="advance-deal">Next</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <div class="dv-card crm">
+    <div class="crm-list" role="group" aria-label="Contacts">
+      {contacts.map((c, i) => (
+        <button type="button" class="crm-contact" data-action="contact" data-contact={c.id} aria-pressed={i === 0 ? 'true' : 'false'}>
+          <span class="avatar" aria-hidden="true">{initials(c.name)}</span>
+          <span class="stack"><span class="strong">{c.name}</span><span class="sub">{c.company}</span></span>
+          <span class="chip is-muted">{c.segment}</span>
+        </button>
+      ))}
+    </div>
+    {contacts.map((c, i) => (
+      <div class="crm-detail" data-contact-panel={c.id} hidden={i !== 0}>
+        <div class="crm-detail-head">
+          <div class="stack"><span class="strong">{c.name}</span><span class="sub">{c.company}</span></div>
+          <div class="crm-kpis">
+            <span><strong>{money(c.lifetime)}</strong> lifetime</span>
+            <span><strong>{c.orders}</strong> orders</span>
+          </div>
+        </div>
+        <div class="crm-tags">{c.tags.map((t) => <span class="chip is-muted">{t}</span>)}</div>
+        <ol class="crm-timeline">
+          {c.timeline.map((e) => (
+            <li><time>{e.when}</time><span>{e.text}</span></li>
+          ))}
+        </ol>
+      </div>
+    ))}
+  </div>
+</div>

@@ -1,0 +1,58 @@
+---
+import { orders, productName, statusLabel, money, type OrderStatus } from './data';
+
+const filters = [
+  { key: 'all', label: 'All' },
+  { key: 'unfulfilled', label: 'Unfulfilled' },
+  { key: 'fulfilled', label: 'Fulfilled' },
+];
+
+const tone: Record<OrderStatus, string> = {
+  unfulfilled: 'is-warn',
+  fulfilled: 'is-ok',
+  production: 'is-info',
+};
+---
+
+<div class="demo-view" role="tabpanel" id="demo-panel-orders" aria-labelledby="demo-tab-orders" data-panel="orders" hidden>
+  <div class="dv-head">
+    <div>
+      <h3>Orders</h3>
+      <p>Web and wholesale orders in one queue.</p>
+    </div>
+    <div class="dv-seg" role="group" aria-label="Filter orders">
+      {filters.map((f, i) => (
+        <button type="button" data-action="filter-orders" data-filter={f.key} aria-pressed={i === 0 ? 'true' : 'false'}>
+          {f.label}
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <div class="dv-card">
+    <div class="dv-table orders-cols" data-orders>
+      <div class="dv-tr dv-th"><span>Order</span><span>Customer</span><span>Items</span><span>Total</span><span>Status</span><span></span></div>
+      {orders.map((o) => (
+        <div class="dv-tr" data-order={o.id} data-status={o.status} data-sku={o.sku} data-qty={o.qty}>
+          <span class="mono">#{o.id}</span>
+          <span class="stack"><span class="strong">{o.customer}</span><span class="sub">{o.channel} · {o.when}</span></span>
+          <span>{o.qty} × {productName(o.sku)}</span>
+          <span class="num">{money(o.total)}</span>
+          <span><span class={`chip ${tone[o.status]}`} data-order-status>{statusLabel[o.status]}</span></span>
+          <span>{o.status === 'unfulfilled' && <button type="button" class="dv-btn" data-action="fulfill">Fulfill</button>}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <template data-order-template>
+    <div class="dv-tr is-new" data-status="unfulfilled">
+      <span class="mono" data-f="id"></span>
+      <span class="stack"><span class="strong" data-f="customer"></span><span class="sub">Web · Just now</span></span>
+      <span data-f="items"></span>
+      <span class="num" data-f="total"></span>
+      <span><span class="chip is-warn" data-order-status>Unfulfilled</span></span>
+      <span><button type="button" class="dv-btn" data-action="fulfill">Fulfill</button></span>
+    </div>
+  </template>
+</div>

@@ -30,13 +30,17 @@ import { site } from '../data/site';
             <span>Work email</span>
             <input type="email" name="email" autocomplete="email" placeholder="jane@yourstore.com" required />
           </label>
-          <label class="field full">
-            <span>Current platform and rough monthly revenue</span>
+          <label class="field">
+            <span>Current website</span>
+            <input type="text" name="website" inputmode="url" autocomplete="url" placeholder="yourstore.com" />
+          </label>
+          <label class="field">
+            <span>Platform and monthly revenue</span>
             <input type="text" name="platform" placeholder="e.g. Shopify Plus, ~$120k/mo" />
           </label>
           <label class="field full">
             <span>What do you want built?</span>
-            <textarea name="message" rows="3" placeholder="A custom store with Helcim checkout, FedEx rates, QuickBooks sync, and a B2B portal..."></textarea>
+            <textarea name="message" rows="3" placeholder="A custom store with multi-warehouse inventory, work orders for our shop, a wholesale CRM, and QuickBooks sync..."></textarea>
           </label>
           <label class="honeypot" aria-hidden="true">
             Leave this field empty

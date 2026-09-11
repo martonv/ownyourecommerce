@@ -1,0 +1,50 @@
+---
+import { products } from './data';
+---
+
+<div class="demo-view" role="tabpanel" id="demo-panel-inventory" aria-labelledby="demo-tab-inventory" data-panel="inventory" hidden>
+  <div class="dv-head">
+    <div>
+      <h3>Inventory</h3>
+      <p>Live stock across both warehouses.</p>
+    </div>
+    <div class="dv-tools">
+      <input type="search" class="dv-input" placeholder="Search items or SKUs" aria-label="Search inventory" data-inv-search />
+      <select class="dv-input" aria-label="Warehouse" data-inv-wh>
+        <option value="all">All warehouses</option>
+        <option value="WH1">WH1 · Main</option>
+        <option value="WH2">WH2 · Overflow</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="dv-card">
+    <div class="dv-table inv-cols">
+      <div class="dv-tr dv-th"><span>Item</span><span>Location</span><span>Available</span><span>Reorder at</span><span>Status</span><span></span></div>
+      {products.map((p) => {
+        const low = p.available < p.reorder;
+        return (
+          <div
+            class="dv-tr"
+            data-inv-row
+            data-sku={p.sku}
+            data-wh={p.wh}
+            data-search={`${p.name} ${p.sku}`.toLowerCase()}
+            data-available={p.available}
+            data-reorder={p.reorder}
+          >
+            <span class="stack"><span class="strong">{p.name}</span><span class="sub mono">{p.sku}</span></span>
+            <span class="mono">{p.wh} · {p.bin}</span>
+            <span class="num" data-available-text>{p.available}</span>
+            <span class="num muted">{p.reorder}</span>
+            <span><span class={`chip ${low ? 'is-warn' : 'is-ok'}`} data-stock-status>{low ? 'Reorder' : 'In stock'}</span></span>
+            <span><button type="button" class="dv-btn" data-action="receive" hidden={!low}>Receive</button></span>
+          </div>
+        );
+      })}
+      <div class="dv-empty" data-inv-empty hidden>No items match your search.</div>
+    </div>
+  </div>
+
+  <p class="dv-note">Fulfilling an order deducts stock, and finishing a work order adds it back.</p>
+</div>

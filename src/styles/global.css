@@ -170,6 +170,7 @@ h1, h2, h3, h4 {
   margin: 0;
   color: var(--text);
   line-height: 1.1;
+  text-wrap: balance;
 }
 
 h1 {
@@ -229,6 +230,7 @@ p { margin: 0; color: var(--text-secondary); }
 .section {
   padding: clamp(80px, 10vw, 140px) 0;
   position: relative;
+  scroll-margin-top: 64px; /* clears the sticky nav when jumping to #anchors */
 }
 
 .section-head {
@@ -567,16 +569,6 @@ p { margin: 0; color: var(--text-secondary); }
   background: var(--text);
 }
 
-/* Soften bright pastels in dark mode (hero product cards, customer avatars) */
-:root[data-theme="dark"] .g1 { background: linear-gradient(135deg, #14532d, #052e16) !important; }
-:root[data-theme="dark"] .g2 { background: linear-gradient(135deg, #166534, #14532d) !important; }
-:root[data-theme="dark"] .g3 { background: linear-gradient(135deg, #14532d, #27272a) !important; }
-:root[data-theme="dark"] .g4 { background: linear-gradient(135deg, #166534, #052e16) !important; }
-:root[data-theme="dark"] .customers .avatar {
-  background: linear-gradient(135deg, #14532d, #166534) !important;
-  color: #dcfce7 !important;
-}
-
 /* Belt-and-suspenders: force dark backgrounds on themed sections */
 :root[data-theme="dark"] .comp,
 :root[data-theme="dark"] .comp-head {
@@ -600,12 +592,6 @@ p { margin: 0; color: var(--text-secondary); }
 :root[data-theme="dark"] .faq-item {
   background: #111115 !important;
 }
-:root[data-theme="dark"] .features {
-  background: #08080b !important;
-}
-:root[data-theme="dark"] .feat.card {
-  background: #111115 !important;
-}
 :root[data-theme="dark"] .cta {
   background: #08080b !important;
 }
@@ -614,30 +600,6 @@ p { margin: 0; color: var(--text-secondary); }
 }
 :root[data-theme="dark"] .footer {
   background: #08080b !important;
-}
-:root[data-theme="dark"] .admin-section {
-  background: #08080b !important;
-}
-:root[data-theme="dark"] .admin-frame {
-  background: #0e0e12 !important;
-}
-:root[data-theme="dark"] .admin-top {
-  background: #111115 !important;
-}
-:root[data-theme="dark"] .admin-side {
-  background: #0e0e12 !important;
-}
-:root[data-theme="dark"] .admin-body {
-  background: #0e0e12 !important;
-}
-:root[data-theme="dark"] .stat,
-:root[data-theme="dark"] .card,
-:root[data-theme="dark"] .ghost-pill,
-:root[data-theme="dark"] .status-pill {
-  background: #111115 !important;
-}
-:root[data-theme="dark"] .otr.head {
-  background: #0e0e12 !important;
 }
 :root[data-theme="dark"] .integrations {
   background:

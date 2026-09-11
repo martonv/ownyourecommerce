@@ -1,0 +1,96 @@
+---
+const capabilities = [
+  { title: 'B2B and wholesale portals', body: 'Account pricing, net terms, quick reorder, and approval flows.' },
+  { title: 'Quotes and RFQs', body: 'Customers request quotes; your team prices, sends, and converts them to orders.' },
+  { title: 'Product configurators', body: 'Made-to-order options with live pricing and lead times that feed production.' },
+  { title: 'Subscriptions and memberships', body: 'Recurring orders, member pricing, and self-serve plan changes.' },
+  { title: 'Customer portals', body: 'Order history, invoices, tracking, and documents behind a login.' },
+  { title: 'Returns and warranties', body: 'RMAs, inspections, restocking, and warranty claims in one flow.' },
+  { title: 'Marketplace sync', body: 'Listings, orders, and stock kept in step across your sales channels.' },
+  { title: 'Point of sale', body: 'In-person sales on the same inventory and customer records as the web.' },
+  { title: 'Dealer and distributor networks', body: 'Territories, dealer pricing, lead routing, and co-op programs.' },
+  { title: 'Reports and dashboards', body: 'The numbers you actually run the business on, not a vendor template.' },
+  { title: 'Workflow automation', body: 'Approvals, alerts, and hand-offs that happen without anyone chasing them.' },
+  { title: 'AI search and support', body: 'Smarter product search and answers drawn from your own catalog and policies.' },
+];
+---
+
+<section class="section custom" id="custom">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <span class="eyebrow">Custom capabilities</span>
+      <h2>Whatever else runs your business, <span class="text-accent">we build it</span></h2>
+      <p class="lead" style="text-align:center;">
+        Inventory, production, and CRM are where most clients start. Here's what often comes next. Every one of
+        these is custom code in your repository, not another monthly app.
+      </p>
+    </div>
+
+    <ul class="cap-grid">
+      {capabilities.map((c) => (
+        <li class="cap" data-reveal>
+          <h3>{c.title}</h3>
+          <p>{c.body}</p>
+        </li>
+      ))}
+    </ul>
+
+    <div class="cap-cta" data-reveal>
+      <div>
+        <h3>Don't see it?</h3>
+        <p>If a process runs your business, we can build software for it.</p>
+      </div>
+      <a href="#contact" class="btn btn-primary">
+        Tell us what you need
+        <svg class="arrow" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .custom { background: var(--bg); }
+
+  .cap-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+  .cap {
+    padding: 20px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    transition: border-color 0.18s var(--ease);
+  }
+  .cap:hover { border-color: var(--accent-border); }
+  .cap h3 { font-size: 1rem; margin-bottom: 6px; }
+  .cap p { font-size: 0.88rem; line-height: 1.55; }
+
+  .cap-cta {
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding: 24px 28px;
+    border: 1px solid var(--accent-border);
+    border-radius: var(--radius-lg);
+    background: var(--accent-soft);
+  }
+  .cap-cta h3 { font-size: 1.15rem; }
+  .cap-cta p { margin-top: 4px; }
+
+  @media (max-width: 960px) {
+    .cap-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 560px) {
+    .cap-grid { grid-template-columns: 1fr; }
+  }
+</style>

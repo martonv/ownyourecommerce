@@ -1,0 +1,70 @@
+---
+import { orders, products, workOrders, money } from './data';
+
+const stats = [
+  { key: 'revenue', label: 'Revenue today', value: money(orders.filter((o) => o.today).reduce((sum, o) => sum + o.total, 0)) },
+  { key: 'toFulfill', label: 'Orders to fulfill', value: orders.filter((o) => o.status === 'unfulfilled').length },
+  { key: 'lowStock', label: 'Low stock items', value: products.filter((p) => p.available < p.reorder).length },
+  { key: 'jobs', label: 'Jobs in production', value: workOrders.filter((w) => w.stage < 3).length },
+];
+
+const tries = [
+  { view: 'orders', text: 'Fulfill an order and watch stock drop' },
+  { view: 'inventory', text: 'Receive a delivery for a low-stock item' },
+  { view: 'production', text: 'Move a work order across the shop floor' },
+  { view: 'crm', text: 'Advance a wholesale deal in the pipeline' },
+];
+
+const activity = [
+  { text: 'Order #3041 placed by Sarah Chen', when: '2:42 pm' },
+  { text: 'WO-1179 moved to Quality check', when: '1:55 pm' },
+  { text: 'Harbor Hotel Group accepted a proposal', when: '11:10 am' },
+  { text: 'PO-2291 received: 48 brass handle sets', when: '9:02 am' },
+];
+---
+
+<div class="demo-view" role="tabpanel" id="demo-panel-dashboard" aria-labelledby="demo-tab-dashboard" data-panel="dashboard">
+  <div class="dv-head">
+    <div>
+      <h3>Good afternoon</h3>
+      <p>Here's the workshop at a glance.</p>
+    </div>
+    <button type="button" class="dv-btn primary" data-action="simulate-order">Simulate a web order</button>
+  </div>
+
+  <div class="dv-stats">
+    {stats.map((s) => (
+      <div class="dv-stat">
+        <span class="dv-stat-label">{s.label}</span>
+        <span class="dv-stat-value" data-count={s.key}>{s.value}</span>
+      </div>
+    ))}
+  </div>
+
+  <div class="dv-split">
+    <div class="dv-card">
+      <div class="dv-card-head"><span>Try it</span><span class="dv-meta">Everything updates live</span></div>
+      <ul class="dv-tries">
+        {tries.map((t) => (
+          <li>
+            <button type="button" data-action="goto" data-view={t.view}>
+              <span>{t.text}</span>
+              <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+                <path d="M3 8h10M9 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="dv-card">
+      <div class="dv-card-head"><span>Activity</span><span class="dv-meta">Today</span></div>
+      <ol class="dv-activity" data-activity>
+        {activity.map((a) => (
+          <li><span>{a.text}</span><time>{a.when}</time></li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</div>

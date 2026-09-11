@@ -5,8 +5,8 @@ export const site = {
   legalName: 'Own Your eCommerce',
   // TODO: inbox for leads, privacy requests, and security reports.
   email: 'hello@example.com',
-  // TODO: your Formspree form ID, the part after /f/ in https://formspree.io/f/<id>.
-  formspreeId: 'YOUR_FORM_ID',
+  // Formspree form ID, the part after /f/ in https://formspree.io/f/<id>.
+  formspreeId: 'mdeobpzw',
   // TODO: the US state whose laws govern the Terms of Service, e.g. 'Texas'.
   governingState: '',
 };

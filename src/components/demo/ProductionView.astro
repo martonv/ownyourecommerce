@@ -1,0 +1,48 @@
+---
+import { stages, workOrders, materials, productName } from './data';
+---
+
+<div class="demo-view" role="tabpanel" id="demo-panel-production" aria-labelledby="demo-tab-production" data-panel="production" hidden>
+  <div class="dv-head">
+    <div>
+      <h3>Production</h3>
+      <p>Work orders driven by web and wholesale demand.</p>
+    </div>
+    <span class="chip is-info">Capacity 82% this week</span>
+  </div>
+
+  <div class="kb">
+    {stages.map((stage, i) => (
+      <div class="kb-col" data-stage-col={i}>
+        <div class="kb-head"><span>{stage}</span><span class="kb-count" data-stage-count>{workOrders.filter((w) => w.stage === i).length}</span></div>
+        <div class="kb-list">
+          {workOrders.filter((w) => w.stage === i).map((w) => (
+            <div class="kb-card" data-wo={w.id} data-sku={w.sku} data-qty={w.qty} data-for={w.forOrder}>
+              <div class="kb-top"><span class="mono">{w.id}</span><span class="sub">Due {w.due}</span></div>
+              <div class="strong">{w.qty} × {productName(w.sku)}</div>
+              <div class="kb-foot">
+                <span class={`chip ${w.forOrder ? 'is-info' : 'is-muted'}`}>{w.forOrder ? `Order #${w.forOrder}` : 'For stock'}</span>
+                <button type="button" class="dv-btn" data-action="advance">Next</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <div class="dv-card">
+    <div class="dv-card-head"><span>Materials for WO-1183</span><span class="dv-meta">40 × Ash dining chair</span></div>
+    <div class="dv-table bom-cols">
+      <div class="dv-tr dv-th"><span>Component</span><span>Needed</span><span>On hand</span><span>Status</span></div>
+      {materials.map((m) => (
+        <div class="dv-tr">
+          <span class="strong">{m.name}</span>
+          <span class="num">{m.need}</span>
+          <span class="num">{m.have}</span>
+          <span><span class={`chip ${m.ok ? 'is-ok' : 'is-warn'}`}>{m.ok ? 'Ready' : m.note}</span></span>
+        </div>
+      ))}
+    </div>
+  </div>
+</div>
