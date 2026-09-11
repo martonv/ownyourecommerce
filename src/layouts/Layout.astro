@@ -41,8 +41,9 @@ const schema = {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="/favicon.ico" sizes="48x48" />
-    <link rel="icon" href="/oye-icon.svg" type="image/svg+xml" />
+    {/* Browsers cache favicons for a long time; bump ?v= whenever the icon files change. */}
+    <link rel="icon" href="/favicon.ico?v=2" sizes="48x48" />
+    <link rel="icon" href="/oye-icon.svg?v=2" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content="#ffffff" id="themeColorMeta" />

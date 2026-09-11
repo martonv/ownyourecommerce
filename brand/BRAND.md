@@ -20,9 +20,9 @@ The SVG contains two paths: the letters, and the period. Keep them separate so t
 | `oye-logo-black.svg` | Black letters, `#16A34A` period. For `<img>` tags on light backgrounds, docs, invoices, dashboards. |
 | `oye-logo-white.svg` | White letters, `#22C55E` period. For `<img>` tags on dark backgrounds. |
 | `oye-logo-black.png` / `oye-logo-white.png` | 1200px wide, transparent background. For places that reject SVG (email clients, some social tools). |
-| `oye-icon.svg` | Modern browser favicon (white letters, green period, black rounded square). |
-| `favicon.ico` | Legacy favicon (16, 32, 48px). |
-| `apple-touch-icon.png` | 180×180 iOS home screen icon (square; iOS applies its own mask). |
+| `oye-icon.svg` | Modern browser favicon. Tabs draw it at 16–20px, too small to read the full wordmark, so it shows "o.": the wordmark's own "o" and green period (with the same gap the period has after the "e"), white on a black rounded square. |
+| `favicon.ico` | Legacy favicon (16–256px), same "o." mark. |
+| `apple-touch-icon.png` | 180×180 iOS home screen icon with the full wordmark (square; iOS applies its own mask). |
 | `oye-icon-192.png` / `oye-icon-512.png` | Web app manifest icons and social avatars. |
 
 ## Colors
