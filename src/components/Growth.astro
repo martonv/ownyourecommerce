@@ -1,0 +1,261 @@
+---
+const groups = [
+  {
+    title: 'Get found',
+    modules: [
+      {
+        title: 'AI marketing studio',
+        icon: 'M12 3l1.8 4.6L18.5 9l-4.7 1.4L12 15l-1.8-4.6L5.5 9l4.7-1.4zM18 15l.9 2.1L21 18l-2.1.9L18 21l-.9-2.1L15 18l2.1-.9z',
+        body: 'Product descriptions, emails, and ad copy in your brand voice, plus customer segments that update themselves.',
+        tags: ['Brand voice', 'Auto segments'],
+        demo: 'marketing',
+      },
+      {
+        title: 'SEO and AEO',
+        icon: 'M11 18a7 7 0 100-14 7 7 0 000 14zM21 21l-5-5',
+        body: 'Fast pages, structured data, and answer-ready content, so you rank on Google and get recommended by ChatGPT, Perplexity, and Google AI Overviews.',
+        tags: ['Schema markup', 'llms.txt'],
+        demo: 'marketing',
+      },
+      {
+        title: 'Google Ads and Merchant Center',
+        icon: 'M4 13l8 8 9-9V4h-8zM16 8h.01',
+        body: 'A product feed synced from live inventory, free listings, Shopping and Performance Max campaigns, and conversion tracking from day one.',
+        tags: ['Live feed', 'Performance Max'],
+        demo: 'marketing',
+      },
+      {
+        title: 'Pixels and server-side tracking',
+        icon: 'M12 21a9 9 0 100-18 9 9 0 000 18zM12 16a4 4 0 100-8 4 4 0 000 8z',
+        body: "Meta, Google, TikTok, Pinterest, and Snapchat events sent from your server, so ad platforms still see conversions, always within the shopper's consent choice.",
+        tags: ['Conversions API', 'Consent-aware'],
+        demo: 'marketing',
+      },
+    ],
+  },
+  {
+    title: 'Sell everywhere',
+    modules: [
+      {
+        title: 'Social commerce',
+        icon: 'M6 7h12l-1 12H7zM9 7V5a3 3 0 016 0v2',
+        body: 'TikTok Shop, Instagram, Facebook, and YouTube catalogs synced with your stock, with their orders landing in the same queue as your site.',
+        tags: ['TikTok Shop', 'Instagram and Facebook'],
+        demo: 'marketing',
+      },
+      {
+        title: 'International selling',
+        icon: 'M12 21a9 9 0 100-18 9 9 0 000 18zM3 12h18M12 3c2.5 2.8 3.8 5.8 3.8 9s-1.3 6.2-3.8 9c-2.5-2.8-3.8-5.8-3.8-9S9.5 5.8 12 3z',
+        body: 'Local currencies, translated storefronts, and duties and taxes calculated at checkout, so international shoppers see the full price up front.',
+        tags: ['Multi-currency', 'Duties at checkout'],
+      },
+      {
+        title: 'Affiliates and influencers',
+        icon: 'M10 14a4 4 0 005.66 0l3-3a4 4 0 00-5.66-5.66l-1 1M14 10a4 4 0 00-5.66 0l-3 3a4 4 0 005.66 5.66l1-1',
+        body: 'Referral links, creator codes, and commission tracking, with payouts calculated from real orders that were not returned.',
+        tags: ['Creator codes', 'Payout reports'],
+      },
+      {
+        title: 'Email and SMS flows',
+        icon: 'M3 6h18v12H3zM3 7l9 6 9-6',
+        body: 'Abandoned cart, back in stock, post-purchase, and win-back flows triggered by real orders and stock, sent through your own provider.',
+        tags: ['Abandoned cart', 'Back in stock'],
+      },
+    ],
+  },
+  {
+    title: 'Convert and protect',
+    modules: [
+      {
+        title: 'A/B testing',
+        icon: 'M9 3h6M10 3v6l-5 9a2 2 0 001.7 3h10.6A2 2 0 0019 18l-5-9V3',
+        body: 'Test headlines, layouts, offers, and prices on real traffic, then ship the winner. Results are measured in orders, not just clicks.',
+        tags: ['Price tests', 'Revenue-based results'],
+        demo: 'marketing',
+      },
+      {
+        title: 'Fraud screening',
+        icon: 'M12 3l8 3v5c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6zM12 8v4M12 16h.01',
+        body: 'Risky orders are scored and held for review before they ship, using address checks, processor signals, and your own rules.',
+        tags: ['Risk scoring', 'Chargeback evidence'],
+      },
+      {
+        title: 'Gift cards, pre‑orders, and bundles',
+        icon: 'M4 11h16v10H4zM3 7h18v4H3zM12 7v14M12 7c-1.5-3-5-3-5-.5S12 7 12 7zM12 7c1.5-3 5-3 5-.5S12 7 12 7z',
+        body: 'Gift cards and store credit, pre-orders and back-orders with deposits, and bundles and kits that draw down the right stock.',
+        tags: ['Store credit', 'Bundles and kits'],
+      },
+      {
+        title: 'Reviews, loyalty, and referrals',
+        icon: 'M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z',
+        body: 'Photo reviews, product Q&A, points, and referral codes that live in your own database instead of a monthly app.',
+        tags: ['Photo reviews', 'Points and tiers'],
+      },
+    ],
+  },
+  {
+    title: 'Support and deliver',
+    modules: [
+      {
+        title: 'AI shopping assistant',
+        icon: 'M4 5h16v11H9l-5 4zM9 10.5h.01M12 10.5h.01M15 10.5h.01',
+        body: 'A chatbot that answers product, shipping, and order questions from your real catalog, stock, and policies, and hands off to a person when it should.',
+        tags: ['Grounded answers', 'Human handoff'],
+        demo: 'inbox',
+      },
+      {
+        title: 'Live chat and shared inbox',
+        icon: 'M22 12h-6l-2 3h-4l-2-3H2M5.5 5h13L22 12v6a1 1 0 01-1 1H3a1 1 0 01-1-1v-6z',
+        body: "Chat, SMS, and email in one inbox, with each customer's orders and CRM history right beside the conversation.",
+        tags: ['Shared inbox', 'Saved replies'],
+        demo: 'inbox',
+      },
+      {
+        title: 'Custom shipping',
+        icon: 'M3 7h11v9H3zM14 11h4l3 3v2h-7zM7 20a2 2 0 110-4 2 2 0 010 4zM17 20a2 2 0 110-4 2 2 0 010 4z',
+        body: 'Rate shopping across FedEx, UPS, USPS, and DHL, plus freight, local delivery, pickup, and your own rules for zones and free shipping.',
+        tags: ['Rate shopping', 'Freight and LTL'],
+      },
+      {
+        title: 'Accessible by default',
+        icon: 'M12 5a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM5 8l7 1.5L19 8M12 9.5V14l-3 7M12 14l3 7',
+        body: 'Built to WCAG 2.2 AA, with keyboard and screen reader support, readable contrast, and alt text checks, which also lowers the risk of accessibility complaints.',
+        tags: ['WCAG 2.2 AA', 'Screen reader tested'],
+      },
+    ],
+  },
+];
+---
+
+<section class="section growth" id="growth">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <span class="eyebrow">Prebuilt growth stack</span>
+      <h2>Marketing, sales, and support, <span class="text-accent">ready on day one</span></h2>
+      <p class="lead" style="text-align:center;">
+        Prebuilt modules that plug into your store, inventory, and CRM from launch. Pick the ones you need, we tune them
+        to your brand, and they're yours with no app subscriptions.
+      </p>
+    </div>
+
+    {groups.map((group) => (
+      <div class="gr-group" data-reveal>
+        <h3 class="gr-group-title">{group.title}</h3>
+        <ul class="gr-grid">
+          {group.modules.map((m) => (
+            <li class="gr-card">
+              <span class="gr-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d={m.icon} />
+                </svg>
+              </span>
+              <h4>{m.title}</h4>
+              <p>{m.body}</p>
+              <ul class="gr-tags">{m.tags.map((t) => <li>{t}</li>)}</ul>
+              {m.demo && (
+                <a href="#demo" class="gr-link" data-demo-open={m.demo}>
+                  See it in the demo
+                  <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+                    <path d="M3 8h10M9 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </a>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
+
+    <p class="gr-note" data-reveal>
+      AI features run on your own AI provider account, so usage is billed to you directly with no markup.
+    </p>
+  </div>
+</section>
+
+<style>
+  .growth { background: var(--bg); }
+
+  .gr-group + .gr-group { margin-top: 36px; }
+  .gr-group-title {
+    margin-bottom: 14px;
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+  }
+  .gr-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+  .gr-card {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    padding: 20px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    transition: border-color 0.18s var(--ease), box-shadow 0.18s var(--ease);
+  }
+  .gr-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow); }
+  .gr-icon {
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9px;
+    border: 1px solid var(--accent-border);
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+  .gr-card h4 { font-size: 1rem; }
+  .gr-card p { font-size: 0.86rem; line-height: 1.55; }
+  .gr-tags {
+    list-style: none;
+    margin: 2px 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .gr-tags li {
+    padding: 2px 8px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--bg-muted);
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+  }
+  .gr-link {
+    margin-top: auto;
+    padding-top: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.86rem;
+    font-weight: 500;
+    color: var(--text);
+  }
+  .gr-link svg { color: var(--accent); transition: transform 0.18s var(--ease); }
+  .gr-link:hover svg { transform: translateX(2px); }
+  .gr-note {
+    margin-top: 24px;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-tertiary);
+  }
+
+  @media (max-width: 1080px) {
+    .gr-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 560px) {
+    .gr-grid { grid-template-columns: 1fr; }
+  }
+</style>

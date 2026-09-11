@@ -107,3 +107,97 @@ export const contacts = [
     ],
   },
 ];
+
+export const channels = [
+  { id: 'gmc', name: 'Google Merchant Center', detail: 'Feed synced from live stock · 5 products approved', connected: true },
+  { id: 'gads', name: 'Google Ads', detail: 'Enhanced conversions on', connected: true },
+  { id: 'meta', name: 'Meta Pixel + Conversions API', detail: 'Server events matched: 96%', connected: true },
+  { id: 'metashops', name: 'Instagram and Facebook Shops', detail: 'Catalog synced from live stock · 5 products', connected: true },
+  { id: 'tiktokshop', name: 'TikTok Shop', detail: 'Not connected', connected: false },
+  { id: 'tiktok', name: 'TikTok Pixel + Events API', detail: 'Not connected', connected: false },
+  { id: 'pinterest', name: 'Pinterest tag', detail: 'Not connected', connected: false },
+];
+
+export const experiment = {
+  name: 'Product page button: "Add to cart" vs "Buy now, ships in 2 days"',
+  days: 14,
+  variants: [
+    { label: 'A · Add to cart', rate: 3.1 },
+    { label: 'B · Buy now, ships in 2 days', rate: 3.6 },
+  ],
+  lift: '+16% orders',
+  confidence: '97% confidence',
+};
+
+export const seoChecks = [
+  { label: 'Product structured data', ok: true, fixed: '' },
+  { label: 'FAQ and review schema', ok: true, fixed: '' },
+  { label: 'llms.txt for AI assistants', ok: true, fixed: '' },
+  { label: 'Merchant feed matches the site', ok: true, fixed: '' },
+  { label: '2 products missing meta descriptions', ok: false, fixed: 'Meta descriptions written for 2 products' },
+  { label: '3 images missing alt text', ok: false, fixed: 'Alt text written for 3 images' },
+];
+
+// What the AI copywriter knows about each product.
+export const copyFacts: Record<string, { short: string; material: string; detail: string; lead: string }> = {
+  'OAK-TBL-72': { short: 'oak dining table', material: 'solid white oak', detail: 'It seats eight and is finished in hardwax oil.', lead: '2 weeks' },
+  'ASH-CHR-01': { short: 'ash dining chair', material: 'solid ash', detail: 'The back is steam-bent and the seat is hand-woven.', lead: '10 days' },
+  'LIN-BNC-48': { short: 'linen bench', material: 'white oak and Belgian linen', detail: 'The cushion is upholstered by hand, with a removable cover.', lead: '3 weeks' },
+  'WAL-SHF-36': { short: 'walnut wall shelf', material: 'black walnut', detail: 'A hidden steel bracket holds up to 60 lb.', lead: '1 week' },
+  'BRS-HDL-S': { short: 'brass handle set', material: 'solid brass', detail: 'It is unlacquered, so it develops a warm patina.', lead: '3 days' },
+};
+
+// 'human' needs someone on the team; 'ai' was resolved by the AI assistant.
+export type ConversationStatus = 'human' | 'ai' | 'resolved';
+
+export const conversations: {
+  id: string;
+  name: string;
+  channel: 'Chat' | 'SMS' | 'Email';
+  status: ConversationStatus;
+  preview: string;
+  context: string;
+  messages: { from: 'customer' | 'ai' | 'agent'; text: string }[];
+  suggestion: string;
+}[] = [
+  {
+    id: 'tom',
+    name: 'Tom Alvarez',
+    channel: 'Chat',
+    status: 'human',
+    preview: 'Can we get net 30 terms?',
+    context: 'CRM: Maple Street Studios · deal D-19, Qualified · $3,600',
+    messages: [
+      { from: 'customer', text: "We're furnishing a new studio. Can we get net 30 terms on a $3,600 order?" },
+      { from: 'ai', text: "Payment terms are set by our wholesale team, so I've passed this to them with your deal details. Someone will reply here shortly." },
+    ],
+    suggestion: "Hi Tom, happy to set up net 30 for Maple Street Studios. I'll send the paperwork today, and your order can go into production as soon as it's signed.",
+  },
+  {
+    id: 'grace',
+    name: 'Grace Kim',
+    channel: 'Chat',
+    status: 'ai',
+    preview: 'Will the oak table arrive by Friday?',
+    context: 'Viewing: Oak dining table, 72" · 12 in stock at WH1',
+    messages: [
+      { from: 'customer', text: "If I order the oak table today, will it arrive by Friday? I'm in Austin." },
+      { from: 'ai', text: 'Yes. We have 12 in stock at our main warehouse, so an order placed today ships tomorrow, and FedEx Ground to Austin takes 2 days.' },
+      { from: 'customer', text: 'Perfect, ordering now.' },
+    ],
+    suggestion: 'Thanks, Grace! Your table will be packed today. Reply here any time if you need anything.',
+  },
+  {
+    id: 'emma',
+    name: 'Emma Rodriguez',
+    channel: 'SMS',
+    status: 'ai',
+    preview: 'Where is my order?',
+    context: 'Order #3038 · Walnut wall shelf · shipped via UPS',
+    messages: [
+      { from: 'customer', text: 'Hi, where is my order?' },
+      { from: 'ai', text: 'Order #3038 shipped yesterday with UPS and is due Thursday. I just texted you the tracking link.' },
+    ],
+    suggestion: 'Hi Emma, your shelf is on its way and due Thursday. Let us know how you like it!',
+  },
+];

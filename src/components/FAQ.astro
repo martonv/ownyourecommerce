@@ -29,8 +29,12 @@ const faqs = [
     a: 'That\'s exactly what we\'re for. Quote builders, product configurators, dealer portals, custom pricing rules, automations: if a process runs your business, we can build software for it.',
   },
   {
-    q: 'Which host do you deploy to?',
-    a: 'Whichever one you want. We work with Cloudflare, AWS, Vercel, Netlify, DigitalOcean, and most other DNS or hosting providers. If you already have a host you trust, we deploy there. If not, we\'ll recommend one based on your traffic and where your customers are. Your domain stays in your account, on your nameservers.',
+    q: 'What is AEO?',
+    a: 'Answer engine optimization. More shoppers now ask ChatGPT, Perplexity, or Google\'s AI Overviews what to buy, and those tools recommend stores whose product data they can read and trust. We publish clean structured data, answer-ready FAQs, an llms.txt file, and a live product feed, so AI assistants can find and recommend your products.',
+  },
+  {
+    q: 'Will the AI chatbot make things up?',
+    a: 'It\'s set up to answer only from your own catalog, live inventory, order data, and policies, and to hand the conversation to your team when it isn\'t sure or a customer asks for a person. Every conversation is saved in your inbox, so you can review what it said.',
   },
   {
     q: 'How is 99.999% uptime possible?',
@@ -75,6 +79,16 @@ const faqs = [
     </div>
   </div>
 </section>
+
+<script
+  is:inline
+  type="application/ld+json"
+  set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+  })}
+/>
 
 <style>
   .faq { background: var(--bg-subtle); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }

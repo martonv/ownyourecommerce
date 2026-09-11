@@ -1,0 +1,48 @@
+---
+import { conversations, type ConversationStatus } from './data';
+
+const statusLabel: Record<ConversationStatus, string> = { human: 'Needs you', ai: 'AI resolved', resolved: 'Resolved' };
+const statusTone: Record<ConversationStatus, string> = { human: 'is-warn', ai: 'is-info', resolved: 'is-ok' };
+---
+
+<div class="demo-view" role="tabpanel" id="demo-panel-inbox" aria-labelledby="demo-tab-inbox" data-panel="inbox" hidden>
+  <div class="dv-head">
+    <div>
+      <h3>Inbox</h3>
+      <p>Chat, SMS, and email, answered by an AI assistant that hands off to your team.</p>
+    </div>
+    <span class="chip is-info">AI resolved 83% of chats this week</span>
+  </div>
+
+  <div class="dv-card ib">
+    <div class="ib-list" role="group" aria-label="Conversations">
+      {conversations.map((c, i) => (
+        <button type="button" class="ib-item" data-action="conversation" data-conversation={c.id} aria-pressed={i === 0 ? 'true' : 'false'}>
+          <span class="stack"><span class="strong">{c.name}</span><span class="sub">{c.channel} · {c.preview}</span></span>
+          <span class={`chip ${statusTone[c.status]}`} data-conv-status data-status={c.status}>{statusLabel[c.status]}</span>
+        </button>
+      ))}
+    </div>
+
+    {conversations.map((c, i) => (
+      <div class="ib-thread" data-thread={c.id} hidden={i !== 0}>
+        <div class="ib-context">{c.context}</div>
+        <ol class="ib-messages" data-messages>
+          {c.messages.map((m) => (
+            <li class={`ib-msg from-${m.from}`}>
+              {m.from === 'ai' && <span class="ib-who">AI assistant</span>}
+              <p>{m.text}</p>
+            </li>
+          ))}
+        </ol>
+        <div class="ib-compose">
+          <textarea class="dv-input" rows="2" placeholder="Reply as your team…" aria-label={`Reply to ${c.name}`} data-reply></textarea>
+          <div class="ib-actions">
+            <button type="button" class="dv-btn" data-action="suggest-reply" data-suggestion={c.suggestion}>Suggest with AI</button>
+            <button type="button" class="dv-btn primary" data-action="send-reply">Send</button>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>

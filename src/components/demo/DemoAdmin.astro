@@ -4,15 +4,19 @@ import OrdersView from './OrdersView.astro';
 import InventoryView from './InventoryView.astro';
 import ProductionView from './ProductionView.astro';
 import CrmView from './CrmView.astro';
-import { business, orders, products } from './data';
+import MarketingView from './MarketingView.astro';
+import InboxView from './InboxView.astro';
+import { business, orders, products, conversations } from './data';
 import './demo.css';
 
 const tabs = [
   { key: 'dashboard', label: 'Dashboard', icon: 'M4 11l8-7 8 7v9a1 1 0 01-1 1h-4v-6h-6v6H5a1 1 0 01-1-1z' },
-  { key: 'orders', label: 'Orders', icon: 'M6 7h12l-1 12H7zM9 7V5a3 3 0 016 0v2', badge: orders.filter((o) => o.status === 'unfulfilled').length },
+  { key: 'orders', label: 'Orders', icon: 'M6 7h12l-1 12H7zM9 7V5a3 3 0 016 0v2', badge: orders.filter((o) => o.status === 'unfulfilled').length, badgeKey: 'toFulfill' },
   { key: 'inventory', label: 'Inventory', icon: 'M4 7l8-4 8 4-8 4zM4 7v10l8 4V11M20 7v10l-8 4' },
   { key: 'production', label: 'Production', icon: 'M3 20h18M5 20V10l5 3v-3l5 3v-3l4 2.5V20' },
   { key: 'crm', label: 'Customers', icon: 'M9 11a3.5 3.5 0 100-7 3.5 3.5 0 000 7zM3 20c.7-3.2 3.1-5 6-5s5.3 1.8 6 5M16 4.3a3.5 3.5 0 010 6.4M18 15.2c1.6.7 2.6 2.3 3 4.8' },
+  { key: 'marketing', label: 'Marketing', icon: 'M4 11l14-7v16zM4 11v4h2l1 4h3l-1-4' },
+  { key: 'inbox', label: 'Inbox', icon: 'M4 5h16v11H9l-5 4z', badge: conversations.filter((c) => c.status === 'human').length, badgeKey: 'needsHuman' },
 ];
 
 const catalog = products.map(({ sku, name, price }) => ({ sku, name, price }));
@@ -24,8 +28,8 @@ const catalog = products.map(({ sku, name, price }) => ({ sku, name, price }));
       <span class="eyebrow">Interactive demo</span>
       <h2>Try a <span class="text-accent">sample admin</span></h2>
       <p class="lead" style="text-align:center;">
-        Click around. This is the kind of back office we build: storefront orders, inventory, production, and
-        customers in one system. It runs on sample data, so nothing you do here is saved.
+        Click around. This is the kind of back office we build: orders, inventory, production, customers,
+        marketing, and support in one system. It runs on sample data, so nothing you do here is saved.
       </p>
     </div>
 
@@ -56,7 +60,7 @@ const catalog = products.map(({ sku, name, price }) => ({ sku, name, price }));
                 <path d={t.icon} />
               </svg>
               <span>{t.label}</span>
-              {t.badge !== undefined && <span class="demo-badge" data-count="toFulfill">{t.badge}</span>}
+              {t.badge !== undefined && <span class="demo-badge" data-count={t.badgeKey}>{t.badge}</span>}
             </button>
           ))}
         </div>
@@ -67,6 +71,8 @@ const catalog = products.map(({ sku, name, price }) => ({ sku, name, price }));
           <InventoryView />
           <ProductionView />
           <CrmView />
+          <MarketingView />
+          <InboxView />
         </div>
       </div>
     </div>
@@ -96,7 +102,11 @@ const catalog = products.map(({ sku, name, price }) => ({ sku, name, price }));
     const all = <T extends HTMLElement>(sel: string, scope: ParentNode = main) => [...scope.querySelectorAll<T>(sel)];
     const money = (n: number) => `$${n.toLocaleString('en-US')}`;
     const setCount = (key: string, value: string | number) =>
-      all(`[data-count="${key}"]`, root).forEach((el) => (el.textContent = String(value)));
+      all(`[data-count="${key}"]`, root).forEach((el) => {
+        el.textContent = String(value);
+        // Sidebar badges disappear once there's nothing left to do.
+        if (el.classList.contains('demo-badge')) el.hidden = value === 0;
+      });
 
     const flash = (el: Element) => {
       el.classList.remove('is-flash');
@@ -138,6 +148,7 @@ const catalog = products.map(({ sku, name, price }) => ({ sku, name, price }));
       setCount('lowStock', all('[data-inv-row]').filter((r) => Number(r.dataset.available) < Number(r.dataset.reorder)).length);
       setCount('jobs', all('[data-stage-col]:not([data-stage-col="3"]) [data-wo]').length);
       setCount('pipeline', money(all('[data-deal-col]:not([data-deal-col="3"]) [data-deal]').reduce((sum, d) => sum + Number(d.dataset.value), 0)));
+      setCount('needsHuman', all('[data-conv-status][data-status="human"]').length);
       all('[data-stage-col], [data-deal-col]').forEach((col) => {
         const count = one('[data-stage-count]', col);
         if (count) count.textContent = String(col.querySelectorAll('.kb-card').length);
@@ -244,7 +255,77 @@ const catalog = products.map(({ sku, name, price }) => ({ sku, name, price }));
       all('[data-contact-panel]').forEach((p) => (p.hidden = p.dataset.contactPanel !== btn.dataset.contact));
     };
 
+    let typing = 0;
+    const typeOut = (el: HTMLElement, text: string) => {
+      window.clearInterval(typing);
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        el.textContent = text;
+        return;
+      }
+      let shown = 0;
+      el.textContent = '';
+      typing = window.setInterval(() => {
+        shown += 3;
+        el.textContent = text.slice(0, shown);
+        if (shown >= text.length) window.clearInterval(typing);
+      }, 16);
+    };
+
+    const connect = (btn: HTMLElement) => {
+      const row = btn.closest<HTMLElement>('[data-channel]')!;
+      one('[data-channel-detail]', row)!.textContent = 'Connected just now · purchase events flowing';
+      btn.replaceWith(Object.assign(document.createElement('span'), { className: 'chip is-ok', textContent: 'Connected' }));
+      flash(row);
+      log(`${one('.strong', row)!.textContent} connected`);
+    };
+
+    const fixSeo = (btn: HTMLElement) => {
+      const row = btn.closest<HTMLElement>('[data-check]')!;
+      row.dataset.ok = 'true';
+      one('.mk-dot', row)!.className = 'mk-dot is-ok';
+      one('[data-check-label]', row)!.textContent = btn.dataset.fixed ?? '';
+      btn.remove();
+      flash(row);
+      const checks = all('[data-check]');
+      const score = Math.round((checks.filter((c) => c.dataset.ok === 'true').length / checks.length) * 100);
+      one('[data-seo-score]')!.textContent = String(score);
+      log(`AI fix: ${btn.dataset.fixed}`);
+    };
+
+    const generateCopy = () => {
+      const copy = JSON.parse(one('.mk-writer')!.dataset.copy || '{}');
+      const sku = one<HTMLSelectElement>('[data-copy-product]')!.value;
+      const format = one<HTMLSelectElement>('[data-copy-format]')!.value;
+      typeOut(one('[data-copy-output]')!, copy[sku]?.[format] ?? '');
+    };
+
+    const selectConversation = (btn: HTMLElement) => {
+      all('[data-action="conversation"]').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      all('[data-thread]').forEach((t) => (t.hidden = t.dataset.thread !== btn.dataset.conversation));
+    };
+
+    const sendReply = (thread: HTMLElement) => {
+      const box = one<HTMLTextAreaElement>('[data-reply]', thread)!;
+      const text = box.value.trim();
+      if (!text) return box.focus();
+      const li = document.createElement('li');
+      li.className = 'ib-msg from-agent is-flash';
+      li.append(Object.assign(document.createElement('span'), { className: 'ib-who', textContent: 'You' }));
+      li.append(Object.assign(document.createElement('p'), { textContent: text }));
+      one('[data-messages]', thread)!.append(li);
+      box.value = '';
+      const item = one(`[data-conversation="${thread.dataset.thread}"]`)!;
+      const chip = one('[data-conv-status]', item)!;
+      if (chip.dataset.status === 'human') {
+        chip.dataset.status = 'resolved';
+        chip.textContent = 'Resolved';
+        chip.className = 'chip is-ok';
+      }
+      log(`Replied to ${one('.strong', item)!.textContent}`);
+    };
+
     const reset = () => {
+      window.clearInterval(typing);
       main.innerHTML = initialHtml;
       nextOrder = 3042;
       revenueToday = Number(one('[data-count="revenue"]')!.textContent!.replace(/\D/g, ''));
@@ -271,6 +352,22 @@ const catalog = products.map(({ sku, name, price }) => ({ sku, name, price }));
         case 'advance': advance(btn.closest<HTMLElement>('[data-wo]')!, 'stageCol'); break;
         case 'advance-deal': advance(btn.closest<HTMLElement>('[data-deal]')!, 'dealCol'); break;
         case 'contact': selectContact(btn); break;
+        case 'connect': connect(btn); break;
+        case 'fix-seo': fixSeo(btn); break;
+        case 'generate-copy': generateCopy(); break;
+        case 'conversation': selectConversation(btn); break;
+        case 'suggest-reply':
+          one<HTMLTextAreaElement>('[data-reply]', btn.closest<HTMLElement>('[data-thread]')!)!.value = btn.dataset.suggestion ?? '';
+          break;
+        case 'send-reply': sendReply(btn.closest<HTMLElement>('[data-thread]')!); break;
+        case 'ship-variant': {
+          const card = btn.closest<HTMLElement>('[data-experiment]')!;
+          one('[data-exp-status]', card)!.textContent = 'Shipped to 100% of traffic';
+          btn.replaceWith(Object.assign(document.createElement('span'), { className: 'chip is-ok', textContent: 'Variant B is live' }));
+          flash(card);
+          log('A/B test finished: variant B shipped to everyone');
+          break;
+        }
       }
       refresh();
     });

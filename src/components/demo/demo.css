@@ -367,6 +367,115 @@
 }
 .demo .crm-timeline time { font-size: 0.72rem; color: var(--text-tertiary); }
 
+/* Marketing */
+.demo .mk-list { list-style: none; margin: 0; padding: 4px 14px; }
+.demo .mk-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.82rem;
+}
+.demo .mk-list li:last-child { border-bottom: 0; }
+.demo .mk-checks li { justify-content: flex-start; }
+.demo .mk-checks .dv-btn { margin-left: auto; height: 26px; padding: 0 10px; }
+.demo .mk-check-label { color: var(--text); }
+.demo .mk-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.demo .mk-dot.is-ok { background: var(--success); }
+.demo .mk-dot.is-warn { background: var(--warn); }
+.demo .mk-score { display: flex; align-items: baseline; gap: 8px; padding: 14px 14px 2px; }
+.demo .mk-score-num {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: var(--text);
+}
+.demo .mk-writer { display: flex; flex-direction: column; gap: 12px; padding: 14px; }
+.demo .mk-output {
+  margin: 0;
+  min-height: 86px;
+  padding: 12px 14px;
+  border: 1px dashed var(--border-strong);
+  border-radius: 8px;
+  background: var(--bg-subtle);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--text);
+  white-space: pre-wrap;
+}
+
+.demo .mk-exp { display: flex; flex-direction: column; gap: 10px; padding: 14px; }
+.demo .mk-exp-name { font-size: 0.82rem; color: var(--text-secondary); }
+.demo .mk-variant {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr auto;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.8rem;
+}
+.demo .mk-bar { height: 6px; border-radius: 999px; background: var(--bg-muted); overflow: hidden; }
+.demo .mk-bar span { display: block; height: 100%; border-radius: inherit; background: var(--text-tertiary); }
+.demo .mk-variant.is-winner .mk-bar span { background: var(--accent); }
+.demo .mk-exp-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+/* Inbox */
+.demo .ib { display: grid; grid-template-columns: 1fr 1.5fr; }
+.demo .ib-list { display: flex; flex-direction: column; padding: 6px; border-right: 1px solid var(--border); }
+.demo .ib-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text);
+  font-size: 0.82rem;
+  text-align: left;
+}
+.demo .ib-item:hover { background: var(--bg-subtle); }
+.demo .ib-item[aria-pressed='true'] { background: var(--accent-soft); }
+.demo .ib-thread { display: flex; flex-direction: column; min-width: 0; }
+.demo .ib-context {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-subtle);
+  font-size: 0.76rem;
+  color: var(--text-secondary);
+}
+.demo .ib-messages { list-style: none; margin: 0; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+.demo .ib-msg { max-width: 85%; display: flex; flex-direction: column; gap: 3px; }
+.demo .ib-msg p {
+  margin: 0;
+  padding: 9px 12px;
+  border-radius: 12px;
+  background: var(--bg-muted);
+  color: var(--text);
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+.demo .ib-msg.from-customer { align-self: flex-start; }
+.demo .ib-msg.from-ai,
+.demo .ib-msg.from-agent { align-self: flex-end; align-items: flex-end; }
+.demo .ib-msg.from-ai p { background: var(--accent-soft); border: 1px solid var(--accent-border); }
+.demo .ib-msg.from-agent p { background: var(--text); color: var(--bg); }
+.demo .ib-who { font-size: 0.7rem; color: var(--text-tertiary); }
+.demo .ib-compose { display: flex; flex-direction: column; gap: 8px; padding: 12px 16px; border-top: 1px solid var(--border); }
+.demo textarea.dv-input { height: auto; padding: 8px 10px; resize: vertical; }
+.demo .ib-actions { display: flex; justify-content: flex-end; gap: 8px; }
+
 /* Feedback */
 .demo .is-flash { animation: demo-flash 1.4s var(--ease); }
 @keyframes demo-flash { from { background-color: var(--accent-soft); } }
@@ -393,6 +502,8 @@
   .demo .dv-stats { grid-template-columns: repeat(2, 1fr); }
   .demo .crm { grid-template-columns: 1fr; }
   .demo .crm-list { border-right: 0; border-bottom: 1px solid var(--border); }
+  .demo .ib { grid-template-columns: 1fr; }
+  .demo .ib-list { border-right: 0; border-bottom: 1px solid var(--border); }
 }
 @media (max-width: 640px) {
   .demo .demo-main { padding: 14px; }

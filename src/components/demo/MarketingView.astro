@@ -1,0 +1,119 @@
+---
+import { products, channels, seoChecks, copyFacts, experiment } from './data';
+
+const formats = [
+  { key: 'description', label: 'Product description' },
+  { key: 'email', label: 'Email subject lines' },
+  { key: 'ads', label: 'Google Ads headlines' },
+];
+
+const title = (s: string) => s.replace(/\b\w/g, (c) => c.toUpperCase());
+const headline = (h: string) => `${h}  (${h.length}/30)`;
+
+// Canned sample output. A real build calls your AI provider with your brand voice guide.
+const copy = Object.fromEntries(
+  products.map((p) => {
+    const f = copyFacts[p.sku];
+    return [
+      p.sku,
+      {
+        description: `Our ${f.short} is made by hand in our workshop from ${f.material}. ${f.detail} It ships in ${f.lead}, or we can build one to your spec.`,
+        email: [
+          `Back in stock: the ${f.short} you've been eyeing`,
+          `Built by hand, built to last: meet the ${f.short}`,
+          `48 hours left for free delivery on the ${f.short}`,
+        ].join('\n'),
+        ads: [
+          headline(`Handmade ${title(f.short)}`),
+          headline(`Ships in ${f.lead}`),
+          headline(`From $${p.price.toLocaleString('en-US')} · Made to Last`),
+        ].join('\n'),
+      },
+    ];
+  })
+);
+
+const score = Math.round((seoChecks.filter((c) => c.ok).length / seoChecks.length) * 100);
+const maxRate = Math.max(...experiment.variants.map((v) => v.rate));
+---
+
+<div class="demo-view" role="tabpanel" id="demo-panel-marketing" aria-labelledby="demo-tab-marketing" data-panel="marketing" hidden>
+  <div class="dv-head">
+    <div>
+      <h3>Marketing</h3>
+      <p>Ads, product feeds, pixels, and AI copy, all fed by live store data.</p>
+    </div>
+    <span class="chip is-info">Return on ad spend 4.2× (30 days)</span>
+  </div>
+
+  <div class="dv-split">
+    <div class="dv-card">
+      <div class="dv-card-head"><span>Channels and pixels</span><span class="dv-meta">Server-side, consent-aware</span></div>
+      <ul class="mk-list">
+        {channels.map((c) => (
+          <li data-channel={c.id}>
+            <span class="stack"><span class="strong">{c.name}</span><span class="sub" data-channel-detail>{c.detail}</span></span>
+            {c.connected ? (
+              <span class="chip is-ok">Connected</span>
+            ) : (
+              <button type="button" class="dv-btn" data-action="connect">Connect</button>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="dv-card">
+      <div class="dv-card-head"><span>Search readiness</span><span class="dv-meta">SEO and AEO</span></div>
+      <div class="mk-score">
+        <span class="mk-score-num" data-seo-score>{score}</span>
+        <span class="sub">/ 100 · ready for Google and AI assistants</span>
+      </div>
+      <ul class="mk-list mk-checks">
+        {seoChecks.map((c) => (
+          <li data-check data-ok={String(c.ok)}>
+            <span class={`mk-dot ${c.ok ? 'is-ok' : 'is-warn'}`} aria-hidden="true"></span>
+            <span class="mk-check-label" data-check-label>{c.label}</span>
+            {!c.ok && <button type="button" class="dv-btn" data-action="fix-seo" data-fixed={c.fixed}>Fix with AI</button>}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+
+  <div class="dv-split">
+  <div class="dv-card">
+    <div class="dv-card-head"><span>AI copywriter</span><span class="dv-meta">Sample output in your brand voice</span></div>
+    <div class="mk-writer" data-copy={JSON.stringify(copy)}>
+      <div class="dv-tools">
+        <select class="dv-input" aria-label="Product" data-copy-product>
+          {products.map((p) => <option value={p.sku}>{p.name}</option>)}
+        </select>
+        <select class="dv-input" aria-label="Format" data-copy-format>
+          {formats.map((f) => <option value={f.key}>{f.label}</option>)}
+        </select>
+        <button type="button" class="dv-btn primary" data-action="generate-copy">Generate</button>
+      </div>
+      <pre class="mk-output" data-copy-output aria-live="polite">Pick a product and a format, then press Generate.</pre>
+    </div>
+  </div>
+
+  <div class="dv-card" data-experiment>
+    <div class="dv-card-head"><span>A/B test</span><span class="dv-meta" data-exp-status>Running for {experiment.days} days</span></div>
+    <div class="mk-exp">
+      <p class="mk-exp-name">{experiment.name}</p>
+      {experiment.variants.map((v) => (
+        <div class={`mk-variant${v.rate === maxRate ? ' is-winner' : ''}`}>
+          <span class="strong">{v.label}</span>
+          <span class="mk-bar"><span style={`width:${Math.round((v.rate / maxRate) * 100)}%`}></span></span>
+          <span class="num">{v.rate}% conversion</span>
+        </div>
+      ))}
+      <div class="mk-exp-foot">
+        <span class="chip is-ok">B wins: {experiment.lift}, {experiment.confidence}</span>
+        <button type="button" class="dv-btn primary" data-action="ship-variant">Ship variant B</button>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
