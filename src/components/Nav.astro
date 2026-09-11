@@ -14,7 +14,7 @@ const links = [
 <header class="nav-wrap">
   <div class="container nav-inner">
     <a href="/#top" class="brand" aria-label="Own Your eCommerce home">
-      <Logo height={28} label="" />
+      <Logo height={32} label="" />
     </a>
 
     <nav class="nav-links" id="navLinks" aria-label="Primary">
@@ -113,8 +113,9 @@ const links = [
     align-items: center;
     color: var(--oye-ink);
   }
-  /* The logo's viewBox includes the "y" descender, so nudge it down to sit level with the links. */
-  .brand :global(.oye-logo) { transform: translateY(1px); }
+  /* The logo's viewBox includes the "y" descender, so nudge it down to sit level with the links.
+     A plain offset rather than a transform, so the outlines are never resampled. */
+  .brand :global(.oye-logo) { position: relative; top: 2px; }
   .nav-links {
     display: flex;
     justify-content: center;
