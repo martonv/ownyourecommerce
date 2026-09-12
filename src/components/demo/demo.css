@@ -107,8 +107,8 @@
 .demo .demo-badge {
   padding: 1px 7px;
   border-radius: 999px;
-  background: var(--accent);
-  color: #fff;
+  background: var(--btn-accent-bg);
+  color: var(--btn-accent-fg);
   font-size: 0.7rem;
   font-weight: 600;
 }
@@ -132,8 +132,8 @@
   transition: background 0.15s var(--ease), border-color 0.15s var(--ease);
 }
 .demo .dv-btn:hover { background: var(--bg-muted); border-color: var(--border-emphasis); }
-.demo .dv-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
-.demo .dv-btn.primary:hover { background: var(--accent-strong); }
+.demo .dv-btn.primary { background: var(--btn-accent-bg); border-color: var(--btn-accent-bg); color: var(--btn-accent-fg); }
+.demo .dv-btn.primary:hover { background: var(--btn-accent-hover); border-color: var(--btn-accent-hover); }
 .demo .dv-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
 .demo .dv-stat {
   display: flex;
@@ -219,8 +219,19 @@
   font: inherit;
   font-size: 0.8rem;
 }
-.demo .dv-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.demo .dv-input:focus-visible { outline: none; border-color: var(--accent-strong); box-shadow: 0 0 0 3px var(--accent-border); }
 .demo .dv-note { font-size: 0.8rem; color: var(--text-tertiary); }
+/* reaches screen readers only, for things like a header cell with no visible label */
+.demo .dv-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
 
 /* Tables */
 .demo .dv-table { display: flex; flex-direction: column; }

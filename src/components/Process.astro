@@ -38,7 +38,7 @@ const steps = [
     <div class="section-head" data-reveal>
       <span class="eyebrow">Process</span>
       <h2>From rented platform to <span class="text-accent">owned business</span></h2>
-      <p class="lead" style="text-align:center;">
+      <p class="lead">
         A clear path from your first Shopify invoice to a store that's yours.
       </p>
     </div>
@@ -60,54 +60,60 @@ const steps = [
 <style>
   .process { background: var(--bg); }
 
+  /* One column threaded on a vertical rule, so the process reads as a sequence. */
   .steps {
     list-style: none;
     margin: 0;
     padding: 0;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-    position: relative;
+    max-width: 720px;
   }
 
   .step {
     position: relative;
-    padding: 24px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    background: var(--surface);
-    transition: border-color 0.18s var(--ease), transform 0.18s var(--ease), box-shadow 0.18s var(--ease);
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    column-gap: 20px;
+    padding-bottom: 34px;
   }
-  .step:hover {
-    border-color: var(--border-strong);
-    box-shadow: var(--shadow);
+  .step:last-child { padding-bottom: 0; }
+  .step::before {
+    content: '';
+    position: absolute;
+    left: 15.5px;
+    top: 38px;
+    bottom: 4px;
+    width: 1px;
+    background: var(--border-strong);
   }
+  .step:last-child::before { display: none; }
 
   .step-num {
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     font-family: var(--font-mono);
-    font-size: 0.78rem;
-    color: var(--accent);
+    font-size: 0.72rem;
+    color: var(--accent-strong);
     background: var(--accent-soft);
     border: 1px solid var(--accent-border);
-    width: fit-content;
-    padding: 4px 10px;
-    border-radius: 999px;
-    margin-bottom: 14px;
-    letter-spacing: 0.04em;
+    border-radius: 50%;
+    letter-spacing: 0.02em;
   }
+  .step-body { padding-top: 3px; }
   .step h3 {
     font-size: 1.05rem;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
   }
   .step p {
     font-size: 0.92rem;
-    line-height: 1.55;
+    line-height: 1.6;
+    max-width: 62ch;
   }
 
-  @media (max-width: 880px) {
-    .steps { grid-template-columns: repeat(2, 1fr); }
-  }
   @media (max-width: 560px) {
-    .steps { grid-template-columns: 1fr; }
+    .step { column-gap: 14px; }
+    .step p { font-size: 0.9rem; }
   }
 </style>

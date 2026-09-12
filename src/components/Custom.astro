@@ -20,13 +20,13 @@ const capabilities = [
     <div class="section-head" data-reveal>
       <span class="eyebrow">Custom capabilities</span>
       <h2>Whatever else runs your business, <span class="text-accent">we build it</span></h2>
-      <p class="lead" style="text-align:center;">
+      <p class="lead">
         Beyond the systems and prebuilt modules above, here's what clients often ask us to build. Every one is custom
         code in your repository, not another monthly app.
       </p>
     </div>
 
-    <ul class="cap-grid">
+    <ul class="cap-list">
       {capabilities.map((c) => (
         <li class="cap" data-reveal>
           <h3>{c.title}</h3>
@@ -57,27 +57,25 @@ const capabilities = [
     border-bottom: 1px solid var(--border);
   }
 
-  .cap-grid {
+  /* A plain two column list on hairlines, rather than a fourth grid of bordered cards. */
+  .cap-list {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
+    grid-template-columns: 1fr 1fr;
+    column-gap: clamp(32px, 5vw, 72px);
   }
   .cap {
-    padding: 20px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    background: var(--surface);
-    transition: border-color 0.18s var(--ease);
+    padding: 18px 0;
+    border-top: 1px solid var(--border);
   }
-  .cap:hover { border-color: var(--accent-border); }
-  .cap h3 { font-size: 1rem; margin-bottom: 6px; }
-  .cap p { font-size: 0.88rem; line-height: 1.55; }
+  .cap:nth-child(-n + 2) { border-top: none; padding-top: 0; }
+  .cap h3 { font-size: 1rem; margin-bottom: 4px; }
+  .cap p { font-size: 0.88rem; line-height: 1.55; max-width: 46ch; }
 
   .cap-cta {
-    margin-top: 16px;
+    margin-top: 40px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -91,10 +89,8 @@ const capabilities = [
   .cap-cta h3 { font-size: 1.15rem; }
   .cap-cta p { margin-top: 4px; }
 
-  @media (max-width: 960px) {
-    .cap-grid { grid-template-columns: repeat(2, 1fr); }
-  }
-  @media (max-width: 560px) {
-    .cap-grid { grid-template-columns: 1fr; }
+  @media (max-width: 640px) {
+    .cap-list { grid-template-columns: 1fr; }
+    .cap:nth-child(2) { border-top: 1px solid var(--border); padding-top: 18px; }
   }
 </style>

@@ -127,9 +127,12 @@ const cols = [
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 2px;
   }
   .col a {
+    display: inline-block;
+    /* padding keeps the target at least 24px tall (WCAG 2.5.8) */
+    padding: 4px 0;
     font-size: 0.92rem;
     color: var(--text-secondary);
     transition: color 0.15s var(--ease);

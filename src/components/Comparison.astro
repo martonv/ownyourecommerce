@@ -21,34 +21,34 @@ const rows = [
     <div class="section-head" data-reveal>
       <span class="eyebrow">The honest math</span>
       <h2>What you stop paying when <span class="text-accent">you own the store</span></h2>
-      <p class="lead" style="text-align:center;">
+      <p class="lead">
         A Shopify Plus store with the usual stack of apps quietly costs $500 to $3,000+
         every month before you've sold anything. We replace that whole stack. Once.
       </p>
     </div>
 
-    <div class="comp-card" data-reveal>
-      <div class="comp-head">
-        <div class="comp-cell label">&nbsp;</div>
-        <div class="comp-cell them">
+    <div class="comp-card" role="table" aria-label="Renting a platform compared with owning the store" data-reveal>
+      <div class="comp-head" role="row">
+        <div class="comp-cell label" role="columnheader">&nbsp;</div>
+        <div class="comp-cell them" role="columnheader">
           <span class="comp-tag tag-them">Shopify / Wix / BigCommerce</span>
         </div>
-        <div class="comp-cell us">
+        <div class="comp-cell us" role="columnheader">
           <span class="comp-tag tag-us">Own Your eCommerce</span>
         </div>
       </div>
 
       {rows.map((r, i) => (
-        <div class={`comp-row${i % 2 === 0 ? ' alt' : ''}`}>
-          <div class="comp-cell label">{r.label}</div>
-          <div class="comp-cell them">
-            <svg class="x" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8">
+        <div class={`comp-row${i % 2 === 0 ? ' alt' : ''}`} role="row">
+          <div class="comp-cell label" role="rowheader">{r.label}</div>
+          <div class="comp-cell them" role="cell">
+            <svg class="x" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
               <path d="M4 4l8 8M12 4l-8 8" stroke-linecap="round"/>
             </svg>
             <span>{r.them}</span>
           </div>
-          <div class="comp-cell us">
-            <svg class="check" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+          <div class="comp-cell us" role="cell">
+            <svg class="check" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
               <path d="M3 8.5l3.5 3.5L13 5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
             <span>{r.us}</span>

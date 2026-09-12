@@ -33,7 +33,7 @@ const current = Astro.url.pathname.replace(/\/$/, '');
 
 <Layout title={`${title} | ${site.name}`} description={description}>
   <Nav />
-  <main class="legal">
+  <main id="main" tabindex="-1" class="legal">
     <header class="legal-head">
       <div class="container legal-head-inner">
         <span class="eyebrow">{eyebrow}</span>

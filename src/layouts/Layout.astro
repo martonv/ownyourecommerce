@@ -67,7 +67,7 @@ const schema = {
       (function () {
         try {
           var stored = localStorage.getItem('theme');
-          var theme = stored || 'light';
+          var theme = stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
           document.documentElement.setAttribute('data-theme', theme);
           var m = document.getElementById('themeColorMeta');
           if (m) m.setAttribute('content', theme === 'dark' ? '#08080b' : '#ffffff');
@@ -79,9 +79,13 @@ const schema = {
 
     <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
 
+    {/* Sections start hidden and are revealed by script, so without JS they have to stay visible. */}
+    <noscript><style is:inline>[data-reveal] { opacity: 1 !important; transform: none !important; }</style></noscript>
+
     <title>{title}</title>
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
     <slot />
 
     <CookieButton />

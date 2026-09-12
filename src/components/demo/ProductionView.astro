@@ -33,14 +33,14 @@ import { stages, workOrders, materials, productName } from './data';
 
   <div class="dv-card">
     <div class="dv-card-head"><span>Materials for WO-1183</span><span class="dv-meta">40 × Ash dining chair</span></div>
-    <div class="dv-table bom-cols">
-      <div class="dv-tr dv-th"><span>Component</span><span>Needed</span><span>On hand</span><span>Status</span></div>
+    <div class="dv-table bom-cols" role="table" aria-label="Materials for work order WO-1183">
+      <div class="dv-tr dv-th" role="row"><span role="columnheader">Component</span><span role="columnheader">Needed</span><span role="columnheader">On hand</span><span role="columnheader">Status</span></div>
       {materials.map((m) => (
-        <div class="dv-tr">
-          <span class="strong">{m.name}</span>
-          <span class="num">{m.need}</span>
-          <span class="num">{m.have}</span>
-          <span><span class={`chip ${m.ok ? 'is-ok' : 'is-warn'}`}>{m.ok ? 'Ready' : m.note}</span></span>
+        <div class="dv-tr" role="row">
+          <span class="strong" role="rowheader">{m.name}</span>
+          <span class="num" role="cell">{m.need}</span>
+          <span class="num" role="cell">{m.have}</span>
+          <span role="cell"><span class={`chip ${m.ok ? 'is-ok' : 'is-warn'}`}>{m.ok ? 'Ready' : m.note}</span></span>
         </div>
       ))}
     </div>

@@ -27,7 +27,7 @@ const catalog = products.map(({ sku, name, price }) => ({ sku, name, price }));
     <div class="section-head" data-reveal>
       <span class="eyebrow">Interactive demo</span>
       <h2>Try a <span class="text-accent">sample admin</span></h2>
-      <p class="lead" style="text-align:center;">
+      <p class="lead">
         Click around. This is the kind of back office we build: orders, inventory, production, customers,
         marketing, and support in one system. It runs on sample data, so nothing you do here is saved.
       </p>
@@ -141,6 +141,10 @@ const catalog = products.map(({ sku, name, price }) => ({ sku, name, price }));
         }
       });
       all('[data-panel]').forEach((panel) => (panel.hidden = panel.dataset.panel !== view));
+      // keep ?demo= in step with the open tab, so a view can be linked to and shared
+      const url = new URL(location.href);
+      url.searchParams.set('demo', view);
+      history.replaceState(null, '', url);
     };
 
     const refresh = () => {
@@ -389,9 +393,13 @@ const catalog = products.map(({ sku, name, price }) => ({ sku, name, price }));
     document.addEventListener('click', (e) => {
       const opener = (e.target as HTMLElement).closest<HTMLElement>('[data-demo-open]');
       if (!opener) return;
+      // leave new-tab, new-window and middle clicks to the browser
+      const click = e as MouseEvent;
+      if (click.metaKey || click.ctrlKey || click.shiftKey || click.altKey || click.button !== 0) return;
       e.preventDefault();
       show(opener.dataset.demoOpen!);
-      document.getElementById('demo')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const smooth = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+      document.getElementById('demo')?.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' });
     });
 
     revenueToday = Number(one('[data-count="revenue"]')!.textContent!.replace(/\D/g, ''));

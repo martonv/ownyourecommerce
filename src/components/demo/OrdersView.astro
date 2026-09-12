@@ -30,29 +30,29 @@ const tone: Record<OrderStatus, string> = {
   </div>
 
   <div class="dv-card">
-    <div class="dv-table orders-cols" data-orders>
-      <div class="dv-tr dv-th"><span>Order</span><span>Customer</span><span>Items</span><span>Total</span><span>Status</span><span></span></div>
+    <div class="dv-table orders-cols" role="table" aria-label="Orders" data-orders>
+      <div class="dv-tr dv-th" role="row"><span role="columnheader">Order</span><span role="columnheader">Customer</span><span role="columnheader">Items</span><span role="columnheader">Total</span><span role="columnheader">Status</span><span role="columnheader"><span class="dv-sr">Actions</span></span></div>
       {orders.map((o) => (
-        <div class="dv-tr" data-order={o.id} data-status={o.status} data-sku={o.sku} data-qty={o.qty}>
-          <span class="mono">#{o.id}</span>
-          <span class="stack"><span class="strong">{o.customer}</span><span class="sub">{o.channel} · {o.when}</span></span>
-          <span>{o.qty} × {productName(o.sku)}</span>
-          <span class="num">{money(o.total)}</span>
-          <span><span class={`chip ${tone[o.status]}`} data-order-status>{statusLabel[o.status]}</span></span>
-          <span>{o.status === 'unfulfilled' && <button type="button" class="dv-btn" data-action="fulfill">Fulfill</button>}</span>
+        <div class="dv-tr" role="row" data-order={o.id} data-status={o.status} data-sku={o.sku} data-qty={o.qty}>
+          <span class="mono" role="cell">#{o.id}</span>
+          <span class="stack" role="cell"><span class="strong">{o.customer}</span><span class="sub">{o.channel} · {o.when}</span></span>
+          <span role="cell">{o.qty} × {productName(o.sku)}</span>
+          <span class="num" role="cell">{money(o.total)}</span>
+          <span role="cell"><span class={`chip ${tone[o.status]}`} data-order-status>{statusLabel[o.status]}</span></span>
+          <span role="cell">{o.status === 'unfulfilled' && <button type="button" class="dv-btn" data-action="fulfill">Fulfill</button>}</span>
         </div>
       ))}
     </div>
   </div>
 
   <template data-order-template>
-    <div class="dv-tr is-new" data-status="unfulfilled">
-      <span class="mono" data-f="id"></span>
-      <span class="stack"><span class="strong" data-f="customer"></span><span class="sub">Web · Just now</span></span>
-      <span data-f="items"></span>
-      <span class="num" data-f="total"></span>
-      <span><span class="chip is-warn" data-order-status>Unfulfilled</span></span>
-      <span><button type="button" class="dv-btn" data-action="fulfill">Fulfill</button></span>
+    <div class="dv-tr is-new" role="row" data-status="unfulfilled">
+      <span class="mono" role="cell" data-f="id"></span>
+      <span class="stack" role="cell"><span class="strong" data-f="customer"></span><span class="sub">Web · Just now</span></span>
+      <span role="cell" data-f="items"></span>
+      <span class="num" role="cell" data-f="total"></span>
+      <span role="cell"><span class="chip is-warn" data-order-status>Unfulfilled</span></span>
+      <span role="cell"><button type="button" class="dv-btn" data-action="fulfill">Fulfill</button></span>
     </div>
   </template>
 </div>

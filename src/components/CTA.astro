@@ -71,11 +71,16 @@ import { site } from '../data/site';
   const label = form?.querySelector('.send-label') as HTMLElement | null;
   const status = form?.querySelector('.form-status') as HTMLElement | null;
 
+  // Unhide the live region first and write to it on the next frame; screen readers
+  // routinely miss text set while the element is still hidden.
   const showStatus = (message: string, tone: 'ok' | 'error') => {
     if (!status) return;
-    status.textContent = message;
     status.dataset.tone = tone;
     status.hidden = false;
+    // a timeout, not requestAnimationFrame: rAF does not fire while the tab is in the background
+    setTimeout(() => {
+      status.textContent = message;
+    }, 50);
   };
 
   form?.addEventListener('submit', async (e) => {
@@ -93,7 +98,8 @@ import { site } from '../data/site';
       });
       if (!res.ok) throw new Error(`Form endpoint responded ${res.status}: ${await res.text()}`);
       form.reset();
-      label.textContent = 'Sent. Talk soon';
+      btn.disabled = false;
+      label.textContent = 'Send request';
       showStatus("Thanks. We'll be in touch within 1 business day.", 'ok');
     } catch (err) {
       console.error(err);
@@ -188,10 +194,11 @@ import { site } from '../data/site';
     transition: border-color 0.15s var(--ease), box-shadow 0.15s var(--ease);
     resize: vertical;
   }
-  .field input:focus,
-  .field textarea:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 4px var(--accent-soft);
+  .field input:focus-visible,
+  .field textarea:focus-visible {
+    border-color: var(--accent-strong);
+    box-shadow: 0 0 0 3px var(--accent-border);
+    outline: none;
   }
   .field input::placeholder,
   .field textarea::placeholder {

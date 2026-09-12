@@ -40,7 +40,7 @@ const links = [
       <a href="/#contact" class="btn btn-ghost ghost-cta">Talk to us</a>
       <a href="/#contact" class="btn btn-primary">
         Start a project
-        <svg class="arrow" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75">
+        <svg class="arrow" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
           <path d="M3 8h10M9 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </a>
@@ -62,19 +62,17 @@ const links = [
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });
 
-  toggle?.addEventListener('click', () => {
-    const open = linksEl?.classList.toggle('is-open');
-    toggle.setAttribute('aria-expanded', String(!!open));
-    toggle.classList.toggle('is-open', !!open);
-  });
+  const setMenu = (open: boolean) => {
+    if (!toggle) return;
+    linksEl?.classList.toggle('is-open', open);
+    toggle.classList.toggle('is-open', open);
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  };
 
-  linksEl?.querySelectorAll('a').forEach((a) =>
-    a.addEventListener('click', () => {
-      linksEl.classList.remove('is-open');
-      toggle?.classList.remove('is-open');
-      toggle?.setAttribute('aria-expanded', 'false');
-    })
-  );
+  toggle?.addEventListener('click', () => setMenu(!linksEl?.classList.contains('is-open')));
+
+  linksEl?.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setMenu(false)));
 
   themeBtn?.addEventListener('click', () => {
     const root = document.documentElement;
@@ -191,12 +189,15 @@ const links = [
       transform: translateY(-12px);
       opacity: 0;
       pointer-events: none;
-      transition: transform 0.2s var(--ease), opacity 0.2s var(--ease);
+      /* visibility keeps the closed menu's links out of the tab order */
+      visibility: hidden;
+      transition: transform 0.2s var(--ease), opacity 0.2s var(--ease), visibility 0.2s var(--ease);
     }
     .nav-links.is-open {
       transform: none;
       opacity: 1;
       pointer-events: auto;
+      visibility: visible;
     }
     .nav-links a {
       padding: 12px 8px;

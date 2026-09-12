@@ -19,13 +19,14 @@ import { products } from './data';
   </div>
 
   <div class="dv-card">
-    <div class="dv-table inv-cols">
-      <div class="dv-tr dv-th"><span>Item</span><span>Location</span><span>Available</span><span>Reorder at</span><span>Status</span><span></span></div>
+    <div class="dv-table inv-cols" role="table" aria-label="Inventory">
+      <div class="dv-tr dv-th" role="row"><span role="columnheader">Item</span><span role="columnheader">Location</span><span role="columnheader">Available</span><span role="columnheader">Reorder at</span><span role="columnheader">Status</span><span role="columnheader"><span class="dv-sr">Actions</span></span></div>
       {products.map((p) => {
         const low = p.available < p.reorder;
         return (
           <div
             class="dv-tr"
+            role="row"
             data-inv-row
             data-sku={p.sku}
             data-wh={p.wh}
@@ -33,17 +34,17 @@ import { products } from './data';
             data-available={p.available}
             data-reorder={p.reorder}
           >
-            <span class="stack"><span class="strong">{p.name}</span><span class="sub mono">{p.sku}</span></span>
-            <span class="mono">{p.wh} · {p.bin}</span>
-            <span class="num" data-available-text>{p.available}</span>
-            <span class="num muted">{p.reorder}</span>
-            <span><span class={`chip ${low ? 'is-warn' : 'is-ok'}`} data-stock-status>{low ? 'Reorder' : 'In stock'}</span></span>
-            <span><button type="button" class="dv-btn" data-action="receive" hidden={!low}>Receive</button></span>
+            <span class="stack" role="rowheader"><span class="strong">{p.name}</span><span class="sub mono">{p.sku}</span></span>
+            <span class="mono" role="cell">{p.wh} · {p.bin}</span>
+            <span class="num" role="cell" data-available-text>{p.available}</span>
+            <span class="num muted" role="cell">{p.reorder}</span>
+            <span role="cell"><span class={`chip ${low ? 'is-warn' : 'is-ok'}`} data-stock-status>{low ? 'Reorder' : 'In stock'}</span></span>
+            <span role="cell"><button type="button" class="dv-btn" data-action="receive" hidden={!low}>Receive</button></span>
           </div>
         );
       })}
-      <div class="dv-empty" data-inv-empty hidden>No items match your search.</div>
     </div>
+    <div class="dv-empty" role="status" data-inv-empty hidden>No items match your search.</div>
   </div>
 
   <p class="dv-note">Fulfilling an order deducts stock, and finishing a work order adds it back.</p>

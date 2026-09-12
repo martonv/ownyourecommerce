@@ -15,7 +15,7 @@ const stats = [
     <a href="#systems" class="badge" data-reveal>
       <span class="dot"></span>
       Built for store owners who are done renting their business
-      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
         <path d="M6 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </a>
@@ -35,7 +35,7 @@ const stats = [
     <div class="hero-cta" data-reveal>
       <a href="#contact" class="btn btn-primary btn-lg">
         Get a custom quote
-        <svg class="arrow" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75">
+        <svg class="arrow" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
           <path d="M3 8h10M9 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </a>
@@ -60,6 +60,8 @@ const stats = [
     padding: clamp(28px, 4vw, 48px) 0 clamp(12px, 2vw, 20px);
     overflow: hidden;
     isolation: isolate;
+    /* the hero is not a .section, so it needs its own clearance under the sticky nav */
+    scroll-margin-top: 64px;
   }
   .hero-inner {
     position: relative;
@@ -80,7 +82,7 @@ const stats = [
     border-radius: 999px;
     font-size: 0.82rem;
     color: var(--text-secondary);
-    transition: all 0.18s var(--ease);
+    transition: border-color 0.18s var(--ease), color 0.18s var(--ease), transform 0.18s var(--ease);
     backdrop-filter: blur(8px);
   }
   .badge:hover {
