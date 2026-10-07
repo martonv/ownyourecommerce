@@ -201,3 +201,42 @@ export const conversations: {
     suggestion: 'Hi Emma, your shelf is on its way and due Thursday. Let us know how you like it!',
   },
 ];
+
+// Internal operations: the tools the team uses all day, on the same backend as the orders above.
+export const me = { name: 'Alex Rivera', role: 'Shop supervisor' };
+
+export const team = [
+  { name: 'Luis Ferreira', role: 'Cabinetmaker', in: true, since: '6:45 am' },
+  { name: 'Dana Whitfield', role: 'Operations', in: true, since: '7:58 am' },
+  { name: 'Sam Okafor', role: 'Shipping', in: true, since: '8:10 am' },
+  { name: 'Mei Tanaka', role: 'Finishing', in: false, since: 'Clocked out 2:05 pm' },
+];
+
+export type TicketState = 'open' | 'active' | 'done';
+
+export const tickets: {
+  id: string;
+  title: string;
+  team: string;
+  priority: string;
+  state: TicketState;
+  who: string;
+  when: string;
+}[] = [
+  { id: 'T-312', title: 'Edge sander trips the breaker under load', team: 'Maintenance', priority: 'High', state: 'active', who: 'Luis Ferreira', when: '35 min ago' },
+  { id: 'T-311', title: 'Laptop and logins for the new hire', team: 'IT', priority: 'Normal', state: 'open', who: 'Dana Whitfield', when: '2 hours ago' },
+  { id: 'T-309', title: 'Dust collector filter change', team: 'Facilities', priority: 'Low', state: 'done', who: 'Mei Tanaka', when: 'Yesterday' },
+];
+
+// What the AI does with a new ticket: picks the queue, sets priority, and links the related record.
+export const ticketTemplates = [
+  { title: 'Planer knives are chipping the stock', team: 'Maintenance', priority: 'High', link: 'Linked to WO-1183, due Oct 2' },
+  { title: 'Shop floor printer is offline', team: 'IT', priority: 'Normal', link: 'Matched 2 similar tickets from last quarter' },
+  { title: 'Loading dock light is out', team: 'Facilities', priority: 'Normal', link: 'Added to the Friday maintenance round' },
+];
+
+export const requests = [
+  { id: 'R-48', who: 'Mei Tanaka', type: 'Time off', detail: 'Oct 14 to Oct 16', meta: '12 days remaining' },
+  { id: 'R-47', who: 'Sam Okafor', type: 'Purchase', detail: 'Pallet jack, $1,240', meta: 'Shipping budget, 68% used' },
+  { id: 'R-46', who: 'Luis Ferreira', type: 'Overtime', detail: '6 hours, Saturday build', meta: 'Against WO-1183' },
+];

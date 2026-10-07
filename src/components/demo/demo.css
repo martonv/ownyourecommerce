@@ -256,6 +256,8 @@
 .demo .orders-cols .dv-tr { grid-template-columns: 0.6fr 1.5fr 1.6fr 0.8fr 1fr 0.7fr; }
 .demo .inv-cols .dv-tr { grid-template-columns: 1.7fr 1.1fr 0.8fr 0.8fr 0.9fr 0.8fr; }
 .demo .bom-cols .dv-tr { grid-template-columns: 1.6fr 0.8fr 0.8fr 1.4fr; }
+.demo .int-cols .dv-tr { grid-template-columns: 1.4fr auto; }
+.demo .ticket-cols .dv-tr { grid-template-columns: 2.2fr 0.9fr 0.7fr 0.9fr; }
 .demo .dv-empty { padding: 18px 14px; font-size: 0.84rem; color: var(--text-tertiary); }
 .demo .stack { display: flex; flex-direction: column; min-width: 0; }
 .demo .strong { font-weight: 500; color: var(--text); }
@@ -278,6 +280,29 @@
 .demo .chip.is-warn { color: color-mix(in srgb, var(--warn) 70%, var(--text)); background: color-mix(in srgb, var(--warn) 16%, transparent); }
 .demo .chip.is-info { color: var(--accent-strong); background: var(--accent-soft); border-color: var(--accent-border); }
 .demo .chip.is-muted { color: var(--text-secondary); background: var(--bg-muted); border-color: var(--border); }
+
+/* Internal ops */
+.demo .int-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: start; }
+.demo .int-clock {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.demo .int-list { display: flex; flex-direction: column; }
+.demo .int-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+}
+.demo .int-row + .int-row { border-top: 1px solid var(--border); }
+@media (max-width: 860px) {
+  .demo .int-grid { grid-template-columns: 1fr; }
+}
 
 /* Boards (production and deals) */
 .demo .kb { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
@@ -527,5 +552,10 @@
   .demo .inv-cols .dv-tr > :nth-child(4) { display: none; }
   .demo .bom-cols .dv-tr { grid-template-columns: 1.4fr 0.8fr 1.2fr; }
   .demo .bom-cols .dv-tr > :nth-child(3) { display: none; }
+  .demo .ticket-cols .dv-tr { grid-template-columns: 1.6fr 1fr; }
+  .demo .ticket-cols .dv-tr > :nth-child(2),
+  .demo .ticket-cols .dv-tr > :nth-child(3) { display: none; }
+  /* let a long card subtitle drop under its title instead of squeezing it */
+  .demo .dv-card-head { flex-wrap: wrap; }
   .demo .kb { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 80%; overflow-x: auto; }
 }

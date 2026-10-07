@@ -1,0 +1,94 @@
+---
+import { me, team, tickets, ticketTemplates, requests, type TicketState } from './data';
+
+const tone: Record<TicketState, string> = { open: 'is-warn', active: 'is-info', done: 'is-ok' };
+const stateLabel: Record<TicketState, string> = { open: 'Open', active: 'In progress', done: 'Done' };
+---
+
+<div class="demo-view" role="tabpanel" id="demo-panel-internal" aria-labelledby="demo-tab-internal" data-panel="internal" hidden>
+  <div class="dv-head">
+    <div>
+      <h3>Internal ops</h3>
+      <p>Tickets, time, and approvals on the same backend as the orders.</p>
+    </div>
+    <button type="button" class="dv-btn primary" data-action="clock" data-in="false">Clock in</button>
+  </div>
+
+  <div class="int-grid">
+    <div class="dv-card">
+      <div class="dv-card-head"><span>Time clock</span><span class="dv-meta" data-clock-meta>You are clocked out</span></div>
+      <div class="int-clock">
+        <span class="stack">
+          <span class="strong" data-me>{me.name}</span>
+          <span class="sub">{me.role}</span>
+        </span>
+        <span class="chip is-muted" data-clock-chip>Clocked out</span>
+      </div>
+      <div class="dv-table int-cols" role="table" aria-label="Who is on the clock">
+        <div class="dv-tr dv-th" role="row"><span role="columnheader">Team member</span><span role="columnheader">Status</span></div>
+        {team.map((t) => (
+          <div class="dv-tr" role="row">
+            <span class="stack" role="rowheader"><span class="strong">{t.name}</span><span class="sub">{t.role}</span></span>
+            <span role="cell"><span class={`chip ${t.in ? 'is-ok' : 'is-muted'}`}>{t.in ? `In since ${t.since}` : t.since}</span></span>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="dv-card">
+      <div class="dv-card-head">
+        <span>Approvals waiting on you</span>
+        <span class="dv-meta"><span data-count="approvals">{requests.length}</span> pending</span>
+      </div>
+      <div class="int-list">
+        {requests.map((r) => (
+          <div class="int-row" data-request={r.id}>
+            <span class="stack">
+              <span class="strong">{r.type}: {r.detail}</span>
+              <span class="sub">{r.who} · {r.meta}</span>
+            </span>
+            <button type="button" class="dv-btn" data-action="approve">Approve</button>
+          </div>
+        ))}
+        <p class="dv-empty" role="status" data-approvals-empty hidden>Nothing left to approve.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="dv-card">
+    <div class="dv-card-head">
+      <span>Internal tickets</span>
+      <span class="dv-meta">AI picks the queue, the priority, and the record it belongs to</span>
+    </div>
+    <div class="dv-tools">
+      <select class="dv-input" aria-label="What needs fixing" data-ticket-pick>
+        {ticketTemplates.map((t, i) => (
+          <option value={i} data-team={t.team} data-priority={t.priority} data-link={t.link}>{t.title}</option>
+        ))}
+      </select>
+      <button type="button" class="dv-btn primary" data-action="raise-ticket">Raise ticket</button>
+    </div>
+    <div class="dv-table ticket-cols" role="table" aria-label="Internal tickets" data-tickets>
+      <div class="dv-tr dv-th" role="row"><span role="columnheader">Ticket</span><span role="columnheader">Queue</span><span role="columnheader">Priority</span><span role="columnheader">Status</span></div>
+      {tickets.map((t) => (
+        <div class="dv-tr" role="row" data-ticket={t.id}>
+          <span class="stack" role="rowheader"><span class="strong">{t.title}</span><span class="sub mono">{t.id} · {t.who} · {t.when}</span></span>
+          <span role="cell">{t.team}</span>
+          <span role="cell">{t.priority}</span>
+          <span role="cell"><span class={`chip ${tone[t.state]}`}>{stateLabel[t.state]}</span></span>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <template data-ticket-template>
+    <div class="dv-tr is-new" role="row">
+      <span class="stack" role="rowheader"><span class="strong" data-f="title"></span><span class="sub mono" data-f="meta"></span></span>
+      <span role="cell" data-f="team"></span>
+      <span role="cell" data-f="priority"></span>
+      <span role="cell"><span class="chip is-warn">Open</span></span>
+    </div>
+  </template>
+
+  <p class="dv-note">Same database as orders and stock, so a ticket can point at the work order that caused it.</p>
+</div>

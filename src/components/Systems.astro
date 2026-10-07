@@ -39,6 +39,19 @@ const systems = [
       'Two-way sync with HubSpot or Salesforce',
     ],
   },
+  {
+    key: 'internal',
+    title: 'Internal tools and team ops',
+    body: 'The software your team lives in all day: tickets, time, approvals, and documents, on the same system as your orders.',
+    icon: 'M9 4h6v3H9zM7 5H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-1M8.5 13.5l2 2 4-4',
+    points: [
+      'Internal ticket queues and requests',
+      'Clock in, clock out, and timesheets',
+      'Time off, approvals, and sign-offs',
+      'SOPs, checklists, and documents',
+      'Equipment and asset tracking',
+    ],
+  },
 ];
 
 const flow = ['Order placed', 'Stock reserved', 'Work order released', 'Picked and packed', 'Shipped', 'Books updated'];
@@ -47,11 +60,12 @@ const flow = ['Order placed', 'Stock reserved', 'Work order released', 'Picked a
 <section class="section systems" id="systems">
   <div class="container">
     <div class="section-head" data-reveal>
-      <span class="eyebrow">Beyond the storefront</span>
-      <h2>Inventory, production, and CRM, <span class="text-accent">built in</span></h2>
+      <span class="eyebrow">One backend</span>
+      <h2>Every workflow your company runs, <span class="text-accent">in one backend</span></h2>
       <p class="lead">
-        Your store, warehouse, shop floor, and customer records on one system you own. No separate inventory
-        app, no manufacturing subscription, no CRM billed per seat.
+        Your store, warehouse, shop floor, customer records, and the internal tools your team uses all day,
+        on one system you own, with AI built into every screen. No separate inventory app, no manufacturing
+        subscription, no CRM billed per seat, no ticketing tool bolted on top.
       </p>
     </div>
 
@@ -98,7 +112,7 @@ const flow = ['Order placed', 'Stock reserved', 'Work order released', 'Picked a
 
   .sys-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 16px;
   }
   .sys-card {

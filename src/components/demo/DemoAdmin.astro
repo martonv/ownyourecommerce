@@ -6,7 +6,8 @@ import ProductionView from './ProductionView.astro';
 import CrmView from './CrmView.astro';
 import MarketingView from './MarketingView.astro';
 import InboxView from './InboxView.astro';
-import { business, orders, products, conversations } from './data';
+import InternalView from './InternalView.astro';
+import { business, orders, products, conversations, requests } from './data';
 import './demo.css';
 
 const tabs = [
@@ -17,6 +18,7 @@ const tabs = [
   { key: 'crm', label: 'Customers', icon: 'M9 11a3.5 3.5 0 100-7 3.5 3.5 0 000 7zM3 20c.7-3.2 3.1-5 6-5s5.3 1.8 6 5M16 4.3a3.5 3.5 0 010 6.4M18 15.2c1.6.7 2.6 2.3 3 4.8' },
   { key: 'marketing', label: 'Marketing', icon: 'M4 11l14-7v16zM4 11v4h2l1 4h3l-1-4' },
   { key: 'inbox', label: 'Inbox', icon: 'M4 5h16v11H9l-5 4z', badge: conversations.filter((c) => c.status === 'human').length, badgeKey: 'needsHuman' },
+  { key: 'internal', label: 'Internal', icon: 'M9 4h6v3H9zM7 5H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-1M8.5 13.5l2 2 4-4', badge: requests.length, badgeKey: 'approvals' },
 ];
 
 const catalog = products.map(({ sku, name, price }) => ({ sku, name, price }));
@@ -29,7 +31,8 @@ const catalog = products.map(({ sku, name, price }) => ({ sku, name, price }));
       <h2>Try a <span class="text-accent">sample admin</span></h2>
       <p class="lead">
         Click around. This is the kind of back office we build: orders, inventory, production, customers,
-        marketing, and support in one system. It runs on sample data, so nothing you do here is saved.
+        marketing, support, and your internal tools in one system, with AI wired through it. It runs on
+        sample data, so nothing you do here is saved.
       </p>
     </div>
 
@@ -73,6 +76,7 @@ const catalog = products.map(({ sku, name, price }) => ({ sku, name, price }));
           <CrmView />
           <MarketingView />
           <InboxView />
+          <InternalView />
         </div>
       </div>
     </div>
@@ -96,6 +100,7 @@ const catalog = products.map(({ sku, name, price }) => ({ sku, name, price }));
     const shoppers = ['Noah Patel', 'Grace Kim', 'Leo Martins', 'Ava Brooks', 'Mia Laurent'];
     const initialHtml = main.innerHTML;
     let nextOrder = 3042;
+    let nextTicket = 312;
     let revenueToday = 0;
 
     const one = <T extends HTMLElement>(sel: string, scope: ParentNode = main) => scope.querySelector<T>(sel);
@@ -153,6 +158,10 @@ const catalog = products.map(({ sku, name, price }) => ({ sku, name, price }));
       setCount('jobs', all('[data-stage-col]:not([data-stage-col="3"]) [data-wo]').length);
       setCount('pipeline', money(all('[data-deal-col]:not([data-deal-col="3"]) [data-deal]').reduce((sum, d) => sum + Number(d.dataset.value), 0)));
       setCount('needsHuman', all('[data-conv-status][data-status="human"]').length);
+      const pending = all('[data-request]:not([data-done])').length;
+      setCount('approvals', pending);
+      const nothingLeft = one('[data-approvals-empty]');
+      if (nothingLeft) nothingLeft.hidden = pending > 0;
       all('[data-stage-col], [data-deal-col]').forEach((col) => {
         const count = one('[data-stage-count]', col);
         if (count) count.textContent = String(col.querySelectorAll('.kb-card').length);
@@ -332,9 +341,46 @@ const catalog = products.map(({ sku, name, price }) => ({ sku, name, price }));
       window.clearInterval(typing);
       main.innerHTML = initialHtml;
       nextOrder = 3042;
+      nextTicket = 312;
       revenueToday = Number(one('[data-count="revenue"]')!.textContent!.replace(/\D/g, ''));
       show('dashboard');
       refresh();
+    };
+
+    const clockToggle = (btn: HTMLElement) => {
+      const on = btn.dataset.in !== 'true';
+      btn.dataset.in = String(on);
+      btn.textContent = on ? 'Clock out' : 'Clock in';
+      const chip = one('[data-clock-chip]')!;
+      chip.textContent = on ? 'On the clock' : 'Clocked out';
+      chip.className = `chip ${on ? 'is-ok' : 'is-muted'}`;
+      one('[data-clock-meta]')!.textContent = on ? 'Clocked in just now' : 'You are clocked out';
+      flash(chip);
+      log(on ? 'You clocked in' : 'You clocked out');
+    };
+
+    // The AI picks the queue, the priority, and the record the ticket belongs to.
+    const raiseTicket = () => {
+      const option = one<HTMLSelectElement>('[data-ticket-pick]')!.selectedOptions[0];
+      const table = one('[data-tickets]')!;
+      const row = one<HTMLTemplateElement>('[data-ticket-template]')!.content.firstElementChild!.cloneNode(true) as HTMLElement;
+      const id = `T-${++nextTicket}`;
+      row.dataset.ticket = id;
+      one('[data-f="title"]', row)!.textContent = option.textContent;
+      one('[data-f="meta"]', row)!.textContent = `${id} · ${one('[data-me]')!.textContent} · just now · ${option.dataset.link}`;
+      one('[data-f="team"]', row)!.textContent = option.dataset.team!;
+      one('[data-f="priority"]', row)!.textContent = option.dataset.priority!;
+      table.insertBefore(row, table.children[1]);
+      flash(row);
+      log(`${id} raised, AI routed it to ${option.dataset.team}`);
+    };
+
+    const approve = (btn: HTMLElement) => {
+      const row = btn.closest<HTMLElement>('[data-request]')!;
+      row.dataset.done = 'true';
+      btn.replaceWith(Object.assign(document.createElement('span'), { className: 'chip is-ok', textContent: 'Approved' }));
+      flash(row);
+      log(`Approved ${row.dataset.request}`);
     };
 
     root.addEventListener('click', (e) => {
@@ -364,6 +410,9 @@ const catalog = products.map(({ sku, name, price }) => ({ sku, name, price }));
           one<HTMLTextAreaElement>('[data-reply]', btn.closest<HTMLElement>('[data-thread]')!)!.value = btn.dataset.suggestion ?? '';
           break;
         case 'send-reply': sendReply(btn.closest<HTMLElement>('[data-thread]')!); break;
+        case 'clock': clockToggle(btn); break;
+        case 'raise-ticket': raiseTicket(); break;
+        case 'approve': approve(btn); break;
         case 'ship-variant': {
           const card = btn.closest<HTMLElement>('[data-experiment]')!;
           one('[data-exp-status]', card)!.textContent = 'Shipped to 100% of traffic';

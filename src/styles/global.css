@@ -1,6 +1,6 @@
 /* ============================================
    Own Your eCommerce design system
-   Light + dark themes, Linear inspired
+   Light theme, Linear inspired
    ============================================ */
 
 :root {
@@ -85,63 +85,6 @@
 
   --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
-
-/* ============================================
-   Dark theme overrides
-   ============================================ */
-:root[data-theme="dark"] {
-  --bg: #08080b;
-  --bg-subtle: #0e0e12;
-  --bg-muted: #16161b;
-  --surface: #111115;
-  --surface-elevated: #16161c;
-  --surface-raised: rgba(22, 22, 28, 0.7);
-
-  --border: rgba(255, 255, 255, 0.06);
-  --border-strong: rgba(255, 255, 255, 0.10);
-  --border-emphasis: rgba(255, 255, 255, 0.18);
-
-  --text: #fafafa;
-  --text-secondary: #a1a1aa;
-  /* 5.8:1 on the dark background; #71717a was 4.1:1 */
-  --text-tertiary: #8a8a93;
-  --text-inverse: #09090b;
-
-  --accent: #16a34a;
-  --accent-strong: #22c55e;
-  --accent-soft: rgba(22, 163, 74, 0.12);
-  --accent-border: rgba(22, 163, 74, 0.28);
-  --accent-glow: rgba(22, 163, 74, 0.28);
-
-  /* On dark the brighter green carries near-black text at 8.7:1 */
-  --btn-accent-bg: #22c55e;
-  --btn-accent-fg: #08080b;
-  --btn-accent-hover: #4ade80;
-
-  --oye-ink: #ffffff;
-  --oye-dot: #22c55e;
-
-  --neg-bg: rgba(239, 68, 68, 0.08);
-  --neg-fg: #fca5a5;
-  --neg-border: rgba(239, 68, 68, 0.22);
-
-  --chrome-bg: #1a1a20;
-  --chrome-url-bg: #0e0e12;
-
-  --aurora-1: #15803d;
-  --aurora-2: #166534;
-  --aurora-opacity: 0.35;
-
-  --btn-primary-bg: #27272a;
-  --btn-primary-hover: #3f3f46;
-  --btn-primary-fg: #fafafa;
-
-  --shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 16px 40px -8px rgba(0, 0, 0, 0.5), 0 4px 12px -4px rgba(0, 0, 0, 0.35);
-
-  color-scheme: dark;
-}
-
 
 * { box-sizing: border-box; }
 *::before, *::after { box-sizing: border-box; }
@@ -449,31 +392,6 @@ p { margin: 0; color: var(--text-secondary); }
   margin: 0;
 }
 
-/* ===== Theme toggle (used in Nav) ===== */
-.theme-toggle {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 999px;
-  background: transparent;
-  border: 1px solid var(--border-strong);
-  color: var(--text-secondary);
-  transition: color 0.15s var(--ease), background 0.15s var(--ease), border-color 0.15s var(--ease);
-  position: relative;
-}
-.theme-toggle:hover {
-  color: var(--text);
-  background: var(--bg-subtle);
-  border-color: var(--border-emphasis);
-}
-.theme-toggle svg { width: 16px; height: 16px; }
-.theme-toggle .icon-sun { display: none; }
-.theme-toggle .icon-moon { display: block; }
-:root[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
-:root[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
-
 /* ===== Floating cookie button ===== */
 .cookie-fab {
   position: fixed;
@@ -612,13 +530,4 @@ p { margin: 0; color: var(--text-secondary); }
 .switch input:checked ~ .knob {
   transform: translateX(16px);
   background: var(--text-inverse);
-}
-:root[data-theme="dark"] .switch input:checked ~ .knob {
-  background: var(--text);
-}
-
-/* The CTA's aurora glow doubles up with the card's own gradient on dark, so it is dropped there.
-   The rest of this block used to re-declare dark backgrounds the tokens already produce. */
-:root[data-theme="dark"] .cta-aurora {
-  display: none;
 }

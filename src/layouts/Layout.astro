@@ -8,7 +8,7 @@ interface Props {
 
 const {
   title = 'Own Your eCommerce. Custom stores. No monthly fees. Forever yours.',
-  description = 'Custom eCommerce stores with built-in inventory, production, CRM, marketing, and support systems. Zero monthly fees, total code ownership, Helcim payments, and FedEx and UPS shipping. Escape Wix and Shopify.',
+  description = 'One backend for your whole company: storefront, inventory, production, CRM, support, tickets, time clock, and approvals, with AI built in. Zero monthly fees and total code ownership.',
 } = Astro.props;
 
 const isNotFound = Astro.url.pathname.startsWith('/404');
@@ -46,8 +46,8 @@ const schema = {
     <link rel="icon" href="/oye-icon.svg?v=2" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    <meta name="theme-color" content="#ffffff" id="themeColorMeta" />
-    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="color-scheme" content="light" />
     <meta name="description" content={description} />
     {isNotFound ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
 
@@ -62,20 +62,6 @@ const schema = {
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&display=swap"
       rel="stylesheet"
     />
-
-    <script is:inline>
-      (function () {
-        try {
-          var stored = localStorage.getItem('theme');
-          var theme = stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-          document.documentElement.setAttribute('data-theme', theme);
-          var m = document.getElementById('themeColorMeta');
-          if (m) m.setAttribute('content', theme === 'dark' ? '#08080b' : '#ffffff');
-        } catch (e) {
-          document.documentElement.setAttribute('data-theme', 'light');
-        }
-      })();
-    </script>
 
     <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
 
