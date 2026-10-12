@@ -7,7 +7,7 @@ const toc = [
   { id: 'this-site', label: 'This website' },
   { id: 'stores-we-build', label: 'Stores we build' },
   { id: 'payments', label: 'Payments' },
-  { id: 'access', label: 'Access and ownership' },
+  { id: 'access', label: 'Account access' },
   { id: 'reporting', label: 'Reporting a vulnerability' },
 ];
 const mail = `mailto:${site.email}?subject=${encodeURIComponent('Security report')}`;
@@ -24,7 +24,7 @@ const mail = `mailto:${site.email}?subject=${encodeURIComponent('Security report
   <p>
     Many store breaches start with an outdated plugin, a shared password, or third-party code nobody
     reviewed. We avoid those by design: custom code instead of plugins, as few moving parts as possible, and
-    accounts that stay in your name.
+    tight access control on every account we touch.
   </p>
 
   <h2 id="this-site">This website</h2>
@@ -41,16 +41,16 @@ const mail = `mailto:${site.email}?subject=${encodeURIComponent('Security report
   <p>Every store is built for its owner, but these practices apply to every project:</p>
   <ul>
     <li>
-      <strong>No plugin sprawl.</strong> Features are built into your codebase, so there's no marketplace
+      <strong>No plugin sprawl.</strong> Features are built into your system, so there's no marketplace
       code with its own update schedule and vulnerabilities.
     </li>
     <li>
-      <strong>Encrypted everywhere.</strong> HTTPS on every page, plus DDoS protection from your hosting
-      provider's edge network.
+      <strong>Encrypted everywhere.</strong> HTTPS on every page, plus DDoS protection at the edge
+      network.
     </li>
     <li>
-      <strong>Secrets out of the code.</strong> API keys for payments, shipping, and accounting live in your
-      host's encrypted environment settings, never in the repository.
+      <strong>Secrets out of the code.</strong> API keys for payments, shipping, and accounting live in
+      encrypted environment settings, never in the code.
     </li>
     <li>
       <strong>Tracked changes.</strong> Every change goes through version control, so it's reviewed,
@@ -66,17 +66,16 @@ const mail = `mailto:${site.email}?subject=${encodeURIComponent('Security report
   <p>
     Card payments go through PCI DSS compliant processors such as Helcim. We use the processor's secure
     payment fields, so card numbers go straight to the processor and are never sent through or stored on
-    your store's servers. That keeps most of the PCI compliance burden with the processor.
+    the store's servers. That keeps most of the PCI compliance burden with the processor.
   </p>
 
-  <h2 id="access">Access and ownership</h2>
+  <h2 id="access">Account access</h2>
   <ul>
     <li>
-      Your domain, hosting, payment, and shipping accounts are registered to you. We use our own logins with
-      only the access we need, and you can revoke it at any time.
+      We work from our own logins with only the access we need, and you can revoke it at any time.
     </li>
     <li>We use two-factor authentication on every account we use to work on client projects.</li>
-    <li>When a project ends, or whenever you ask, we hand everything over and remove our access.</li>
+    <li>When a project ends, or whenever you ask, we remove our access to your accounts.</li>
   </ul>
 
   <h2 id="reporting">Reporting a vulnerability</h2>

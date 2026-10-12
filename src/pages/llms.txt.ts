@@ -6,7 +6,7 @@ export const GET: APIRoute = ({ site }) => {
   const url = (path: string) => new URL(path, site).href;
   const body = `# ${business.name}
 
-> ${business.name} (oye.) builds custom eCommerce stores with built-in inventory, production, CRM, marketing, and support systems. Clients own all of the code, pay one flat build fee, and pay no monthly platform fees.
+> ${business.name} (oye.) builds one custom system that runs a whole company: storefront, inventory, warehousing, manufacturing, CRM, marketing, support, time clocking, and internal operations, with AI built into every screen. Clients pay one flat build fee, pay no monthly platform fees, and everything is built to their specification.
 
 ## Services
 
