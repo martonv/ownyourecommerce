@@ -1,0 +1,66 @@
+---
+// The window frame the product sits in (DESIGN.md §3). Neutral dots, a muted URL label,
+// 16px radius and the one real shadow on the page.
+interface Props {
+  label?: string;
+  class?: string;
+}
+
+const { label = 'app.juniperworkshop.com', class: className } = Astro.props;
+---
+
+<div class:list={['frame', className]}>
+  <div class="frame-bar">
+    <span class="frame-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="frame-url">{label}</span>
+  </div>
+  <div class="frame-body">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .frame {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    background: var(--bg);
+    overflow: hidden;
+    box-shadow: var(--shadow-frame);
+  }
+  .frame-bar {
+    position: relative;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 12px;
+    background: var(--bg-subtle);
+    border-bottom: 1px solid var(--border);
+  }
+  .frame-dots {
+    display: inline-flex;
+    gap: 6px;
+  }
+  .frame-dots i {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--border-strong);
+  }
+  .frame-url {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+  .frame-body {
+    background: var(--bg);
+  }
+
+  @media (max-width: 560px) {
+    /* the centered URL would collide with the dots */
+    .frame-url { display: none; }
+  }
+</style>

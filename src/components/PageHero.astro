@@ -1,0 +1,49 @@
+---
+// Shared hero for the inner pages. Left aligned, quiet, no product frame of its own:
+// each page decides what visual follows.
+interface Props {
+  label: string;
+  title: string;
+  lead: string;
+}
+
+const { label, title, lead } = Astro.props;
+---
+
+<section class="page-hero">
+  <div class="container">
+    <p class="eyebrow" data-reveal>{label}</p>
+    <h1 data-reveal>{title}</h1>
+    <p class="lead" data-reveal>{lead}</p>
+    <div class="actions" data-reveal>
+      <a href="/#contact" class="btn btn-primary">Book a stack review</a>
+      <a href="/demo" class="btn btn-secondary">Try the demo <span class="arrow" aria-hidden="true">→</span></a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .page-hero {
+    padding: clamp(48px, 7vw, 88px) 0 clamp(40px, 5vw, 64px);
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+  .page-hero h1 {
+    margin: 14px 0 20px;
+    font-size: clamp(2.25rem, 4.4vw, 3.5rem);
+    max-width: 18ch;
+  }
+  .page-hero .lead { max-width: 62ch; }
+  .actions {
+    margin-top: 28px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .actions .arrow { display: inline-block; transition: transform 0.18s var(--ease); }
+  .actions a:hover .arrow { transform: translateX(2px); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .actions .arrow { transition: none; }
+  }
+</style>

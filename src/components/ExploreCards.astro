@@ -1,0 +1,100 @@
+---
+const cards = [
+  {
+    href: '/systems',
+    label: 'Systems',
+    title: 'Five systems, one database.',
+    body: 'Storefront, inventory, production, CRM and internal tools, and what consolidating them saves and earns.',
+  },
+  {
+    href: '/growth',
+    label: 'Growth',
+    title: 'Reach, and agents that work.',
+    body: 'Channels that read live stock, and assistants that clear the queues your team never gets to.',
+  },
+  {
+    href: '/process',
+    label: 'Process',
+    title: 'We start with your teams.',
+    body: 'How we map the work each team actually does, what we replace, and what we connect to instead.',
+  },
+];
+---
+
+<section class="section explore">
+  <div class="container">
+    <ul class="cards">
+      {cards.map((c) => (
+        <li data-reveal>
+          <a href={c.href}>
+            <span class="label">{c.label}</span>
+            <span class="title">{c.title}</span>
+            <span class="body">{c.body}</span>
+            <span class="more">Read more <span aria-hidden="true">→</span></span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .explore {
+    background: var(--bg);
+    padding: clamp(56px, 7vw, 88px) 0;
+    border-top: 1px solid var(--border);
+  }
+  .cards {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .cards a {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    height: 100%;
+    padding: 28px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--bg);
+    transition: border-color 0.18s var(--ease);
+  }
+  .cards a:hover { border-color: var(--border-strong); }
+  .label {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--text-muted);
+  }
+  .title {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--text);
+  }
+  .body {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--text-body);
+  }
+  .more {
+    margin-top: auto;
+    padding-top: 14px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text);
+  }
+  .more span { display: inline-block; transition: transform 0.18s var(--ease); }
+  .cards a:hover .more span { transform: translateX(2px); }
+
+  @media (max-width: 900px) {
+    .cards { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .more span { transition: none; }
+  }
+</style>

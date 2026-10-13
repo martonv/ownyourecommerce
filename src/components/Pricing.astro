@@ -1,0 +1,89 @@
+---
+// COPY.md §9. The two price figures in the file are still [TODO], so those rows are not shown.
+const rows = [
+  { label: 'Timeline', value: '8–16 weeks depending on scope' },
+  { label: 'After launch', value: 'An optional support and features retainer' },
+];
+---
+
+<section class="section pricing" id="pricing">
+  <div class="container">
+    <div class="card" data-reveal>
+      <p class="eyebrow">Pricing</p>
+      <h2>One price, agreed up front.</h2>
+      <p>
+        Every system is scoped to your business, so we quote after the stack review. To give you a
+        sense of scale:
+      </p>
+
+      <dl>
+        {rows.map((r) => (
+          <div class="row">
+            <dt>{r.label}</dt>
+            <dd>{r.value}</dd>
+          </div>
+        ))}
+      </dl>
+
+      <a href="#contact" class="btn btn-primary">Book a stack review</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .pricing {
+    background: var(--bg-subtle);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .card {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: clamp(28px, 4vw, 40px);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    text-align: center;
+  }
+  .card h2 {
+    margin: 10px auto 14px;
+    max-width: 18ch;
+  }
+  .card > p {
+    margin: 0 auto;
+    color: var(--text-body);
+  }
+
+  dl {
+    margin: 28px 0;
+    border-top: 1px solid var(--border);
+  }
+  .row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+  }
+  dt {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--text);
+  }
+  dd {
+    margin: 0;
+    font-size: 0.9375rem;
+    color: var(--text-body);
+    text-align: right;
+  }
+
+  .card .btn { width: 100%; }
+
+  @media (max-width: 480px) {
+    .row { flex-direction: column; gap: 2px; }
+    dd { text-align: left; }
+  }
+</style>

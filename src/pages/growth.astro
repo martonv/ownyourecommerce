@@ -1,0 +1,257 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import PageHero from '../components/PageHero.astro';
+import CtaBand from '../components/CtaBand.astro';
+
+const channels = [
+  {
+    title: 'Google Ads and Merchant Center',
+    body: 'A product feed synced from live inventory, free listings, Shopping and Performance Max campaigns, and conversion tracking from day one.',
+    tags: ['Live feed', 'Performance Max'],
+  },
+  {
+    title: 'Search and answer engines',
+    body: 'Fast pages, structured data and answer-ready content, so you rank on Google and get recommended by the assistants people now ask what to buy.',
+    tags: ['Schema markup', 'llms.txt'],
+  },
+  {
+    title: 'Social commerce',
+    body: 'TikTok Shop, Instagram, Facebook and YouTube catalogs synced with your stock, with their orders landing in the same queue as your site.',
+    tags: ['Catalog sync', 'One order queue'],
+  },
+  {
+    title: 'International selling',
+    body: 'Local currencies, translated storefronts, and duties and taxes calculated at checkout, so international shoppers see the full price up front.',
+    tags: ['Multi-currency', 'Duties at checkout'],
+  },
+  {
+    title: 'Affiliates and creators',
+    body: 'Referral links, creator codes and commission tracking, with payouts calculated from real orders that were not returned.',
+    tags: ['Creator codes', 'Payout reports'],
+  },
+  {
+    title: 'Server-side tracking',
+    body: 'Ad platform events sent from your server rather than the browser, so campaigns keep seeing conversions, always within the shopper\'s consent choice.',
+    tags: ['Conversions API', 'Consent-aware'],
+  },
+];
+
+const agents = [
+  {
+    title: 'A shopping assistant on your catalog',
+    body: 'Answers product, stock, shipping and order questions from your real data, and hands the conversation to your team the moment it should.',
+    works: 'Works the chat queue overnight',
+  },
+  {
+    title: 'A copywriter that knows the product',
+    body: 'Drafts product descriptions, emails and ad variants in your brand voice from the catalog itself, ready for someone to approve.',
+    works: 'Clears the backlog of unwritten listings',
+  },
+  {
+    title: 'Triage for every inbound message',
+    body: 'Chat, SMS and email arrive in one inbox already sorted, with the customer\'s orders and history attached to the thread.',
+    works: 'Cuts the time before a reply',
+  },
+  {
+    title: 'Routing for internal tickets',
+    body: 'A raised ticket gets its queue, its priority and the work order it belongs to, without anyone triaging the list by hand.',
+    works: 'Keeps the shop floor moving',
+  },
+  {
+    title: 'Risk scoring before you ship',
+    body: 'Risky orders are held for review using address checks, processor signals and your own rules, instead of being discovered at chargeback.',
+    works: 'Protects the margin you already earned',
+  },
+  {
+    title: 'Restock and demand prompts',
+    body: 'Reorder points and open demand are watched against live stock, so purchase orders get raised before a bestseller runs out.',
+    works: 'Stops the stockout that costs the sale',
+  },
+];
+
+const convert = [
+  {
+    title: 'A/B testing measured in orders',
+    body: 'Test headlines, layouts, offers and prices on real traffic, then ship the winner. Results are counted in revenue, not clicks.',
+  },
+  {
+    title: 'Reviews, loyalty and referrals',
+    body: 'Photo reviews, product questions, points and referral codes that live in your own system instead of another monthly app.',
+  },
+  {
+    title: 'Email and SMS that react to real events',
+    body: 'Abandoned cart, back in stock, post-purchase and win-back flows triggered by actual orders and stock levels.',
+  },
+  {
+    title: 'Gift cards, pre-orders and bundles',
+    body: 'Store credit, deposits on back-orders, and bundles that draw down the right components from the right warehouse.',
+  },
+];
+---
+
+<Layout
+  title="Growth | Own Your eCommerce"
+  description="Integrations that put your catalog where buyers are, and agents that work the queues your team never gets to, all on the same data as your orders."
+>
+  <Nav />
+  <main id="main" tabindex="-1">
+    <PageHero
+      label="Growth"
+      title="Connected systems sell more."
+      lead="Every integration puts your catalog, stock and customers where buyers already are. Every agent works a queue your team never gets to. Both run on the same records as your orders, so nothing is guessing from a stale export."
+    />
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow">Reach</p>
+          <h2>Where your products show up.</h2>
+          <p class="lead">
+            Channels read from live inventory, and their orders come back into the same queue as your
+            website's. Adding one is a configuration, not another system to run.
+          </p>
+        </div>
+
+        <ul class="grid">
+          {channels.map((c) => (
+            <li class="card" data-reveal>
+              <h3>{c.title}</h3>
+              <p>{c.body}</p>
+              <ul class="tags">
+                {c.tags.map((t) => <li>{t}</li>)}
+              </ul>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section class="section section-subtle">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow">Agents</p>
+          <h2>Work that happens without anyone starting it.</h2>
+          <p class="lead">
+            Each one reads your own catalog, stock and orders, acts inside rules you set, and hands
+            over to a person when it is not sure.
+          </p>
+        </div>
+
+        <ul class="agents">
+          {agents.map((a) => (
+            <li class="agent" data-reveal>
+              <div>
+                <h3>{a.title}</h3>
+                <p>{a.body}</p>
+              </div>
+              <span class="works">{a.works}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow">Convert and keep</p>
+          <h2>The revenue you already have, kept.</h2>
+        </div>
+
+        <ul class="grid two">
+          {convert.map((c) => (
+            <li class="card" data-reveal>
+              <h3>{c.title}</h3>
+              <p>{c.body}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <CtaBand
+      title="Find the revenue your stack is leaking."
+      body="We map where your catalog, stock and customer data stop short today, and what connecting them would be worth."
+    />
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  .grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .grid.two { grid-template-columns: repeat(2, 1fr); }
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 24px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    transition: border-color 0.18s var(--ease);
+  }
+  .card:hover { border-color: var(--border-strong); }
+  .card h3 { font-size: 1.0625rem; }
+  .card p { font-size: 0.9375rem; }
+  .tags {
+    list-style: none;
+    margin: auto 0 0;
+    padding: 12px 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .tags li {
+    padding: 2px 9px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--bg-muted);
+    font-size: 0.6875rem;
+    color: var(--text-muted);
+  }
+
+  .agents {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--border);
+  }
+  .agent {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: start;
+    gap: 24px;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .agent h3 { font-size: 1.0625rem; margin-bottom: 4px; }
+  .agent p { font-size: 0.9375rem; max-width: 64ch; }
+  .works {
+    align-self: center;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+    font-size: 0.75rem;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 1024px) {
+    .grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 680px) {
+    .grid, .grid.two { grid-template-columns: 1fr; }
+    .agent { grid-template-columns: 1fr; gap: 10px; }
+    .works { align-self: start; }
+  }
+</style>

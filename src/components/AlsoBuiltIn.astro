@@ -1,0 +1,84 @@
+---
+// COPY.md §8. A plain two-column list, deliberately not cards.
+const items = [
+  'B2B and wholesale portal',
+  'Quotes and RFQs',
+  'Product configurators',
+  'Point of sale',
+  'EDI for retail partners',
+  'Returns and warranties',
+  'AI assistant grounded in your own data',
+  'Marketing integrations (email, ads, merchant feeds)',
+];
+---
+
+<section class="section also" id="also">
+  <div class="container">
+    <div class="head" data-reveal>
+      <h2>Room to grow.</h2>
+    </div>
+
+    <ul class="list" data-reveal>
+      {items.map((item) => (
+        <li>
+          <svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+            <path d="M3 8.5l3.5 3.5L13 5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          {item}
+        </li>
+      ))}
+    </ul>
+
+    <p class="note" data-reveal>
+      If a process runs your business, we can build it in.
+      <a href="#contact">Tell us what yours needs <span aria-hidden="true">→</span></a>
+    </p>
+  </div>
+</section>
+
+<style>
+  /* a tighter section than the rest, per DESIGN.md §4.8 */
+  .also {
+    background: var(--bg);
+    padding: 80px 0;
+    border-top: 1px solid var(--border);
+  }
+  .head { margin-bottom: 28px; }
+
+  .list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px clamp(24px, 5vw, 64px);
+  }
+  .list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 0.9375rem;
+    color: var(--text);
+  }
+  .list svg { flex: none; margin-top: 3px; color: var(--text-muted); }
+
+  .note {
+    margin-top: 28px;
+    font-size: 0.9375rem;
+    color: var(--text-muted);
+    max-width: none;
+  }
+  .note a {
+    color: var(--text);
+    font-weight: 500;
+  }
+  .note a span { display: inline-block; transition: transform 0.18s var(--ease); }
+  .note a:hover span { transform: translateX(2px); }
+
+  @media (max-width: 640px) {
+    .list { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .note a span { transition: none; }
+  }
+</style>

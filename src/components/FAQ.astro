@@ -1,149 +1,156 @@
 ---
+// COPY.md §10. The "who owns the code and data" question is deliberately not here.
 const faqs = [
   {
-    q: 'Why is there no monthly fee?',
-    a: 'Because you\'re paying us to build software, not to rent it. A Shopify or Wix subscription is a recurring license to use someone else\'s platform. You pay once for a system built to your specification, and there is nothing to subscribe to afterwards.',
+    q: 'Do we have to leave our current platform?',
+    a: 'No. Many clients keep the storefront they have, Shopify or otherwise, and replace what sits behind it: the inventory system, the CRM and the connectors holding them together. We recommend whichever is cheaper and simpler for you.',
   },
   {
-    q: 'Why no plugins?',
-    a: 'Plugins are a tax. They duplicate functionality, conflict with each other, slow down your store, renew on their own schedules, and break when their authors abandon them. We build the features you need directly into your system, where they\'re fast and accountable to one team. Ours.',
+    q: 'Can we keep software we already use?',
+    a: 'Yes. If a tool earns its place, we connect to it instead of replacing it. Anything with an API can stay: your accounting, your email platform, your 3PL, your CRM. We will tell you honestly which ones are worth keeping.',
   },
   {
-    q: 'Can you replace our inventory or ERP software?',
-    a: 'Often, yes. We build inventory, warehousing, and production into the same system as your store, so stock, orders, and work orders share one database. If you\'d rather keep an ERP like NetSuite, we integrate with it instead of replacing it.',
+    q: 'How do you migrate our existing data?',
+    a: 'We export items, locations, bills of materials, open orders and history from whatever you run today, then run both systems side by side until the counts match. You do not switch over until they do.',
   },
   {
-    q: 'Do you build for manufacturers?',
-    a: 'Yes. Bills of materials, work orders, routing, capacity planning, shop floor views, and material requirements, set up around how your shop actually runs, whether you make to stock, make to order, or both.',
+    q: 'What does it cost after launch?',
+    a: 'Ongoing development is optional: a monthly retainer, or project by project. Nothing renews on its own.',
   },
   {
-    q: 'Can the built-in CRM replace HubSpot or Salesforce?',
-    a: 'For many businesses it can: contacts, companies, deals, tasks, and full order history in one place, with no per-seat fees. If your team lives in HubSpot or Salesforce, we sync with them instead.',
-  },
-  {
-    q: 'Can you build our internal software too, not just the store?',
-    a: 'That is a large part of what we do. Ticket queues, clock in and out, timesheets, time off and approvals, SOPs, asset tracking, and the dashboards your managers live in, all on the same backend as your orders and stock, so nobody retypes anything between systems. AI is wired into those screens too, drafting replies, summarizing threads, and flagging what needs a person.',
-  },
-  {
-    q: 'What if we need something no software does?',
-    a: 'That\'s exactly what we\'re for. Quote builders, product configurators, dealer portals, custom pricing rules, automations: if a process runs your business, we can build software for it.',
-  },
-  {
-    q: 'What is AEO?',
-    a: 'Answer engine optimization. More shoppers now ask ChatGPT, Perplexity, or Google\'s AI Overviews what to buy, and those tools recommend stores whose product data they can read and trust. We publish clean structured data, answer-ready FAQs, an llms.txt file, and a live product feed, so AI assistants can find and recommend your products.',
-  },
-  {
-    q: 'Will the AI chatbot make things up?',
-    a: 'It\'s set up to answer only from your own catalog, live inventory, order data, and policies, and to hand the conversation to your team when it isn\'t sure or a customer asks for a person. Every conversation is saved in your inbox, so you can review what it said.',
-  },
-  {
-    q: 'How is 99.999% uptime possible?',
-    a: 'We deploy to a global edge network with automatic failover, DDoS protection, and SSL. The major edge providers publish SLAs at 99.999%, which is roughly 26 seconds of downtime per month, and we tune the setup around your traffic.',
-  },
-  {
-    q: 'How long does a build take?',
-    a: 'Storefront builds typically launch in 6 to 10 weeks. Larger commerce builds with custom workflows and B2B logic run 10 to 16 weeks. We give you a fixed timeline up front, with weekly reviews.',
-  },
-  {
-    q: 'What if I need new features after launch?',
-    a: 'We offer ongoing engineering retainers where we add features, integrations, and optimizations every month. Or you can hire us project by project, as things come up. Your call, every time.',
-  },
-  {
-    q: 'Can you migrate me from Shopify, Wix, BigCommerce, or WooCommerce?',
-    a: 'Yes. Products, customers, orders, content, SEO redirects, and historical data. We sequence the migration so your old store stays live until the new one is fully tested. Zero downtime, zero lost orders.',
+    q: 'How long does it take?',
+    a: 'Most consolidation projects take 8–16 weeks. You\'ll see working software in the first few weeks and every week after.',
   },
 ];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
 ---
 
 <section class="section faq" id="faq">
-  <div class="container">
-    <div class="section-head" data-reveal>
-      <span class="eyebrow">Questions</span>
-      <h2>The things people <span class="text-accent">actually ask us</span></h2>
+  <div class="container grid">
+    <div class="head" data-reveal>
+      <p class="eyebrow">FAQ</p>
+      <h2>Questions we get asked.</h2>
     </div>
 
-    <div class="faq-list">
+    <div class="list" data-reveal>
       {faqs.map((f, i) => (
-        <details class="faq-item" data-reveal open={i === 0}>
-          <summary>
-            <span class="q">{f.q}</span>
-            <span class="chev" aria-hidden="true">
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75">
-                <path d="M4 6l4 4 4-4" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </span>
-          </summary>
-          <div class="a">{f.a}</div>
-        </details>
+        <div class="item">
+          <h3>
+            <button type="button" aria-expanded="false" aria-controls={`faq-a-${i}`} id={`faq-q-${i}`} data-faq>
+              <span>{f.q}</span>
+              <span class="icon" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="answer" id={`faq-a-${i}`} role="region" aria-labelledby={`faq-q-${i}`}>
+            <div class="answer-inner">
+              <p>{f.a}</p>
+            </div>
+          </div>
+        </div>
       ))}
     </div>
   </div>
 </section>
 
-<script
-  is:inline
-  type="application/ld+json"
-  set:html={JSON.stringify({
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
-  })}
-/>
+<script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
+
+<script>
+  for (const btn of document.querySelectorAll<HTMLButtonElement>('[data-faq]')) {
+    btn.addEventListener('click', () => {
+      const open = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!open));
+      btn.closest('.item')?.classList.toggle('is-open', !open);
+    });
+  }
+</script>
 
 <style>
-  .faq { background: var(--bg-subtle); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-  .faq-list {
-    max-width: 760px;
-    margin: 0 auto;
+  .faq { background: var(--bg); border-top: 1px solid var(--border); }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 4fr 8fr;
+    gap: clamp(24px, 5vw, 64px);
+    align-items: start;
+  }
+  .head {
+    position: sticky;
+    top: 104px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 12px;
   }
-  .faq-item {
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    background: var(--surface);
-    overflow: hidden;
-    transition: border-color 0.18s var(--ease), box-shadow 0.18s var(--ease);
-  }
-  .faq-item:hover {
-    border-color: var(--border-strong);
-  }
-  .faq-item[open] {
-    border-color: var(--border-strong);
-    box-shadow: var(--shadow-sm);
-  }
-  summary {
-    list-style: none;
-    cursor: pointer;
-    padding: 16px 20px;
+
+  .list { border-top: 1px solid var(--border); }
+  .item { border-bottom: 1px solid var(--border); }
+  .item h3 { margin: 0; font-size: inherit; letter-spacing: 0; }
+
+  .item button {
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    color: var(--text);
-    font-size: 0.98rem;
+    padding: 18px 0;
+    border: 0;
+    background: transparent;
+    text-align: left;
+    font-size: 1rem;
     font-weight: 500;
+    color: var(--text);
   }
-  summary::-webkit-details-marker { display: none; }
-  .q { flex: 1; }
-  .chev {
-    display: inline-flex;
-    width: 28px;
-    height: 28px;
-    align-items: center;
-    justify-content: center;
-    border-radius: 6px;
-    color: var(--text-secondary);
-    transition: transform 0.2s var(--ease), background 0.15s var(--ease);
+  .item button:hover { color: var(--text-body); }
+
+  .icon {
+    position: relative;
+    flex: none;
+    width: 14px;
+    height: 14px;
+    transition: transform 0.2s var(--ease);
   }
-  .faq-item[open] .chev { transform: rotate(180deg); }
-  summary:hover .chev { background: var(--bg-muted); color: var(--text); }
-  .a {
-    padding: 0 20px 20px;
-    color: var(--text-secondary);
-    font-size: 0.92rem;
-    line-height: 1.6;
-    max-width: 64ch;
+  .icon::before,
+  .icon::after {
+    content: '';
+    position: absolute;
+    inset: 50% 0 auto;
+    height: 1.5px;
+    background: var(--text-muted);
+  }
+  .icon::after { transform: rotate(90deg); }
+  .is-open .icon { transform: rotate(45deg); }
+
+  .answer {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.2s var(--ease);
+  }
+  .is-open .answer { grid-template-rows: 1fr; }
+  .answer-inner {
+    overflow: hidden;
+    /* keeps links inside a closed answer out of the tab order */
+    visibility: hidden;
+  }
+  .is-open .answer-inner { visibility: visible; }
+  .answer p {
+    padding-bottom: 18px;
+    font-size: 0.9375rem;
+    color: var(--text-body);
+  }
+
+  @media (max-width: 1024px) {
+    .grid { grid-template-columns: 1fr; }
+    .head { position: static; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .answer, .icon { transition: none; }
   }
 </style>

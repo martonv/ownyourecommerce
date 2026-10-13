@@ -1,0 +1,275 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import PageHero from '../components/PageHero.astro';
+import ProductFrame from '../components/ProductFrame.astro';
+import HeroDashboard from '../components/HeroDashboard.astro';
+import CtaBand from '../components/CtaBand.astro';
+
+const systems = [
+  {
+    title: 'Storefront and orders',
+    replaces: 'Your ecommerce platform and its order apps',
+    body: 'Web, wholesale and marketplace orders land in one queue, with stock and production status beside each one.',
+    points: ['Multichannel order queue', 'Wholesale pricing and net terms', 'Fulfilment that drops stock as it happens'],
+  },
+  {
+    title: 'Inventory and warehousing',
+    replaces: 'A separate inventory or warehouse subscription',
+    body: 'Know what you have, where it is, and when to reorder, across every warehouse you run.',
+    points: [
+      'Stock by warehouse, aisle and bin',
+      'Barcode receiving, picking and cycle counts',
+      'Purchase orders and reorder points',
+      'Lot, batch and serial tracking',
+    ],
+  },
+  {
+    title: 'Production and manufacturing',
+    replaces: 'A separate MRP or shop floor tool',
+    body: 'Plan, build and track every job from the order that triggered it to the day it ships.',
+    points: [
+      'Multi-level bills of materials',
+      'Work orders from web and wholesale demand',
+      'Material checks before you promise a date',
+      'Routing, stations and capacity planning',
+    ],
+  },
+  {
+    title: 'CRM and customer data',
+    replaces: 'Per-seat CRM licences',
+    body: 'Every contact, company, deal and order in one place, with no per-seat subscription.',
+    points: [
+      'Deal pipelines for wholesale and B2B',
+      'Full order and conversation history',
+      'Tasks, reminders and account owners',
+      'Two-way sync with the CRM you keep',
+    ],
+  },
+  {
+    title: 'Internal tools and team ops',
+    replaces: 'Ticketing, time tracking and approval apps',
+    body: 'The software your team lives in all day, on the same system as your orders.',
+    points: [
+      'Internal ticket queues and requests',
+      'Clock in, clock out and timesheets',
+      'Time off, approvals and sign-offs',
+      'Equipment and asset tracking',
+    ],
+  },
+];
+
+const saves = [
+  {
+    title: 'One build instead of three renewals',
+    body: 'The platform fee, the inventory subscription and the per-seat CRM stop renewing. You pay once for the system that replaces them.',
+  },
+  {
+    title: 'No connector bill',
+    body: 'There is nothing between the systems to pay for, monitor or repair, because there are no systems to connect.',
+  },
+  {
+    title: 'Headcount that scales with orders, not seats',
+    body: 'Adding someone to the warehouse or the sales team costs nothing in licences. Everyone works in the same system.',
+  },
+];
+
+const earns = [
+  {
+    title: 'Stock you can sell with confidence',
+    body: 'Availability is read from the same record the warehouse picks from, so overselling stops being a weekly cleanup job.',
+  },
+  {
+    title: 'Quotes and orders that move the same day',
+    body: 'Sales sees stock and production status while the customer is still on the phone, instead of waiting on someone to check.',
+  },
+  {
+    title: 'Hours back from retyping',
+    body: 'An order becomes a work order, a pick, a shipment and a journal entry without anyone copying it between tools.',
+  },
+];
+---
+
+<Layout
+  title="Systems | Own Your eCommerce"
+  description="Storefront, inventory, production, CRM and internal tools on one database, replacing the subscriptions and connectors between them."
+>
+  <Nav />
+  <main id="main" tabindex="-1">
+    <PageHero
+      label="Systems"
+      title="Every system, one database."
+      lead="Storefront, inventory, production, CRM and the internal tools your team uses all day stop being separate products. One record moves through all of them, so nobody retypes anything and nothing drifts out of sync."
+    />
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow">What we bring together</p>
+          <h2>Five systems that usually have five bills.</h2>
+        </div>
+
+        <ul class="systems">
+          {systems.map((s) => (
+            <li class="card" data-reveal>
+              <div class="card-head">
+                <h3>{s.title}</h3>
+                <span class="replaces">{s.replaces}</span>
+              </div>
+              <p>{s.body}</p>
+              <ul class="points">
+                {s.points.map((point) => (
+                  <li>
+                    <svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+                      <path d="M3 8.5l3.5 3.5L13 5" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    {point}
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section class="section section-subtle">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow">Seeing it</p>
+          <h2>The same admin your team would use.</h2>
+          <p class="lead">
+            Every module above is one tab of the same back office. This is a still of it. The demo is
+            the real thing, running on sample data.
+          </p>
+        </div>
+        <div data-reveal>
+          <ProductFrame>
+            <HeroDashboard />
+          </ProductFrame>
+        </div>
+        <p class="frame-note" data-reveal>
+          <a href="/demo">Open the full demo <span aria-hidden="true">→</span></a>
+        </p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="two-up">
+          <div data-reveal>
+            <div class="section-head">
+              <p class="eyebrow">What it saves</p>
+              <h2>Money that stops leaving every month.</h2>
+            </div>
+            <ul class="plain">
+              {saves.map((s) => (
+                <li>
+                  <h3>{s.title}</h3>
+                  <p>{s.body}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div data-reveal>
+            <div class="section-head">
+              <p class="eyebrow">What it earns</p>
+              <h2>Time your team spends selling instead.</h2>
+            </div>
+            <ul class="plain">
+              {earns.map((s) => (
+                <li>
+                  <h3>{s.title}</h3>
+                  <p>{s.body}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <CtaBand />
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  .systems {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 28px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    transition: border-color 0.18s var(--ease);
+  }
+  .card:hover { border-color: var(--border-strong); }
+  .card-head { display: flex; flex-direction: column; gap: 6px; }
+  .replaces {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+  .card > p { font-size: 0.9375rem; }
+  .points {
+    list-style: none;
+    margin: auto 0 0;
+    padding: 12px 0 0;
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .points li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: var(--text);
+  }
+  .points svg { flex: none; margin-top: 3px; color: var(--text-muted); }
+
+  .frame-note { margin-top: 16px; font-size: 0.9375rem; }
+  .frame-note a { color: var(--text); font-weight: 500; }
+
+  .two-up {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(32px, 5vw, 64px);
+    align-items: start;
+  }
+  .two-up .section-head { margin-bottom: 28px; }
+  .plain {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .plain li {
+    padding: 18px 0;
+    border-top: 1px solid var(--border);
+  }
+  .plain li:first-child { border-top: 0; padding-top: 0; }
+  .plain h3 { font-size: 1.0625rem; margin-bottom: 4px; }
+  .plain p { font-size: 0.9375rem; }
+
+  @media (max-width: 1024px) {
+    .systems { grid-template-columns: repeat(2, 1fr); }
+    .two-up { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 680px) {
+    .systems { grid-template-columns: 1fr; }
+  }
+</style>

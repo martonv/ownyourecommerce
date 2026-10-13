@@ -1,145 +1,120 @@
 ---
-const stats = [
-  { value: '$0', label: 'Monthly fees' },
-  { value: '100%', label: 'Built to your spec' },
-  { value: '99.999%', label: 'Hosting uptime' },
-  { value: '0', label: 'Required plugins' },
-];
+import HeroDemo from './hero/HeroDemo';
 ---
 
 <section class="hero" id="top">
-  <div class="aurora" aria-hidden="true"></div>
-  <div class="grid-bg" aria-hidden="true"></div>
+  <div class="dots" aria-hidden="true"></div>
 
   <div class="container hero-inner">
-    <a href="#systems" class="badge" data-reveal>
-      <span class="dot"></span>
-      Built for companies done renting the software they run on
-      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-        <path d="M6 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </a>
+    <p class="eyebrow" data-reveal>For companies running their store, CRM and inventory in separate tools</p>
 
-    <h1 data-reveal>
-      Own your eCommerce.
-      <br />
-      <span class="text-accent">Forever.</span>
-    </h1>
+    <h1 data-reveal>Building the new standard for eCommerce businesses.</h1>
 
     <p class="lead" data-reveal>
-      One center for everything your company runs: store, inventory, manufacturing, time clocking, and
-      every internal operation, with AI wired through all of it. Pay once, built exactly how you
-      specify, and never a monthly fee.
+      We replace the patchwork of storefront, CRM and inventory tools with one system: orders,
+      customers, inventory and production on a single database. Built around how your team works.
+      Paid for once, owned by you.
     </p>
 
     <div class="hero-cta" data-reveal>
-      <a href="#contact" class="btn btn-primary btn-lg">
-        Get a custom quote
-        <svg class="arrow" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
-          <path d="M3 8h10M9 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </a>
-      <a href="#demo" class="btn btn-secondary btn-lg">Try the sample admin</a>
+      <a href="#contact" class="btn btn-primary">Book a stack review</a>
+      <a href="#product" class="btn btn-secondary">Try the live demo <span class="arrow" aria-hidden="true">→</span></a>
     </div>
 
-    <ul class="hero-stats" data-reveal>
-      {stats.map((s) => (
-        <li>
-          <div class="stat-v">{s.value}</div>
-          <div class="stat-l">{s.label}</div>
-        </li>
-      ))}
-    </ul>
+    <p class="micro" data-reveal>Free 45-minute review. You leave with a map of your stack either way.</p>
+  </div>
 
+  <div class="container frame-wrap">
+    {/* Hydrates only on wide screens; narrow ones keep the server-rendered still. */}
+    <HeroDemo client:media="(min-width: 1024px)" />
   </div>
 </section>
+
+<div class="stack-strip">
+  <div class="container">
+    <p>Replaces or connects to: Shopify · HubSpot · Fishbowl · QuickBooks · ShipStation</p>
+  </div>
+</div>
 
 <style>
   .hero {
     position: relative;
-    padding: clamp(28px, 4vw, 48px) 0 clamp(12px, 2vw, 20px);
-    overflow: hidden;
-    isolation: isolate;
-    /* the hero is not a .section, so it needs its own clearance under the sticky nav */
+    padding: clamp(56px, 7vw, 96px) 0 0;
     scroll-margin-top: 64px;
+    background: var(--bg);
   }
+
+  /* a very faint dot grid, faded out around the headline */
+  .dots {
+    position: absolute;
+    inset: 0 0 auto;
+    height: 560px;
+    background-image: radial-gradient(var(--border-strong) 1px, transparent 1px);
+    background-size: 28px 28px;
+    opacity: 0.5;
+    mask-image: radial-gradient(ellipse 60% 55% at 50% 30%, #000 0%, transparent 70%);
+    -webkit-mask-image: radial-gradient(ellipse 60% 55% at 50% 30%, #000 0%, transparent 70%);
+    pointer-events: none;
+  }
+
   .hero-inner {
     position: relative;
-    z-index: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 28px;
-  }
-  .badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 6px 12px 6px 10px;
-    border: 1px solid var(--border-strong);
-    background: var(--surface-raised);
-    border-radius: 999px;
-    font-size: 0.82rem;
-    color: var(--text-secondary);
-    transition: border-color 0.18s var(--ease), color 0.18s var(--ease), transform 0.18s var(--ease);
-    backdrop-filter: blur(8px);
-  }
-  .badge:hover {
-    border-color: var(--accent);
-    color: var(--text);
-    transform: translateY(-1px);
-  }
-  .badge .dot {
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 0 4px var(--accent-soft);
+    gap: 20px;
   }
 
-  h1 {
-    max-width: 18ch;
-    margin: 0 auto;
-  }
+  .hero-inner h1 { max-width: 24ch; }
+  .hero-inner .lead { max-width: 56ch; }
 
   .hero-cta {
     display: flex;
-    gap: 12px;
-    margin-top: 8px;
+    gap: 10px;
     flex-wrap: wrap;
     justify-content: center;
-  }
-
-  .hero-stats {
-    list-style: none;
-    margin: 28px 0 0;
-    padding: 22px;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 22px;
-    width: 100%;
-    max-width: 760px;
-    border: 1px solid var(--border);
-    background: var(--surface-raised);
-    backdrop-filter: blur(8px);
-    border-radius: var(--radius-lg);
-  }
-  .hero-stats li { text-align: center; }
-  .stat-v {
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: clamp(1.5rem, 2.2vw, 1.875rem);
-    letter-spacing: -0.025em;
-    color: var(--text);
-  }
-  .stat-l {
-    font-size: 0.8125rem;
-    color: var(--text-tertiary);
     margin-top: 4px;
-    letter-spacing: 0.01em;
+  }
+  .hero-cta .arrow { transition: transform 0.18s var(--ease); display: inline-block; }
+  .hero-cta a:hover .arrow { transform: translateX(2px); }
+
+  .micro {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    max-width: 48ch;
   }
 
-  @media (max-width: 880px) {
-    .hero-stats { grid-template-columns: repeat(2, 1fr); }
+  /* the frame overlaps the band below it */
+  .frame-wrap {
+    position: relative;
+    margin-top: 64px;
+    margin-bottom: -120px;
+  }
+  .frame-wrap :global(.hero-frame) {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .stack-strip {
+    background: var(--bg-subtle);
+    border-bottom: 1px solid var(--border);
+    padding: 164px 0 40px;
+  }
+  .stack-strip p {
+    margin: 0 auto;
+    max-width: none;
+    text-align: center;
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+  }
+
+  @media (max-width: 900px) {
+    .frame-wrap { margin-top: 48px; margin-bottom: -60px; }
+    .stack-strip { padding: 100px 0 32px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-cta .arrow { transition: none; }
   }
 </style>

@@ -2,29 +2,33 @@
 import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
 import Hero from '../components/Hero.astro';
-import DemoAdmin from '../components/demo/DemoAdmin.astro';
-import Systems from '../components/Systems.astro';
-import Growth from '../components/Growth.astro';
-import Custom from '../components/Custom.astro';
-import Integrations from '../components/Integrations.astro';
+import Problem from '../components/Problem.astro';
+import Solution from '../components/Solution.astro';
+import Walkthrough from '../components/Walkthrough.astro';
+import ExploreCards from '../components/ExploreCards.astro';
 import Comparison from '../components/Comparison.astro';
-import Process from '../components/Process.astro';
+import HowItWorks from '../components/HowItWorks.astro';
+import AlsoBuiltIn from '../components/AlsoBuiltIn.astro';
+import Pricing from '../components/Pricing.astro';
 import FAQ from '../components/FAQ.astro';
 import CTA from '../components/CTA.astro';
 import Footer from '../components/Footer.astro';
+
+// COPY.md §5 (case study) and §5b (team) are both entirely [TODO], so neither is rendered.
 ---
 
 <Layout>
   <Nav />
   <main id="main" tabindex="-1">
     <Hero />
-    <DemoAdmin />
-    <Systems />
-    <Growth />
-    <Custom />
-    <Integrations />
+    <Problem />
+    <Solution />
+    <Walkthrough />
+    <ExploreCards />
     <Comparison />
-    <Process />
+    <HowItWorks />
+    <AlsoBuiltIn />
+    <Pricing />
     <FAQ />
     <CTA />
   </main>

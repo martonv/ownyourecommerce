@@ -1,0 +1,223 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import PageHero from '../components/PageHero.astro';
+import CtaBand from '../components/CtaBand.astro';
+
+const teams = [
+  {
+    team: 'Sales and wholesale',
+    maps: 'How quotes, pricing tiers and net terms work today, and what reps have to ask someone else to answer.',
+  },
+  {
+    team: 'Warehouse',
+    maps: 'How stock is counted, where it lives, what gets picked first, and which numbers nobody trusts.',
+  },
+  {
+    team: 'Production',
+    maps: 'What triggers a build, how materials are checked, and where a job waits longer than it should.',
+  },
+  {
+    team: 'Customer support',
+    maps: 'The questions that come in daily, what the team has to open three tabs to answer, and what should never reach a person.',
+  },
+  {
+    team: 'Finance',
+    maps: 'Which records have to match the books, what gets exported by hand, and when the month-end reconciliation gets painful.',
+  },
+  {
+    team: 'Leadership',
+    maps: 'The numbers you run the business on, how long they take to produce, and how much of that is someone building a spreadsheet.',
+  },
+];
+
+const steps = [
+  {
+    title: 'Stack review',
+    free: true,
+    body: 'A 45-minute call where we map your tools, data flows and where things break. You get the map whether or not you hire us.',
+  },
+  {
+    title: 'Team discovery',
+    body: 'We sit with each team that touches an order and write down how the work actually happens, edge cases included, rather than how the software says it should.',
+  },
+  {
+    title: 'Scope and price',
+    body: 'A written scope, a fixed price and a timeline, including which of your current tools we replace and which we connect to. Nothing starts until you agree to all three.',
+  },
+  {
+    title: 'Build and migrate',
+    body: 'Weekly demos of working software. We migrate products, customers, orders and history while your current systems keep running.',
+  },
+  {
+    title: 'Launch',
+    body: 'We switch over when it is tested and your team is working in the new system, with the old one still available until the counts match.',
+  },
+  {
+    title: 'Maintain and evolve',
+    body: 'New features, integrations and performance work shipped by the team that built it. Monthly retainer or project by project, your call.',
+  },
+];
+---
+
+<Layout
+  title="Process | Own Your eCommerce"
+  description="We talk to every team that touches an order, map how the work really happens, then build one system around it and connect whatever you want to keep."
+>
+  <Nav />
+  <main id="main" tabindex="-1">
+    <PageHero
+      label="Process"
+      title="We start with your teams, not your software."
+      lead="Before anything is scoped, we talk to the people doing the work: what they retype, what they wait on, and which number they do not trust. The system gets built around that, and whatever software you want to keep, we connect to it."
+    />
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow">Discovery</p>
+          <h2>Who we sit with, and what we map.</h2>
+          <p class="lead">
+            Every team sees a different part of the same order. The gaps between those views are
+            usually where the money and the hours go.
+          </p>
+        </div>
+
+        <ul class="teams">
+          {teams.map((t) => (
+            <li data-reveal>
+              <h3>{t.team}</h3>
+              <p>{t.maps}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section class="section section-subtle">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow">How it runs</p>
+          <h2>Fixed scope. Fixed price. Weekly demos.</h2>
+        </div>
+
+        <ol class="steps" data-reveal>
+          {steps.map((s, i) => (
+            <li>
+              <span class="marker" aria-hidden="true"></span>
+              <span class="step-label">
+                Step {i + 1}
+                {s.free && <span class="chip">Free</span>}
+              </span>
+              <h3>{s.title}</h3>
+              <p>{s.body}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container keep">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow">What you keep</p>
+          <h2>Nothing gets replaced to prove a point.</h2>
+          <p class="lead">
+            If a tool earns its place, it stays and we connect to it through its API: your accounting,
+            your email platform, your 3PL, your CRM. We tell you honestly which ones are worth keeping
+            and which are costing you more than they return.
+          </p>
+        </div>
+        <a href="/#contact" class="btn btn-primary" data-reveal>Book a stack review</a>
+      </div>
+    </section>
+
+    <CtaBand
+      title="Start with the map."
+      body="Forty-five minutes with your team, and you leave knowing where your systems disagree and what it would take to fix it."
+    />
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  .teams {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0 clamp(24px, 4vw, 48px);
+  }
+  .teams li {
+    padding: 22px 0;
+    border-top: 1px solid var(--border);
+  }
+  .teams li:nth-child(-n + 3) { border-top: 0; padding-top: 0; }
+  .teams h3 { font-size: 1.0625rem; margin-bottom: 4px; }
+  .teams p { font-size: 0.9375rem; }
+
+  .steps {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0 28px;
+    position: relative;
+    max-width: 760px;
+  }
+  .steps::before {
+    content: '';
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    left: 5px;
+    width: 1px;
+    background: var(--border-strong);
+  }
+  .steps li {
+    position: relative;
+    padding-bottom: 28px;
+  }
+  .steps li:last-child { padding-bottom: 0; }
+  .marker {
+    position: absolute;
+    top: 6px;
+    left: -28px;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 1px solid var(--border-strong);
+  }
+  .steps li:first-child .marker {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .step-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--text-muted);
+  }
+  .chip {
+    padding: 1px 8px;
+    border-radius: 999px;
+    background: var(--btn-accent-bg);
+    color: var(--btn-accent-fg);
+    font-size: 0.6875rem;
+    font-weight: 600;
+  }
+  .steps h3 { font-size: 1.0625rem; margin: 2px 0 4px; }
+  .steps p { font-size: 0.9375rem; }
+
+  .keep { display: flex; flex-direction: column; align-items: flex-start; }
+  .keep .section-head { margin-bottom: 24px; }
+
+  @media (max-width: 900px) {
+    .teams { grid-template-columns: 1fr; }
+    .teams li:nth-child(-n + 3) { border-top: 1px solid var(--border); padding-top: 22px; }
+    .teams li:first-child { border-top: 0; padding-top: 0; }
+  }
+</style>

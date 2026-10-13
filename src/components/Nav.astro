@@ -2,12 +2,11 @@
 import Logo from './Logo.astro';
 
 const links = [
-  { href: '/#demo', label: 'Demo' },
-  { href: '/#systems', label: 'Systems' },
-  { href: '/#growth', label: 'Growth' },
-  { href: '/#comparison', label: 'Compare' },
-  { href: '/#process', label: 'Process' },
-  { href: '/#faq', label: 'FAQ' },
+  { href: '/systems', label: 'Systems' },
+  { href: '/growth', label: 'Growth' },
+  { href: '/process', label: 'Process' },
+  { href: '/demo', label: 'Demo' },
+  { href: '/#pricing', label: 'Pricing' },
 ];
 ---
 
@@ -28,13 +27,8 @@ const links = [
     </div>
 
     <div class="nav-cta">
-      <a href="/#contact" class="btn btn-ghost ghost-cta">Talk to us</a>
-      <a href="/#contact" class="btn btn-primary">
-        Start a project
-        <svg class="arrow" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
-          <path d="M3 8h10M9 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </a>
+      {/* Demo is a nav link now, so one button here rather than two saying the same thing. */}
+      <a href="/#contact" class="btn btn-primary">Book a stack review</a>
     </div>
   </div>
 </header>
@@ -73,12 +67,12 @@ const links = [
     backdrop-filter: saturate(180%) blur(14px);
     -webkit-backdrop-filter: saturate(180%) blur(14px);
     background: color-mix(in srgb, var(--bg) 72%, transparent);
-    border-bottom: 1px solid transparent;
+    /* the hairline stays put at the top of the page, not only once scrolled */
+    border-bottom: 1px solid var(--border);
     transition: background 0.2s var(--ease), border-color 0.2s var(--ease);
   }
   .nav-wrap.is-scrolled {
     background: color-mix(in srgb, var(--bg) 88%, transparent);
-    border-bottom-color: var(--border);
   }
   .nav-inner {
     display: grid;
@@ -144,9 +138,9 @@ const links = [
   .nav-toggle.is-open span:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
 
   @media (max-width: 960px) {
-    /* Brand | Start a project | tools. Equal side columns keep the button centered. */
+    /* Brand on the left, then the button and the hamburger together on the right. */
     .nav-inner {
-      grid-template-columns: 1fr auto 1fr;
+      grid-template-columns: 1fr auto auto;
       column-gap: 12px;
     }
     .brand { justify-self: start; }

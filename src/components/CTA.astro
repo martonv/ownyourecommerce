@@ -1,66 +1,79 @@
 ---
 import { site } from '../data/site';
+
+// COPY.md §11. The founder's first name is still [TODO], so the line under the button omits it.
+const tools = ['Shopify', 'HubSpot', 'Fishbowl', 'QuickBooks', 'Other'];
 ---
 
 <section class="section cta" id="contact">
   <div class="container">
-    <div class="cta-card" data-reveal>
-      <div class="cta-aurora" aria-hidden="true"></div>
-      <div class="cta-inner">
-        <span class="eyebrow">Get started</span>
-        <h2>Stop paying rent on your <span class="text-accent">own storefront</span></h2>
-        <p class="lead">
-          Tell us about your store, your stack, and where you want to be in twelve months.
-          We'll come back with a fixed scope, a fixed price, and the math on what you'd save.
-        </p>
+    <div class="head" data-reveal>
+      <h2>See your stack as one system.</h2>
+      <p class="lead">
+        Tell us what you run today. We'll come back with a map of how it fits together and what it
+        would take to make it one system.
+      </p>
+    </div>
 
-        <form
-          class="cta-form"
-          id="contactForm"
-          action={`https://formspree.io/f/${site.formspreeId}`}
-          method="POST"
-          data-fallback-email={site.email}
-        >
-          <input type="hidden" name="_subject" value={`New project inquiry from ${Astro.site?.host}`} />
-          <label class="field">
-            <span>Your name</span>
-            <input type="text" name="name" autocomplete="name" placeholder="Jane Doe" required />
-          </label>
-          <label class="field">
-            <span>Work email</span>
-            <input type="email" name="email" autocomplete="email" placeholder="jane@yourstore.com" required />
-          </label>
-          <label class="field">
-            <span>Current website</span>
-            <input type="text" name="website" inputmode="url" autocomplete="url" placeholder="yourstore.com" />
-          </label>
-          <label class="field">
-            <span>Platform and monthly revenue</span>
-            <input type="text" name="platform" placeholder="e.g. Shopify Plus, ~$120k/mo" />
-          </label>
-          <label class="field full">
-            <span>What do you want built?</span>
-            <textarea name="message" rows="3" placeholder="A custom store with multi-warehouse inventory, work orders for our shop, a wholesale CRM, and QuickBooks sync..."></textarea>
-          </label>
-          <label class="honeypot" aria-hidden="true">
-            Leave this field empty
-            <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" />
-          </label>
-          <div class="cta-actions">
-            <button type="submit" class="btn btn-accent btn-lg send-btn">
-              <span class="send-label">Send request</span>
-              <svg class="arrow" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
-                <path d="M3 8h10M9 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
-            <span class="micro">No sales calls. A real reply within 1 business day.</span>
+    <div class="card" data-reveal>
+      <form
+        class="form"
+        id="contactForm"
+        action={`https://formspree.io/f/${site.formspreeId}`}
+        method="POST"
+        data-fallback-email={site.email}
+      >
+        <input type="hidden" name="_subject" value={`New stack review request from ${Astro.site?.host}`} />
+
+        <label class="field">
+          <span>Name</span>
+          <input type="text" name="name" autocomplete="name" required placeholder="Dana Whitfield" />
+        </label>
+
+        <label class="field">
+          <span>Work email</span>
+          <input type="email" name="email" autocomplete="email" required placeholder="dana@yourcompany.com" />
+        </label>
+
+        <label class="field full">
+          <span>Company website</span>
+          <input type="url" name="website" autocomplete="url" placeholder="yourcompany.com" />
+        </label>
+
+        <fieldset class="field full tools">
+          <legend>Current tools</legend>
+          <div class="chips">
+            {tools.map((tool) => (
+              <label class="chip">
+                <input type="checkbox" name="tools" value={tool} />
+                <span>{tool}</span>
+              </label>
+            ))}
           </div>
-          <p class="form-status" role="status" aria-live="polite" hidden></p>
-          <p class="consent">
-            We only use your details to reply to your request. See our <a href="/privacy">privacy policy</a>.
-          </p>
-        </form>
-      </div>
+        </fieldset>
+
+        <label class="field full">
+          <span>What breaks most often?</span>
+          <textarea name="breaks" rows="3" placeholder="Stock counts drift between Fishbowl and Shopify, and wholesale orders get retyped."></textarea>
+        </label>
+
+        <label class="honeypot" aria-hidden="true">
+          Leave this field empty
+          <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" />
+        </label>
+
+        <div class="actions">
+          <button type="submit" class="btn btn-primary send-btn">
+            <span class="send-label">Book my stack review</span>
+          </button>
+          <span class="micro">A real reply within one business day. No sales sequence.</span>
+        </div>
+
+        <p class="form-status" role="status" aria-live="polite" hidden></p>
+        <p class="consent">
+          We only use your details to reply to your request. See our <a href="/privacy">privacy policy</a>.
+        </p>
+      </form>
     </div>
   </div>
 </section>
@@ -71,13 +84,12 @@ import { site } from '../data/site';
   const label = form?.querySelector('.send-label') as HTMLElement | null;
   const status = form?.querySelector('.form-status') as HTMLElement | null;
 
-  // Unhide the live region first and write to it on the next frame; screen readers
-  // routinely miss text set while the element is still hidden.
+  // Unhide the live region first and write to it a tick later; screen readers routinely miss
+  // text set while the element is still hidden.
   const showStatus = (message: string, tone: 'ok' | 'error') => {
     if (!status) return;
     status.dataset.tone = tone;
     status.hidden = false;
-    // a timeout, not requestAnimationFrame: rAF does not fire while the tab is in the background
     setTimeout(() => {
       status.textContent = message;
     }, 50);
@@ -99,111 +111,123 @@ import { site } from '../data/site';
       if (!res.ok) throw new Error(`Form endpoint responded ${res.status}: ${await res.text()}`);
       form.reset();
       btn.disabled = false;
-      label.textContent = 'Send request';
-      showStatus("Thanks. We'll be in touch within 1 business day.", 'ok');
+      label.textContent = 'Book my stack review';
+      showStatus("Thanks. We'll be in touch within one business day.", 'ok');
     } catch (err) {
       console.error(err);
       btn.disabled = false;
-      label.textContent = 'Send request';
-      showStatus(`Sorry, your message didn't send. Please try again, or email us at ${form.dataset.fallbackEmail}.`, 'error');
+      label.textContent = 'Book my stack review';
+      showStatus(`Sorry, that didn't send. Please try again, or email us at ${form.dataset.fallbackEmail}.`, 'error');
     }
   });
 </script>
 
 <style>
   .cta { background: var(--bg); }
-  .cta-card {
-    position: relative;
-    border: 1px solid var(--border-strong);
-    border-radius: var(--radius-xl);
-    background: linear-gradient(180deg, var(--surface) 0%, var(--bg-subtle) 100%);
-    padding: clamp(36px, 6vw, 64px);
-    overflow: hidden;
-    box-shadow: var(--shadow-lg);
-  }
-  .cta-aurora {
-    position: absolute;
-    inset: 0;
-    overflow: hidden;
-    pointer-events: none;
-    z-index: 0;
-  }
-  .cta-aurora::before {
-    content: '';
-    position: absolute;
-    width: 500px; height: 500px;
-    border-radius: 50%;
-    filter: blur(80px);
-    opacity: var(--aurora-opacity);
-    background: radial-gradient(circle, var(--aurora-1) 0%, transparent 70%);
-    top: -180px; right: -120px;
-  }
-  .cta-aurora::after {
-    content: '';
-    position: absolute;
-    width: 420px; height: 420px;
-    border-radius: 50%;
-    filter: blur(70px);
-    opacity: calc(var(--aurora-opacity) * 0.8);
-    background: radial-gradient(circle, var(--aurora-2) 0%, transparent 70%);
-    bottom: -160px; left: -140px;
-  }
-  .cta-inner {
-    position: relative;
-    z-index: 1;
+
+  .head {
+    max-width: 640px;
+    margin: 0 auto clamp(32px, 4vw, 48px);
+    text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
-    text-align: center;
     gap: 16px;
   }
-  .cta-inner h2 { max-width: 18ch; }
-  .cta-inner .lead { text-align: center; }
+  .head h2 { max-width: 20ch; }
+  .head .lead { max-width: 56ch; }
 
-  .cta-form {
-    margin-top: 28px;
-    width: 100%;
-    max-width: 620px;
+  .card {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: clamp(24px, 3vw, 32px);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+  }
+
+  .form {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 14px;
+    gap: 16px;
   }
-  .field {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    text-align: left;
-  }
+  .field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
   .field.full { grid-column: 1 / -1; }
-  .field span {
-    font-size: 0.78rem;
-    color: var(--text-secondary);
+  .field > span,
+  .tools legend {
+    font-size: 0.8125rem;
     font-weight: 500;
-    letter-spacing: 0.01em;
+    color: var(--text-body);
   }
-  .field input,
-  .field textarea {
+
+  input[type='text'],
+  input[type='email'],
+  input[type='url'],
+  textarea {
+    width: 100%;
     font-family: inherit;
-    font-size: 0.92rem;
+    font-size: 0.9375rem;
     color: var(--text);
-    background: var(--surface);
-    border: 1px solid var(--border-strong);
-    border-radius: 8px;
-    padding: 10px 12px;
+    background: var(--bg-muted);
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    padding: 9px 12px;
     outline: none;
     transition: border-color 0.15s var(--ease), box-shadow 0.15s var(--ease);
     resize: vertical;
   }
-  .field input:focus-visible,
-  .field textarea:focus-visible {
-    border-color: var(--accent-strong);
-    box-shadow: 0 0 0 3px var(--accent-border);
+  input[type='text'],
+  input[type='email'],
+  input[type='url'] { height: 40px; }
+  input::placeholder,
+  textarea::placeholder { color: var(--text-muted); }
+  input:focus-visible,
+  textarea:focus-visible {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
     outline: none;
   }
-  .field input::placeholder,
-  .field textarea::placeholder {
-    color: var(--text-tertiary);
+
+  .tools {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
   }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { position: relative; }
+  .chip input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .chip span {
+    display: inline-flex;
+    align-items: center;
+    height: 32px;
+    padding: 0 12px;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    background: var(--bg);
+    font-size: 0.8125rem;
+    color: var(--text-body);
+    cursor: pointer;
+    transition: background 0.15s var(--ease), border-color 0.15s var(--ease), color 0.15s var(--ease);
+  }
+  .chip input:checked + span {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    color: var(--accent-strong);
+    font-weight: 500;
+  }
+  .chip input:focus-visible + span {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
   .honeypot {
     position: absolute;
     left: -10000px;
@@ -211,46 +235,41 @@ import { site } from '../data/site';
     height: 1px;
     overflow: hidden;
   }
-  .cta-actions {
+
+  .actions {
     grid-column: 1 / -1;
     display: flex;
-    align-items: center;
-    gap: 14px;
-    flex-wrap: wrap;
-    margin-top: 4px;
+    flex-direction: column;
+    gap: 10px;
   }
-  .send-btn:disabled {
-    opacity: 0.7;
-    cursor: default;
-    transform: none;
-  }
-  .send-btn:disabled .arrow { display: none; }
+  .actions .btn { width: 100%; }
   .micro {
-    font-size: 0.8rem;
-    color: var(--text-tertiary);
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    text-align: center;
   }
+
   .form-status {
     grid-column: 1 / -1;
-    margin: 2px 0 0;
-    font-size: 0.88rem;
-    text-align: left;
+    margin: 0;
+    font-size: 0.875rem;
   }
-  .form-status[data-tone='ok'] { color: var(--success); }
+  .form-status[data-tone='ok'] { color: var(--accent-strong); }
   .form-status[data-tone='error'] { color: var(--danger); }
+
   .consent {
     grid-column: 1 / -1;
     margin: 0;
-    font-size: 0.78rem;
-    color: var(--text-tertiary);
-    text-align: left;
+    font-size: 0.75rem;
+    color: var(--text-muted);
   }
   .consent a {
-    color: var(--text-secondary);
+    color: var(--text-body);
     text-decoration: underline;
     text-underline-offset: 2px;
   }
 
-  @media (max-width: 600px) {
-    .cta-form { grid-template-columns: 1fr; }
+  @media (max-width: 560px) {
+    .form { grid-template-columns: 1fr; }
   }
 </style>

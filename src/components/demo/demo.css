@@ -103,7 +103,18 @@
 }
 .demo [role='tab'] svg { width: 16px; height: 16px; }
 .demo [role='tab']:hover { background: var(--bg-muted); color: var(--text); }
-.demo [role='tab'][aria-selected='true'] { background: var(--accent-soft); color: var(--accent-strong); }
+.demo [role='tab'][aria-selected='true'] { background: var(--bg-muted); color: var(--text); }
+/* Reset is the one button in the top bar, so it carries the ink fill.
+   The .dv-btn class selector comes later in this file, hence the extra specificity here. */
+.demo .dv-btn[data-demo-reset] {
+  background: var(--btn-primary-bg);
+  border-color: var(--btn-primary-bg);
+  color: var(--btn-primary-fg);
+}
+.demo .dv-btn[data-demo-reset]:hover {
+  background: var(--btn-primary-hover);
+  border-color: var(--btn-primary-hover);
+}
 .demo .demo-badge {
   padding: 1px 7px;
   border-radius: 999px;

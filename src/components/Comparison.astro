@@ -1,135 +1,157 @@
 ---
+// COPY.md §6. Plain text in both columns, no check or cross icons.
 const rows = [
-  { label: 'Monthly platform fee',     them: '$29 to $2,000+/mo',  us: '$0' },
-  { label: 'What the software costs',  them: 'Rented, renews every month', us: 'Paid once, yours to use' },
-  { label: 'Theme and feature limits', them: 'Template bound',     us: 'Unlimited' },
-  { label: 'Credit card processing',   them: '2.9% + 30¢',          us: 'Helcim, materially lower' },
-  { label: 'Shipping integrations',    them: 'Paid app required',   us: 'FedEx and UPS built in' },
-  { label: 'Accounting sync',          them: 'Paid app required',   us: 'Direct API integration' },
-  { label: 'Inventory and warehousing', them: 'Separate app subscription', us: 'Built in, multi-warehouse' },
-  { label: 'Production and manufacturing', them: 'Separate app subscription', us: 'Built in' },
-  { label: 'CRM',                      them: 'Billed per seat',     us: 'Built in, no seat fees' },
-  { label: 'Marketing, sales, and support tools', them: 'Stack of paid apps', us: 'Prebuilt, no app subscriptions' },
-  { label: 'Internal tools: tickets, time clock, approvals', them: 'A separate SaaS seat for each', us: 'Built into the same system' },
-  { label: 'AI across your workflows', them: 'Per-app AI add-ons, each billed', us: 'Built in, on your own AI account' },
+  { label: 'Software licenses', them: '3+ subscriptions, renewing', us: 'None. You own it' },
+  { label: 'Per-seat pricing', them: 'CRM and ERP seats add up as you hire', us: 'Unlimited users' },
+  { label: 'Keeping systems in sync', them: 'Connectors and manual fixes', us: 'One database, no sync' },
+  { label: 'Fit to your process', them: 'You adapt to the software', us: 'Built around your workflow' },
+  { label: 'Your data', them: 'Split across three vendors', us: 'In one place you can query' },
+  { label: 'Ongoing costs', them: 'Rises with seats, orders and apps', us: 'An optional support retainer' },
 ];
 ---
 
-<section class="section comp" id="comparison">
+<section class="section compare" id="compare">
   <div class="container">
     <div class="section-head" data-reveal>
-      <span class="eyebrow">The honest math</span>
-      <h2>What you stop paying when <span class="text-accent">you buy instead of rent</span></h2>
+      <p class="eyebrow">The math</p>
+      <h2>Stop paying rent on your own operations.</h2>
       <p class="lead">
-        A Shopify Plus store with the usual stack of apps quietly costs $500 to $3,000+
-        every month before you've sold anything. We replace that whole stack. Once.
+        A typical storefront, CRM and inventory stack is three renewals, per-seat pricing and a
+        connector bill. Here's how that compares.
       </p>
     </div>
 
-    <div class="comp-card" role="table" aria-label="Renting a platform compared with buying a custom system" data-reveal>
-      <div class="comp-head" role="row">
-        <div class="comp-cell label" role="columnheader">&nbsp;</div>
-        <div class="comp-cell them" role="columnheader">
-          <span class="comp-tag tag-them">Shopify / Wix / BigCommerce</span>
-        </div>
-        <div class="comp-cell us" role="columnheader">
-          <span class="comp-tag tag-us">Own Your eCommerce</span>
-        </div>
-      </div>
-
-      {rows.map((r, i) => (
-        <div class={`comp-row${i % 2 === 0 ? ' alt' : ''}`} role="row">
-          <div class="comp-cell label" role="rowheader">{r.label}</div>
-          <div class="comp-cell them" role="cell">
-            <svg class="x" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-              <path d="M4 4l8 8M12 4l-8 8" stroke-linecap="round"/>
-            </svg>
-            <span>{r.them}</span>
-          </div>
-          <div class="comp-cell us" role="cell">
-            <svg class="check" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-              <path d="M3 8.5l3.5 3.5L13 5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <span>{r.us}</span>
-          </div>
-        </div>
-      ))}
+    <div class="table-wrap" data-reveal>
+      <table>
+        <thead>
+          <tr>
+            <th scope="col"><span class="sr-only">Comparison</span></th>
+            <th scope="col">Your current stack</th>
+            <th scope="col" class="ours">Own Your eCommerce</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((r) => (
+            <tr>
+              <th scope="row">{r.label}</th>
+              <td data-col="Your current stack">{r.them}</td>
+              <td class="ours" data-col="Own Your eCommerce">{r.us}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   </div>
 </section>
 
 <style>
-  .comp { background: var(--bg-subtle); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-
-  .comp-card {
-    border: 1px solid var(--border-strong);
-    background: var(--surface);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    box-shadow: var(--shadow);
-  }
-  .comp-head, .comp-row {
-    display: grid;
-    grid-template-columns: 1.4fr 1fr 1fr;
-    align-items: center;
-  }
-  .comp-head {
+  .compare {
     background: var(--bg-subtle);
+    border-top: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
   }
-  .comp-row.alt { background: var(--bg-muted); }
-  .comp-row + .comp-row, .comp-head + .comp-row {
-    border-top: 1px solid var(--border);
+
+  /* No scroll container here on purpose: it would capture the sticky header
+     and push it away from the page. Under 760px the table becomes cards instead. */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-spacing: 0;
+    /* No overflow or radius here: either one would make the table a scroll container
+       and the sticky header would offset itself inside it instead of against the page. */
   }
-  .comp-cell {
+
+  thead th {
+    position: sticky;
+    top: 64px;
+    z-index: 1;
+    background: var(--bg);
+    text-align: left;
+    padding: 14px 20px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+  }
+  thead th.ours {
+    color: var(--accent-strong);
+    font-weight: 600;
+    background: var(--accent-soft);
+    border-top: 1px solid var(--accent);
+  }
+
+  tbody th {
+    text-align: left;
+    font-weight: 500;
+    color: var(--text);
+  }
+  tbody th,
+  tbody td {
     padding: 16px 20px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.92rem;
+    font-size: 0.9375rem;
+    color: var(--text-body);
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
   }
-  .comp-cell.label {
+  tbody tr:last-child th,
+  tbody tr:last-child td { border-bottom: 0; }
+
+  td.ours {
+    background: var(--accent-soft);
     color: var(--text);
     font-weight: 500;
   }
-  .comp-cell.them { color: var(--text-secondary); }
-  .comp-cell.us { color: var(--text); font-weight: 500; }
-  .comp-cell .x { color: var(--danger); flex-shrink: 0; }
-  .comp-cell .check { color: var(--success); flex-shrink: 0; }
 
-  .comp-tag {
-    display: inline-flex;
-    align-items: center;
-    padding: 4px 10px;
-    border-radius: 999px;
-    font-size: 0.78rem;
-    font-weight: 500;
-  }
-  .tag-them {
-    background: var(--neg-bg);
-    color: var(--neg-fg);
-    border: 1px solid var(--neg-border);
-  }
-  .tag-us {
-    background: var(--accent-soft);
-    color: var(--accent);
-    border: 1px solid var(--accent-border);
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 
-  @media (max-width: 720px) {
-    .comp-head, .comp-row {
-      grid-template-columns: 1fr 1fr;
+  /* Stacked cards, one per row (DESIGN.md §6) */
+  @media (max-width: 760px) {
+    table {
+      border: 0;
+      background: transparent;
     }
-    .comp-cell.label {
-      grid-column: 1 / -1;
-      padding-bottom: 4px;
-      font-weight: 600;
-      color: var(--text-secondary);
-      font-size: 0.78rem;
-      letter-spacing: 0.04em;
+    thead { display: none; }
+    tbody, tbody tr, tbody th, tbody td { display: block; }
+    tbody tr {
+      margin-bottom: 10px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      background: var(--bg);
+      overflow: hidden;
+    }
+    tbody th {
+      padding: 14px 16px 6px;
+      border-bottom: 0;
+      font-size: 0.9375rem;
+    }
+    tbody td {
+      padding: 6px 16px 12px;
+      border-bottom: 0;
+      font-size: 0.875rem;
+    }
+    tbody td::before {
+      content: attr(data-col);
+      display: block;
+      margin-bottom: 2px;
+      font-size: 0.6875rem;
       text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
     }
-    .comp-row + .comp-row, .comp-head + .comp-row { border-top-width: 1px; }
-    .comp-cell { padding: 12px 16px; font-size: 0.88rem; }
+    tbody td.ours {
+      padding-top: 10px;
+      border-top: 1px solid var(--accent);
+    }
   }
 </style>

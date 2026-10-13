@@ -22,21 +22,17 @@ const tabs = [
 ];
 
 const catalog = products.map(({ sku, name, price }) => ({ sku, name, price }));
+
+interface Props {
+  /** Which module the admin opens on. Defaults to the dashboard. */
+  initialView?: string;
+}
+
+const { initialView } = Astro.props;
 ---
 
-<section class="section demo-section" id="demo">
-  <div class="container">
-    <div class="section-head" data-reveal>
-      <span class="eyebrow">Interactive demo</span>
-      <h2>Try a <span class="text-accent">sample admin</span></h2>
-      <p class="lead">
-        Click around. This is the kind of back office we build: orders, inventory, production, customers,
-        marketing, support, and your internal tools in one system, with AI wired through it. It runs on
-        sample data, so nothing you do here is saved.
-      </p>
-    </div>
-
-    <div class="demo" data-demo data-catalog={JSON.stringify(catalog)} data-reveal>
+{/* The admin itself. The page section around it lives in Walkthrough.astro and demo.astro. */}
+<div class="demo" data-demo data-catalog={JSON.stringify(catalog)} data-initial={initialView}>
       <div class="demo-top">
         <div class="demo-brand"><span class="demo-mark" aria-hidden="true">J</span>{business}</div>
         <div class="demo-title" data-demo-title>Dashboard</div>
@@ -79,14 +75,7 @@ const catalog = products.map(({ sku, name, price }) => ({ sku, name, price }));
           <InternalView />
         </div>
       </div>
-    </div>
-
-    <p class="demo-foot" data-reveal>
-      Every screen, field, and rule in your system is built around how you work.
-      <a href="#contact">Tell us what yours needs</a>.
-    </p>
-  </div>
-</section>
+</div>
 
 <script>
   const root = document.querySelector<HTMLElement>('[data-demo]');
@@ -130,7 +119,7 @@ const catalog = products.map(({ sku, name, price }) => ({ sku, name, price }));
       while (list.children.length > 6) list.lastElementChild?.remove();
     };
 
-    const show = (view: string, focus = false) => {
+    const show = (view: string, focus = false, silent = false) => {
       tabs.forEach((tab) => {
         const on = tab.dataset.demoTab === view;
         tab.setAttribute('aria-selected', String(on));
@@ -146,6 +135,7 @@ const catalog = products.map(({ sku, name, price }) => ({ sku, name, price }));
         }
       });
       all('[data-panel]').forEach((panel) => (panel.hidden = panel.dataset.panel !== view));
+      if (silent) return;
       // keep ?demo= in step with the open tab, so a view can be linked to and shared
       const url = new URL(location.href);
       url.searchParams.set('demo', view);
@@ -456,5 +446,13 @@ const catalog = products.map(({ sku, name, price }) => ({ sku, name, price }));
     // Deep link: /?demo=inventory#demo opens a specific tab.
     const requested = new URLSearchParams(location.search).get('demo');
     if (requested && tabs.some((tab) => tab.dataset.demoTab === requested)) show(requested);
+
+    // The page can drive the admin (see Walkthrough.astro). Silent changes leave the URL alone.
+    root.addEventListener('demo:show', (e) => {
+      const detail = (e as CustomEvent<{ view: string; silent?: boolean }>).detail;
+      show(detail.view, false, detail.silent === true);
+    });
+
+    if (root.dataset.initial && !requested) show(root.dataset.initial, false, true);
   }
 </script>

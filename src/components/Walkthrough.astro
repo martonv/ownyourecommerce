@@ -1,0 +1,283 @@
+---
+// COPY.md §4. Page tabs drive the live admin inside the product frame: clicking a tab clicks the
+// matching tab inside the demo, so there is one source of truth for what is on screen.
+import ProductFrame from './ProductFrame.astro';
+import DemoAdmin from './demo/DemoAdmin.astro';
+import HeroDashboard from './HeroDashboard.astro';
+
+const tabs = [
+  {
+    key: 'orders',
+    label: 'Orders',
+    heading: 'Every order, every channel, one queue.',
+    body: 'Web, wholesale and marketplace orders land in the same place, with stock and production status beside each one.',
+    points: ['Multichannel order queue', 'Fulfill and stock drops instantly', 'Wholesale and net terms'],
+  },
+  {
+    key: 'inventory',
+    label: 'Inventory',
+    heading: 'Stock you can trust, down to the bin.',
+    body: 'Multi-warehouse inventory that updates the moment something sells, ships or comes off the line.',
+    points: [
+      'Warehouse, aisle and bin locations',
+      'Barcode receiving and cycle counts',
+      'Reorder points and purchase orders',
+      'Lot and serial tracking',
+    ],
+  },
+  {
+    key: 'production',
+    label: 'Production',
+    heading: 'From order to shop floor without retyping.',
+    body: 'Work orders are created from real demand, with materials checked before you promise a date.',
+    points: ['Multi-level bills of materials', 'Work orders and routing', 'Material checks and capacity'],
+  },
+  {
+    key: 'crm',
+    label: 'Customers',
+    heading: 'A CRM that knows what customers bought.',
+    body: 'Contacts, companies and deals sit next to real order history. No per-seat pricing.',
+    points: [
+      'Deal pipelines for wholesale',
+      'Full order and conversation history',
+      'Optional two-way sync with the CRM you have',
+    ],
+  },
+  {
+    key: 'internal',
+    label: 'Team ops',
+    heading: 'The internal tools, too.',
+    body: 'Time clock, approvals and internal tickets run on the same system, so a ticket can point at the work order that caused it.',
+    points: ['Clock in and timesheets', 'Time off and purchase approvals', 'Internal ticket queues'],
+  },
+];
+---
+
+<section class="section walkthrough" id="product">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <p class="eyebrow">The product</p>
+      <h2>Everything your ops team lives in, in one place.</h2>
+    </div>
+
+    <div class="tabs" data-walkthrough>
+      <div class="rail-wrap">
+        <div class="rail" role="tablist" aria-label="Product modules">
+          {tabs.map((t, i) => (
+            <button
+              type="button"
+              role="tab"
+              id={`wt-tab-${t.key}`}
+              aria-controls={`wt-panel-${t.key}`}
+              aria-selected={i === 0 ? 'true' : 'false'}
+              tabindex={i === 0 ? 0 : -1}
+              data-wt-tab={t.key}
+            >
+              {t.label}
+            </button>
+          ))}
+          <span class="indicator" data-wt-indicator aria-hidden="true"></span>
+        </div>
+      </div>
+
+      <div class="body">
+        <div class="panels">
+          {tabs.map((t, i) => (
+            <div
+              class="panel"
+              role="tabpanel"
+              id={`wt-panel-${t.key}`}
+              aria-labelledby={`wt-tab-${t.key}`}
+              data-wt-panel={t.key}
+              hidden={i !== 0}
+            >
+              <h3>{t.heading}</h3>
+              <p>{t.body}</p>
+              <ul>
+                {t.points.map((point) => (
+                  <li>
+                    <svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+                      <path d="M3 8.5l3.5 3.5L13 5" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    {point}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        <div class="stage">
+          <div class="live">
+            <ProductFrame>
+              <DemoAdmin initialView="orders" />
+            </ProductFrame>
+          </div>
+
+          <div class="still">
+            <ProductFrame>
+              <HeroDashboard />
+            </ProductFrame>
+            <a href="/demo" class="btn btn-secondary">Open the demo <span aria-hidden="true">→</span></a>
+          </div>
+
+          <p class="caption">
+            Click around. It runs on sample data, and nothing is saved.
+            <a href="/demo">Open full demo <span aria-hidden="true">→</span></a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const group = document.querySelector<HTMLElement>('[data-walkthrough]');
+
+  if (group) {
+    const tabs = [...group.querySelectorAll<HTMLButtonElement>('[data-wt-tab]')];
+    const indicator = group.querySelector<HTMLElement>('[data-wt-indicator]')!;
+    const demo = group.querySelector<HTMLElement>('[data-demo]');
+
+    const moveIndicator = (tab: HTMLButtonElement) => {
+      indicator.style.width = `${tab.offsetWidth}px`;
+      indicator.style.transform = `translateX(${tab.offsetLeft}px)`;
+    };
+
+    const select = (key: string, focus = false) => {
+      tabs.forEach((tab) => {
+        const on = tab.dataset.wtTab === key;
+        tab.setAttribute('aria-selected', String(on));
+        tab.tabIndex = on ? 0 : -1;
+        if (on) {
+          moveIndicator(tab);
+          if (focus) tab.focus();
+        }
+      });
+      group
+        .querySelectorAll<HTMLElement>('[data-wt-panel]')
+        .forEach((panel) => (panel.hidden = panel.dataset.wtPanel !== key));
+      // the admin stays the single source of truth for what is on screen
+      demo?.dispatchEvent(new CustomEvent('demo:show', { detail: { view: key } }));
+    };
+
+    tabs.forEach((tab) => tab.addEventListener('click', () => select(tab.dataset.wtTab!)));
+
+    group.querySelector('[role="tablist"]')!.addEventListener('keydown', (e) => {
+      const key = (e as KeyboardEvent).key;
+      const i = tabs.indexOf(document.activeElement as HTMLButtonElement);
+      const step = key === 'ArrowRight' || key === 'ArrowDown' ? 1 : key === 'ArrowLeft' || key === 'ArrowUp' ? -1 : 0;
+      if (i < 0 || !step) return;
+      e.preventDefault();
+      select(tabs[(i + step + tabs.length) % tabs.length].dataset.wtTab!, true);
+    });
+
+    const active = () => tabs.find((t) => t.getAttribute('aria-selected') === 'true');
+    const place = () => {
+      const tab = active();
+      if (tab) moveIndicator(tab);
+    };
+    if (document.fonts?.ready) document.fonts.ready.then(place);
+    place();
+    window.addEventListener('resize', place);
+  }
+</script>
+
+<style>
+  .walkthrough { background: var(--bg-subtle); }
+
+  .rail-wrap {
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .rail-wrap::-webkit-scrollbar { display: none; }
+  .rail {
+    position: relative;
+    display: flex;
+    gap: 4px;
+    width: max-content;
+    min-width: 100%;
+  }
+  .rail button {
+    position: relative;
+    padding: 10px 14px;
+    border: 0;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .rail button:hover { color: var(--text); }
+  .rail button[aria-selected='true'] { color: var(--text); }
+  .indicator {
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    height: 2px;
+    width: 0;
+    background: var(--accent);
+    transition: transform 0.2s var(--ease), width 0.2s var(--ease);
+  }
+
+  .body {
+    display: grid;
+    grid-template-columns: 4fr 8fr;
+    gap: clamp(24px, 4vw, 48px);
+    padding-top: clamp(28px, 4vw, 40px);
+    align-items: start;
+  }
+
+  .panel { display: flex; flex-direction: column; gap: 12px; }
+  .panel[hidden] { display: none; }
+  .panel h3 { max-width: 20ch; }
+  .panel p { font-size: 0.9375rem; }
+  .panel ul {
+    list-style: none;
+    margin: 4px 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .panel li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 0.9375rem;
+    color: var(--text);
+  }
+  .panel li svg { flex: none; margin-top: 3px; color: var(--text-muted); }
+
+  .stage { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+  .still { display: none; }
+  .caption {
+    max-width: none;
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+  }
+  .caption a {
+    color: var(--text);
+    font-weight: 500;
+    text-decoration: underline;
+    text-decoration-color: var(--border-strong);
+    text-underline-offset: 3px;
+  }
+
+  /* DESIGN.md §6: the interactive demo runs at 1024px and up */
+  @media (max-width: 1023.98px) {
+    .body { grid-template-columns: 1fr; }
+    /* below that it opens on its own page instead */
+    .live { display: none; }
+    /* stretch, not flex-start: a column flex item would otherwise shrink-wrap to its
+       max-content width and push the frame wider than the page */
+    .still { display: flex; flex-direction: column; gap: 12px; align-items: stretch; }
+    .still .btn { align-self: flex-start; }
+    .caption { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .indicator { transition: none; }
+  }
+</style>

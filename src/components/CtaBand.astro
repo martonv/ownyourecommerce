@@ -1,0 +1,58 @@
+---
+// Closing call to action for the inner pages. The real form lives on the homepage.
+interface Props {
+  title?: string;
+  body?: string;
+}
+
+const {
+  title = 'See your stack as one system.',
+  body = 'Tell us what you run today. We come back with a map of how it fits together and what it would take to make it one system.',
+} = Astro.props;
+---
+
+<section class="band">
+  <div class="container inner" data-reveal>
+    <h2>{title}</h2>
+    <p>{body}</p>
+    <div class="actions">
+      <a href="/#contact" class="btn btn-primary">Book a stack review</a>
+      <a href="/demo" class="btn btn-secondary">Try the demo <span class="arrow" aria-hidden="true">→</span></a>
+    </div>
+    <p class="micro">Free 45-minute review. You leave with a map of your stack either way.</p>
+  </div>
+</section>
+
+<style>
+  .band {
+    padding: clamp(64px, 8vw, 104px) 0;
+    background: var(--bg-subtle);
+    border-top: 1px solid var(--border);
+  }
+  .inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+  }
+  .inner h2 { max-width: 20ch; }
+  .inner p { max-width: 56ch; }
+  .actions {
+    margin-top: 8px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .actions .arrow { display: inline-block; transition: transform 0.18s var(--ease); }
+  .actions a:hover .arrow { transform: translateX(2px); }
+  .micro {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .actions .arrow { transition: none; }
+  }
+</style>

@@ -1,0 +1,125 @@
+---
+// COPY.md §7. Four steps on a single hairline, vertical on mobile.
+const steps = [
+  {
+    title: 'Stack review',
+    free: true,
+    body: 'A 45-minute call where we map your tools, data flows and where things break. You get the map whether or not you hire us.',
+  },
+  {
+    title: 'Scope and price',
+    body: 'A written scope, a fixed price and a timeline. Nothing starts until you agree to all three.',
+  },
+  {
+    title: 'Build and migrate',
+    body: 'Weekly demos of working software. We migrate products, customers, orders and inventory history while your current systems keep running.',
+  },
+  {
+    title: 'Launch',
+    body: 'We switch over when it is tested and your team is working in the new system. Keep us on retainer for new features, or don\'t.',
+  },
+];
+---
+
+<section class="section how" id="how">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <p class="eyebrow">How it works</p>
+      <h2>Fixed scope. Fixed price. No surprises.</h2>
+    </div>
+
+    <ol class="steps" data-reveal>
+      {steps.map((s, i) => (
+        <li>
+          <span class={`dot${s.free ? ' is-accent' : ''}`} aria-hidden="true"></span>
+          <span class="step-label">
+            Step {i + 1}
+            {s.free && <span class="chip">Free</span>}
+          </span>
+          <h3>{s.title}</h3>
+          <p>{s.body}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .how { background: var(--bg); }
+
+  .steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    position: relative;
+  }
+  /* the hairline the dots sit on */
+  .steps::before {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .steps li {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-top: 28px;
+    padding-right: 16px;
+  }
+  .dot {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 1px solid var(--border-strong);
+  }
+  .dot.is-accent {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .step-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--text-muted);
+  }
+  .chip {
+    padding: 1px 8px;
+    border-radius: 999px;
+    background: var(--btn-accent-bg);
+    color: var(--btn-accent-fg);
+    font-size: 0.6875rem;
+    font-weight: 600;
+  }
+  .steps h3 { font-size: 1.0625rem; }
+  .steps p { font-size: 0.9375rem; }
+
+  @media (max-width: 1024px) {
+    .steps { grid-template-columns: 1fr; gap: 28px; padding-left: 26px; }
+    .steps::before {
+      top: 6px;
+      bottom: 6px;
+      left: 5px;
+      right: auto;
+      width: 1px;
+      height: auto;
+    }
+    .steps li { padding-top: 0; padding-right: 0; }
+    .dot { left: -26px; top: 6px; }
+  }
+</style>

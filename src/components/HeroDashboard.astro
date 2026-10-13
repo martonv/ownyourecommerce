@@ -1,0 +1,231 @@
+---
+// A still of the sample admin's dashboard for the hero frame. Same data and shapes as the live
+// demo further down the page, but inert: no script, no ids, hidden from screen readers.
+import { business, orders, products, workOrders, productName, money } from './demo/data';
+
+const modules = ['Dashboard', 'Orders', 'Inventory', 'Production', 'Customers', 'Marketing', 'Inbox', 'Internal'];
+
+const stats = [
+  { label: 'Revenue today', value: money(orders.filter((o) => o.today).reduce((sum, o) => sum + o.total, 0)) },
+  { label: 'Orders to fulfill', value: String(orders.filter((o) => o.status === 'unfulfilled').length) },
+  { label: 'Low stock items', value: String(products.filter((p) => p.available < p.reorder).length) },
+  { label: 'Jobs in production', value: String(workOrders.filter((w) => w.stage < 3).length) },
+];
+
+const rows = orders.slice(0, 3);
+const activity = [
+  { text: 'Order #3041 placed by Sarah Chen', when: '2:42 pm' },
+  { text: 'WO-1179 moved to Quality check', when: '1:55 pm' },
+  { text: 'Harbor Hotel Group accepted a proposal', when: '11:10 am' },
+];
+---
+
+<div class="mock" aria-hidden="true">
+  <aside class="rail">
+    <span class="rail-brand"><span class="rail-mark">J</span>{business}</span>
+    <ul>
+      {modules.map((m, i) => (
+        <li class={i === 0 ? 'is-on' : undefined}>{m}</li>
+      ))}
+    </ul>
+  </aside>
+
+  <div class="main">
+    <div class="head">
+      <div>
+        <strong>Good afternoon</strong>
+        <span>Here's the workshop at a glance.</span>
+      </div>
+      <span class="btn-mock">Simulate a web order</span>
+    </div>
+
+    <div class="stats">
+      {stats.map((s) => (
+        <div class="stat">
+          <span class="stat-label">{s.label}</span>
+          <span class="stat-value">{s.value}</span>
+        </div>
+      ))}
+    </div>
+
+    <div class="split">
+      <div class="card">
+        <div class="card-head"><span>Open orders</span><span class="meta">Today</span></div>
+        <ul class="list">
+          {rows.map((o) => (
+            <li>
+              <span class="stack">
+                <span class="strong">{o.customer}</span>
+                <span class="sub">#{o.id} · {o.qty} × {productName(o.sku)}</span>
+              </span>
+              <span class="num">{money(o.total)}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><span>Activity</span><span class="meta">Today</span></div>
+        <ul class="list">
+          {activity.map((a) => (
+            <li>
+              <span class="sub-strong">{a.text}</span>
+              <span class="sub">{a.when}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .mock {
+    display: grid;
+    grid-template-columns: 180px minmax(0, 1fr);
+    background: var(--bg-subtle);
+    font-size: 13px;
+    line-height: 1.45;
+    user-select: none;
+  }
+
+  .rail {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 16px 12px;
+    border-right: 1px solid var(--border);
+    background: var(--bg);
+  }
+  .rail-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: var(--text);
+    font-size: 12.5px;
+  }
+  .rail-mark {
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    display: grid;
+    place-items: center;
+    background: var(--text);
+    color: var(--bg);
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .rail ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .rail li {
+    padding: 6px 10px;
+    border-radius: 6px;
+    color: var(--text-muted);
+  }
+  .rail li.is-on {
+    background: var(--bg-muted);
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .main {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px 18px 20px;
+    min-width: 0;
+  }
+  .head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .head strong {
+    display: block;
+    font-size: 16px;
+    letter-spacing: -0.01em;
+    color: var(--text);
+  }
+  /* scoped to the subtitle: a bare `.head span` also caught .btn-mock and greyed its label */
+  .head > div span { color: var(--text-muted); font-size: 12.5px; }
+  .btn-mock {
+    padding: 6px 10px;
+    border-radius: 7px;
+    background: var(--accent-strong);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 10px 12px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  .stat-label { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); }
+  .stat-value {
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--border);
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .meta { font-size: 11px; font-weight: 400; color: var(--text-muted); }
+  .list { list-style: none; margin: 0; padding: 0 12px; }
+  .list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .list li:last-child { border-bottom: 0; }
+  .stack { display: flex; flex-direction: column; min-width: 0; }
+  .strong { font-weight: 500; color: var(--text); }
+  .sub-strong { color: var(--text); }
+  .sub { font-size: 11.5px; color: var(--text-muted); }
+  .num { font-variant-numeric: tabular-nums; color: var(--text); font-weight: 500; }
+
+  /* Narrow screens get the main area only, sized to fit rather than cropped mid card. */
+  @media (max-width: 900px) {
+    .mock { grid-template-columns: 1fr; }
+    .rail { display: none; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .split { grid-template-columns: 1fr; }
+    .split .card:last-child { display: none; }
+    .btn-mock { display: none; }
+  }
+</style>

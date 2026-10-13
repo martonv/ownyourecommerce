@@ -1,0 +1,205 @@
+---
+// COPY.md §3. The diagram is inline SVG so it inherits the tokens and stays sharp.
+const flow = ['Order placed', 'Stock reserved', 'Work order released', 'Picked and packed', 'Shipped', 'Books updated'];
+const before = ['Shopify', 'Fishbowl', 'HubSpot', 'QuickBooks'];
+const after = ['Storefront', 'Inventory', 'Production', 'CRM', 'Team ops'];
+---
+
+<section class="section solution" id="solution">
+  <div class="container">
+    <div class="grid">
+      <div class="copy" data-reveal>
+        <p class="eyebrow">One system</p>
+        <h2>One database. Every team works from it.</h2>
+        <p>
+          When an order comes in, stock is reserved, a work order is released if you need to build it,
+          the customer record updates, and the books follow. No sync. No middleware. One record, from
+          first click to shipped.
+        </p>
+      </div>
+
+      <div class="diagram" data-reveal>
+        <div class="toggle" role="group" aria-label="Diagram view">
+          <button type="button" data-diagram="before" aria-pressed="false">Before</button>
+          <button type="button" data-diagram="after" aria-pressed="true">After</button>
+        </div>
+
+        <div class="canvas">
+          <div data-diagram-panel="before" hidden>
+            <svg viewBox="0 0 600 180" role="img" aria-label="Before: Shopify, Fishbowl, HubSpot and QuickBooks joined by three connectors, each one a point of failure.">
+              {before.map((name, i) => (
+                <g>
+                  <rect x={i * 160} y={56} width={120} height={44} rx={8} class="box" />
+                  <text x={i * 160 + 60} y={83} class="box-label">{name}</text>
+                </g>
+              ))}
+              {[0, 1, 2].map((i) => (
+                <g>
+                  <line x1={i * 160 + 122} y1={78} x2={i * 160 + 158} y2={78} class="wire" />
+                  <circle cx={i * 160 + 140} cy={78} r={5} class="warn" />
+                  <text x={i * 160 + 140} y={112} class="wire-label">connector</text>
+                </g>
+              ))}
+            </svg>
+          </div>
+
+          <div data-diagram-panel="after">
+            <svg viewBox="0 0 600 250" role="img" aria-label="After: storefront, inventory, production, CRM and team ops all on one database, with QuickBooks syncing out.">
+              {after.map((name, i) => (
+                <g>
+                  <rect x={i * 123} y={4} width={108} height={34} rx={8} class="box" />
+                  <text x={i * 123 + 54} y={26} class="box-label">{name}</text>
+                  <line x1={i * 123 + 54} y1={38} x2={i * 123 + 54} y2={96} class="spoke" />
+                </g>
+              ))}
+              <rect x={0} y={96} width={600} height={56} rx={12} class="core" />
+              <text x={300} y={130} class="core-label">One database</text>
+              <line x1={300} y1={152} x2={300} y2={196} class="wire" />
+              <text x={318} y={178} class="wire-label wire-label-left">syncs out</text>
+              <rect x={246} y={196} width={108} height={34} rx={8} class="box" />
+              <text x={300} y={218} class="box-label">QuickBooks</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ol class="flow" data-reveal>
+      {flow.map((step, i) => (
+        <li>
+          {i > 0 && <span class="chev" aria-hidden="true">›</span>}
+          <span class="step">{step}</span>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<script>
+  for (const group of document.querySelectorAll<HTMLElement>('.diagram')) {
+    const buttons = [...group.querySelectorAll<HTMLButtonElement>('[data-diagram]')];
+    buttons.forEach((btn) =>
+      btn.addEventListener('click', () => {
+        buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+        group
+          .querySelectorAll<HTMLElement>('[data-diagram-panel]')
+          .forEach((panel) => (panel.hidden = panel.dataset.diagramPanel !== btn.dataset.diagram));
+      })
+    );
+  }
+</script>
+
+<style>
+  .solution { background: var(--bg); }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 5fr 7fr;
+    gap: clamp(32px, 5vw, 64px);
+    align-items: center;
+  }
+  .copy { display: flex; flex-direction: column; gap: 18px; }
+
+  .diagram { display: flex; flex-direction: column; gap: 16px; }
+  .toggle {
+    align-self: flex-end;
+    display: inline-flex;
+    gap: 2px;
+    padding: 3px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg-muted);
+  }
+  .toggle button {
+    height: 28px;
+    padding: 0 12px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 0.8125rem;
+    font-weight: 500;
+  }
+  .toggle button[aria-pressed='true'] {
+    background: var(--bg);
+    color: var(--text);
+    box-shadow: var(--shadow-xs);
+  }
+
+  .canvas {
+    padding: 24px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--bg-subtle);
+  }
+  .canvas [hidden] { display: none; }
+  .canvas svg { width: 100%; height: auto; }
+
+  .box { fill: var(--bg); stroke: var(--border-strong); stroke-width: 1; }
+  .box-label {
+    fill: var(--text);
+    font-size: 13px;
+    font-weight: 500;
+    text-anchor: middle;
+  }
+  .wire {
+    stroke: var(--border-strong);
+    stroke-width: 1.5;
+    stroke-dasharray: 4 4;
+  }
+  .warn { fill: var(--warn); }
+  .wire-label {
+    fill: var(--text-muted);
+    font-size: 10.5px;
+    text-anchor: middle;
+  }
+  .wire-label-left { text-anchor: start; }
+  .spoke { stroke: var(--border-strong); stroke-width: 1.5; }
+  .core {
+    fill: var(--accent-soft);
+    stroke: var(--accent);
+    stroke-width: 1.5;
+  }
+  .core-label {
+    fill: var(--accent-strong);
+    font-size: 16px;
+    font-weight: 600;
+    text-anchor: middle;
+    letter-spacing: -0.01em;
+  }
+
+  .flow {
+    list-style: none;
+    margin: clamp(40px, 5vw, 64px) 0 0;
+    padding: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 4px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--bg-subtle);
+  }
+  .flow li {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .flow .step {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-body);
+    white-space: nowrap;
+  }
+  .flow .chev { color: var(--text-muted); }
+
+  @media (max-width: 1024px) {
+    .grid { grid-template-columns: 1fr; align-items: start; }
+    .toggle { align-self: flex-start; }
+  }
+  @media (max-width: 640px) {
+    .canvas { padding: 14px; }
+    .flow { justify-content: flex-start; }
+  }
+</style>

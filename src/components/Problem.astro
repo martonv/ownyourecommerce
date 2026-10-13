@@ -1,0 +1,179 @@
+---
+// COPY.md §2. Each card carries a small UI fragment built in HTML, not an image.
+---
+
+<section class="section problem" id="problem">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <p class="eyebrow">The problem</p>
+      <h2>Your systems disagree with each other.</h2>
+      <p class="lead">Every tool is good at its job. The trouble is everything in between.</p>
+    </div>
+
+    <div class="cards">
+      <article class="card" data-reveal>
+        <h3>Stock is wrong somewhere.</h3>
+        <p>
+          Your inventory system says 12. Your storefront says 9. The warehouse says 7. Someone
+          reconciles it by hand every week, and you still oversell.
+        </p>
+        <div class="fragment" aria-hidden="true">
+          <div class="counts">
+            <span><i>Fishbowl</i><b>12</b></span>
+            <span><i>Shopify</i><b>9</b></span>
+            <span class="is-off"><i>Warehouse</i><b>7</b></span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-reveal>
+        <h3>Sales can't see orders.</h3>
+        <p>
+          Your CRM knows the deal closed but not that the order is stuck in production. Your reps
+          find out when the customer calls.
+        </p>
+        <div class="fragment" aria-hidden="true">
+          <div class="deal">
+            <span class="deal-name">Harbor Hotel Group</span>
+            <span class="chip is-ok">Closed won</span>
+          </div>
+          <div class="deal deal-order">
+            <span class="deal-name">Order #3039</span>
+            <span class="chip is-warn">Stuck in production</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-reveal>
+        <h3>Every sync is something that breaks.</h3>
+        <p>
+          Connectors, Zaps and CSV exports hold it all together until an update breaks one and nobody
+          notices for a week.
+        </p>
+        <div class="fragment" aria-hidden="true">
+          <pre class="log"><span>02:14  sync shopify → fishbowl   ok</span>
+<span>03:14  sync shopify → fishbowl   ok</span>
+<span class="is-bad">04:14  sync shopify → fishbowl   failed</span>
+<span class="is-bad">       auth token expired, 0 retries</span></pre>
+        </div>
+      </article>
+    </div>
+
+    <p class="closing" data-reveal>
+      You're paying for three subscriptions, the connectors between them, and the hours your team
+      spends fixing what falls through.
+    </p>
+  </div>
+</section>
+
+<style>
+  .problem { background: var(--bg-subtle); }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 28px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    transition: border-color 0.18s var(--ease);
+  }
+  .card:hover { border-color: var(--border-strong); }
+  .card h3 { max-width: 22ch; }
+  .card p { font-size: 0.9375rem; }
+
+  .fragment {
+    margin-top: auto;
+    padding-top: 18px;
+  }
+
+  /* fragment 1: three sources, three numbers */
+  .counts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .counts span {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg-subtle);
+  }
+  .counts i {
+    font-style: normal;
+    font-size: 0.6875rem;
+    color: var(--text-muted);
+  }
+  .counts b {
+    font-family: var(--font-mono);
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+  }
+  .counts .is-off b { color: var(--danger); }
+  .counts .is-off { border-color: color-mix(in srgb, var(--danger) 35%, var(--border)); }
+
+  /* fragment 2: a deal and its order, disagreeing */
+  .deal {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg-subtle);
+    font-size: 0.8125rem;
+  }
+  .deal + .deal { margin-top: 6px; }
+  .deal-name { color: var(--text); font-weight: 500; }
+  .deal-order .deal-name { color: var(--text-muted); font-weight: 400; }
+  .chip {
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .chip.is-ok { background: var(--accent-soft); color: var(--accent-strong); }
+  .chip.is-warn {
+    background: color-mix(in srgb, var(--warn) 14%, transparent);
+    color: color-mix(in srgb, var(--warn) 78%, var(--text));
+  }
+
+  /* fragment 3: the sync log that nobody reads */
+  .log {
+    margin: 0;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg-subtle);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    line-height: 1.7;
+    color: var(--text-muted);
+    overflow-x: auto;
+  }
+  .log span { display: block; white-space: pre; }
+  .log .is-bad { color: var(--danger); }
+
+  .closing {
+    margin: clamp(32px, 4vw, 48px) auto 0;
+    max-width: 60ch;
+    text-align: center;
+    font-size: 1.125rem;
+    line-height: 1.56;
+    color: var(--text-body);
+  }
+
+  @media (max-width: 1024px) {
+    .cards { grid-template-columns: 1fr; }
+    .fragment { margin-top: 4px; }
+  }
+</style>

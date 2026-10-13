@@ -4,31 +4,34 @@
    ============================================ */
 
 :root {
-  /* Surfaces */
+  /* Surfaces (DESIGN.md tokens) */
   --bg: #ffffff;
-  --bg-subtle: #fafafa;
-  --bg-muted: #f4f4f5;
+  --bg-subtle: #f7f7f8;
+  --bg-muted: #f0f0f2;
   --surface: #ffffff;
   --surface-elevated: #ffffff;
   --surface-raised: rgba(255, 255, 255, 0.7);
 
-  /* Borders */
-  --border: rgba(9, 9, 11, 0.06);
-  --border-strong: rgba(9, 9, 11, 0.10);
-  --border-emphasis: rgba(9, 9, 11, 0.18);
+  /* Borders: hairlines carry the structure, not shadows */
+  --border: #e6e6ea;
+  --border-strong: #d4d4da;
+  --border-emphasis: #b9b9c2;
 
-  /* Text */
-  --text: #09090b;
-  --text-secondary: #52525b;
-  /* 4.8:1 on white; #a1a1aa was 2.6:1 and failed WCAG AA */
+  /* Text. --text-body and --text-muted are the DESIGN.md names;
+     --text-secondary and --text-tertiary are the same values under the older names. */
+  --text: #0e0e11;
+  --text-body: #3f3f46;
+  --text-muted: #71717a;
+  --text-secondary: #3f3f46;
   --text-tertiary: #71717a;
   --text-inverse: #ffffff;
 
-  /* Accent */
+  /* One accent, the brand green (DESIGN.md says adjust its blue to the brand) */
   --accent: #16a34a;
   --accent-strong: #15803d;
-  --accent-soft: rgba(22, 163, 74, 0.08);
-  --accent-border: rgba(22, 163, 74, 0.18);
+  --accent-hover: #166534;
+  --accent-soft: #eef7f1;
+  --accent-border: rgba(22, 163, 74, 0.22);
   --accent-glow: rgba(22, 163, 74, 0.18);
 
   /* Accent button: the brand green under white text is only 3.3:1, so the fill is darkened to 5.0:1 */
@@ -41,9 +44,9 @@
   --oye-dot: #16a34a;
 
   /* Status */
-  --success: #10b981;
-  --warn: #f59e0b;
-  --danger: #ef4444;
+  --success: #16a34a;
+  --warn: #d97706;
+  --danger: #dc2626;
 
   /* Comparison rows */
   --neg-bg: #fef2f2;
@@ -66,22 +69,25 @@
 
   /* Type scale */
   --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-display: 'Inter Tight', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  /* DESIGN.md: Inter for everything, headlines included */
+  --font-display: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 
-  /* Layout */
+  /* Layout: 8px buttons and inputs, 12px cards, 16px product frame */
   --radius-sm: 6px;
-  --radius: 10px;
-  --radius-lg: 14px;
-  --radius-xl: 20px;
+  --radius: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
 
   --shadow-xs: 0 1px 2px rgba(9, 9, 11, 0.04);
   --shadow-sm: 0 1px 3px rgba(9, 9, 11, 0.05), 0 1px 2px rgba(9, 9, 11, 0.03);
   --shadow: 0 4px 12px -2px rgba(9, 9, 11, 0.06), 0 2px 4px -2px rgba(9, 9, 11, 0.04);
   --shadow-lg: 0 16px 40px -8px rgba(9, 9, 11, 0.10), 0 4px 12px -4px rgba(9, 9, 11, 0.05);
+  /* the only real shadow on the page, reserved for the product frame */
+  --shadow-frame: 0 1px 2px rgba(0, 0, 0, 0.04), 0 24px 64px -24px rgba(16, 24, 40, 0.18);
 
   --max-w: 1200px;
-  --gutter: clamp(20px, 4vw, 32px);
+  --gutter: clamp(16px, 4vw, 24px);
 
   --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
@@ -105,9 +111,9 @@ body {
   background: var(--bg);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-feature-settings: 'ss01', 'cv11';
-  line-height: 1.55;
-  font-size: 16px;
+  font-feature-settings: 'cv11', 'ss01';
+  line-height: 1.6;
+  font-size: 15px;
   overflow-x: hidden;
   transition: background-color 0.25s var(--ease), color 0.25s var(--ease);
 }
@@ -117,6 +123,12 @@ button { font: inherit; cursor: pointer; }
 a { color: inherit; text-decoration: none; }
 
 ::selection { background: var(--accent-glow); color: var(--text); }
+
+/* DESIGN.md: 2px accent ring, 2px offset, everywhere */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
 
 /* Skip link: off screen until it is tabbed to, so the nav isn't 10 stops before the content */
 .skip-link {
@@ -148,50 +160,47 @@ h1, h2, h3, h4 {
   text-wrap: balance;
 }
 
+/* display: 64/68, 40/44 on mobile */
 h1 {
-  font-size: clamp(2.5rem, 5.5vw, 4.25rem);
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  line-height: 1.06;
   letter-spacing: -0.035em;
   font-weight: 600;
+  max-width: 20ch;
 }
 
+/* h2: 44/50, 30/36 on mobile */
 h2 {
-  font-size: clamp(2rem, 3.6vw, 2.75rem);
+  font-size: clamp(1.875rem, 3.4vw, 2.75rem);
+  line-height: 1.14;
   letter-spacing: -0.03em;
+  max-width: 24ch;
 }
 
+/* h3: 20/28 */
 h3 {
-  font-size: clamp(1.25rem, 1.6vw, 1.5rem);
-  letter-spacing: -0.02em;
+  font-size: 1.25rem;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
 }
 
-p { margin: 0; color: var(--text-secondary); }
+p { margin: 0; color: var(--text-body); max-width: 60ch; }
 
+/* Section label: small, muted, sentence case. No pill, border or dot. */
 .eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+  display: block;
   font-size: 0.8125rem;
+  line-height: 1.54;
   font-weight: 500;
-  /* 13px text needs 4.5:1, which --accent misses at 3.3:1 on white */
-  color: var(--accent-strong);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  color: var(--text-muted);
 }
 
-.eyebrow::before {
-  content: '';
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 0 4px var(--accent-soft);
-}
-
+/* body-lg: 18/28 */
 .lead {
-  font-size: clamp(1.05rem, 1.4vw, 1.25rem);
-  color: var(--text-secondary);
-  line-height: 1.55;
-  max-width: 640px;
+  font-size: 1.125rem;
+  line-height: 1.56;
+  color: var(--text-body);
+  max-width: 60ch;
 }
 
 /* ===== Layout ===== */
@@ -204,9 +213,16 @@ p { margin: 0; color: var(--text-secondary); }
 }
 
 .section {
-  padding: clamp(80px, 10vw, 140px) 0;
+  padding: clamp(80px, 9vw, 128px) 0;
   position: relative;
   scroll-margin-top: 64px; /* clears the sticky nav when jumping to #anchors */
+}
+
+/* alternating section background */
+.section-subtle {
+  background: var(--bg-subtle);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
 }
 
 /* Left aligned by default; .center is the opt-in for sections that really want it centered. */
@@ -234,29 +250,25 @@ p { margin: 0; color: var(--text-secondary); }
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 0 18px;
+  padding: 0 16px;
   height: 40px;
-  border-radius: 8px;
-  font-size: 0.9375rem;
+  border-radius: var(--radius);
+  font-size: 0.875rem;
   font-weight: 500;
   border: 1px solid transparent;
-  transition: background 0.18s var(--ease), border-color 0.18s var(--ease), color 0.18s var(--ease),
-    box-shadow 0.18s var(--ease), transform 0.18s var(--ease);
+  transition: background 0.18s var(--ease), border-color 0.18s var(--ease), color 0.18s var(--ease);
   white-space: nowrap;
   letter-spacing: -0.005em;
 }
 
+/* One primary style everywhere: the ink button. No lift, no glow. */
 .btn-primary {
   background: var(--btn-primary-bg);
   color: var(--btn-primary-fg);
-  box-shadow: 0 1px 0 0 rgba(255,255,255,0.08) inset, 0 1px 2px rgba(9,9,11,0.2);
-  border-color: var(--border-strong);
 }
 
 .btn-primary:hover {
   background: var(--btn-primary-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 10px rgba(9,9,11,0.18);
 }
 
 .btn-secondary {
