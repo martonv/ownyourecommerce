@@ -1,0 +1,705 @@
+---
+/**
+ * The product tour. A sticky rail of chapters on the left, and a column on the right that scrolls
+ * through one product surface per chapter. The rail follows the scroll position rather than being
+ * clicked through, so the page itself is the control.
+ *
+ * Every visual here is static markup and inline SVG: no screenshots to go stale, and it stays sharp
+ * at any width. The interactive version of these screens lives at /demo.
+ */
+const chapters = [
+  {
+    key: 'orders',
+    label: 'Take orders',
+    lead: 'Every order, every channel, one queue.',
+    body: 'Web, wholesale, marketplace and phone orders land in the same place, with stock and production status already beside them.',
+  },
+  {
+    key: 'inventory',
+    label: 'Track stock',
+    lead: 'Stock you can actually sell.',
+    body: 'One number, read from the same record the warehouse picks from, so overselling stops being a weekly cleanup job.',
+  },
+  {
+    key: 'production',
+    label: 'Build to order',
+    lead: 'From order to shop floor, without retyping.',
+    body: 'A work order is raised from real demand, materials are checked before a date is promised, and the order knows where its build is.',
+  },
+  {
+    key: 'customers',
+    label: 'Grow accounts',
+    lead: 'A CRM that knows what they bought.',
+    body: 'Deals sit next to real order history and real stock, so a rep can answer a question without asking someone else.',
+  },
+  {
+    key: 'team',
+    label: 'Run the team',
+    lead: 'Ask the business a question.',
+    body: 'Tickets, timesheets and approvals run on the same database, so the answer comes from your records rather than a spreadsheet.',
+  },
+];
+---
+
+<section class="story" id="product">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <p class="eyebrow">The product</p>
+      <h2>Everything your ops team lives in, in one place.</h2>
+    </div>
+
+    <div class="story-grid" data-story>
+      <nav class="rail" aria-label="Product tour">
+        <ul>
+          {chapters.map((c, i) => (
+            <li>
+              <button type="button" data-story-link={c.key} aria-current={i === 0 ? 'true' : 'false'}>
+                {c.label}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <div class="chapters">
+        {/* ---------------------------------------------------------- orders */}
+        <article class="chapter" data-story-chapter="orders" id="tour-orders">
+          <p class="chap-copy"><strong>{chapters[0].lead}</strong> {chapters[0].body}</p>
+          <div class="chap-visual two">
+            <div class="pane">
+              <div class="pane-head">
+                <span class="dot-row" aria-hidden="true"><i></i><i></i><i></i></span>
+                <span>Orders · 6 waiting</span>
+              </div>
+              <ul class="queue">
+                {[
+                  ['Web', '#3041', 'Sarah Chen', '1 × Oak dining table, 72"', '$1,890', 'Unfulfilled', 'warn'],
+                  ['Wholesale', '#3039', 'Harbor Hotel Group', '40 × Ash dining chair', '$14,400', 'In production', 'info'],
+                  ['Web', '#3040', 'Marcus Brooks', '2 × Ash dining chair', '$720', 'Unfulfilled', 'warn'],
+                  ['Marketplace', '#3038', 'Emma Rodriguez', '1 × Walnut wall shelf', '$280', 'Ready', 'ok'],
+                  ['Phone', '#3037', 'Cedar & Pine', '6 × Linen bench, 48"', '$5,040', 'Fulfilled', 'ok'],
+                ].map(([chan, id, who, item, total, status, tone]) => (
+                  <li>
+                    <span class={`chan chan-${(chan as string).toLowerCase()}`}>{chan}</span>
+                    <span class="q-main">
+                      <span class="q-who">{who}</span>
+                      <span class="q-item">{id} · {item}</span>
+                    </span>
+                    <span class="q-total">{total}</span>
+                    <span class={`chip is-${tone}`}>{status}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div class="pane pane-center">
+              <div class="pane-head">
+                <span class="dot-row" aria-hidden="true"><i></i><i></i><i></i></span>
+                <span>One queue</span>
+              </div>
+              <div class="orbit">
+                <svg viewBox="0 0 320 250" role="img" aria-label="Web, wholesale, marketplace, phone and retail orders all feeding one queue.">
+                  <circle cx="160" cy="125" r="104" class="ring" />
+                  <circle cx="160" cy="125" r="66" class="ring" />
+                  <circle cx="160" cy="125" r="34" class="hub" />
+                  <path d="M152 115h16M148 125h24M152 135h16" class="hub-mark" />
+                  {[
+                    ['Web', 160, 11, 'ok'],
+                    ['Wholesale', 42, 92, 'info'],
+                    ['Marketplace', 278, 92, 'neutral'],
+                    ['Phone', 72, 214, 'warn'],
+                    ['Retail POS', 250, 214, 'neutral'],
+                  ].map(([label, x, y, tone]) => {
+                    const w = String(label).length * 6.6 + 18;
+                    return (
+                      <g class={`node node-${tone}`}>
+                        <rect x={(x as number) - w / 2} y={(y as number) - 11} width={w} height={22} rx={11} />
+                        <text x={x as number} y={(y as number) + 4}>{label}</text>
+                      </g>
+                    );
+                  })}
+                </svg>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        {/* ---------------------------------------------------------- inventory */}
+        <article class="chapter" data-story-chapter="inventory" id="tour-inventory">
+          <p class="chap-copy"><strong>{chapters[1].lead}</strong> {chapters[1].body}</p>
+          <div class="chap-visual">
+            <div class="pane">
+              <div class="pane-head">
+                <span class="dot-row" aria-hidden="true"><i></i><i></i><i></i></span>
+                <span>Inventory · Main warehouse</span>
+                <span class="chip is-warn head-chip">3 below reorder</span>
+              </div>
+              <table class="grid">
+                <thead>
+                  <tr><th>Item</th><th>Location</th><th class="n">Available</th><th class="n">Committed</th><th class="n">Days cover</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                  {[
+                    ['Oak dining table, 72"', 'A · Bin 14', '28', '6', '41', 'In stock', 'ok'],
+                    ['Ash dining chair', 'B · Bin 03', '4', '40', '6', 'Reorder', 'warn'],
+                    ['Walnut credenza, 84"', 'C · Bin 21', '11', '2', '33', 'In stock', 'ok'],
+                    ['Linen bench, 48"', 'A · Bin 09', '0', '6', '0', 'Out of stock', 'bad'],
+                    ['Maple bar stool', 'B · Bin 17', '46', '12', '58', 'In stock', 'ok'],
+                  ].map(([name, loc, avail, comm, cover, status, tone]) => (
+                    <tr class={tone === 'ok' ? '' : 'is-flagged'}>
+                      <td class="strong">{name}</td>
+                      <td class="muted">{loc}</td>
+                      <td class="n">{avail}</td>
+                      <td class="n muted">{comm}</td>
+                      <td class="n">{cover}</td>
+                      <td><span class={`chip is-${tone === 'bad' ? 'bad' : tone}`}>{status}</span></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <div class="pane-foot">
+                <span>Availability is read from the record the warehouse picks from. There is no second number.</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        {/* ---------------------------------------------------------- production */}
+        <article class="chapter" data-story-chapter="production" id="tour-production">
+          <p class="chap-copy"><strong>{chapters[2].lead}</strong> {chapters[2].body}</p>
+          <div class="chap-visual">
+            <div class="pane pane-canvas">
+              <svg viewBox="0 0 880 330" role="img" aria-label="An order triggers a stock check, which either releases a work order through milling, finishing and assembly, or raises a purchase order first.">
+                <defs>
+                  <pattern id="story-dots" width="16" height="16" patternUnits="userSpaceOnUse">
+                    <circle cx="1.5" cy="1.5" r="1.5" class="dot" />
+                  </pattern>
+                  <marker id="story-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M0 1l8 4-8 4z" class="arrow" />
+                  </marker>
+                </defs>
+                <rect width="880" height="330" fill="url(#story-dots)" />
+
+                <g class="wire">
+                  <path d="M196 60h58" marker-end="url(#story-arrow)" />
+                  <path d="M430 60h58" marker-end="url(#story-arrow)" />
+                  <path d="M560 86v38a10 10 0 01-10 10H146a10 10 0 00-10 10v24" marker-end="url(#story-arrow)" />
+                  <path d="M236 180h54" marker-end="url(#story-arrow)" />
+                  <path d="M430 180h54" marker-end="url(#story-arrow)" />
+                  <path d="M624 180h54" marker-end="url(#story-arrow)" />
+                  {/* the "if not" branch leaves the decision, not the stage after it */}
+                  <path d="M646 60h170a10 10 0 0110 10v182a10 10 0 01-10 10h-42" class="wire-alt" marker-end="url(#story-arrow)" />
+                </g>
+
+                <g class="step" data-tone="trigger">
+                  <rect x="36" y="36" width="160" height="48" rx="10" />
+                  <text x="52" y="58" class="s-title">Order placed</text>
+                  <text x="52" y="73" class="s-sub">Web · wholesale · phone</text>
+                  <text x="52" y="26" class="s-tag">Trigger</text>
+                </g>
+                <g class="step">
+                  <rect x="254" y="36" width="176" height="48" rx="10" />
+                  <text x="270" y="58" class="s-title">Stock reserved</text>
+                  <text x="270" y="73" class="s-sub">Against live availability</text>
+                  <text x="270" y="26" class="s-ok">✓ Done</text>
+                </g>
+                <g class="step" data-tone="branch">
+                  <rect x="488" y="36" width="158" height="48" rx="10" />
+                  <text x="504" y="58" class="s-title">Enough on hand?</text>
+                  <text x="504" y="73" class="s-sub">Checks the bill of materials</text>
+                  <text x="504" y="26" class="s-tag">Decision</text>
+                </g>
+
+                <g class="step">
+                  <rect x="60" y="156" width="176" height="48" rx="10" />
+                  <text x="76" y="178" class="s-title">Work order released</text>
+                  <text x="76" y="193" class="s-sub">WO-1184 · 40 units</text>
+                  <text x="76" y="146" class="s-ok">✓ Done</text>
+                </g>
+                <g class="step">
+                  <rect x="290" y="156" width="140" height="48" rx="10" />
+                  <text x="306" y="178" class="s-title">Mill and joinery</text>
+                  <text x="306" y="193" class="s-sub">Stage 1 of 3</text>
+                  <text x="306" y="146" class="s-ok">✓ Done</text>
+                </g>
+                <g class="step" data-tone="live">
+                  <rect x="484" y="156" width="140" height="48" rx="10" />
+                  <text x="500" y="178" class="s-title">Finishing</text>
+                  <text x="500" y="193" class="s-sub">Stage 2 of 3</text>
+                  <text x="500" y="146" class="s-run">● Running</text>
+                </g>
+                <g class="step" data-tone="idle">
+                  <rect x="678" y="156" width="156" height="48" rx="10" />
+                  <text x="694" y="178" class="s-title">Pack and ship</text>
+                  <text x="694" y="193" class="s-sub">Updates the order</text>
+                  <text x="694" y="146" class="s-tag">Queued</text>
+                </g>
+
+                <g class="step" data-tone="alt">
+                  <rect x="578" y="238" width="196" height="48" rx="10" />
+                  <text x="594" y="260" class="s-title">Raise purchase order</text>
+                  <text x="594" y="275" class="s-sub">Short on walnut veneer</text>
+                  <text x="594" y="228" class="s-tag">If not</text>
+                </g>
+              </svg>
+            </div>
+          </div>
+        </article>
+
+        {/* ---------------------------------------------------------- customers */}
+        <article class="chapter" data-story-chapter="customers" id="tour-customers">
+          <p class="chap-copy"><strong>{chapters[3].lead}</strong> {chapters[3].body}</p>
+          <div class="chap-visual">
+            <div class="pane pane-board">
+              <div class="board">
+                {[
+                  ['Qualified', 'q', [
+                    ['Meridian Workspaces', '$42,000', 'Priya Raman', '12 past orders'],
+                    ['Ember & Oak Cafés', '$18,400', 'Priya Raman', 'First order'],
+                  ]],
+                  ['Sample sent', 's', [
+                    ['Kestrel Contract', '$64,500', 'Marcus Oyelaran', 'Approved by manager'],
+                  ]],
+                  ['Quoted', 'p', [
+                    ['Harbor Hotel Group', '$86,200', 'Tomás Herrera', 'Net 30 · Trade tier 2'],
+                    ['Atlas Office Fitout', '$31,200', 'Priya Raman', 'Security review'],
+                  ]],
+                  ['Won', 'w', [
+                    ['Lakeside Resorts', '$78,900', 'Marcus Oyelaran', 'In production'],
+                  ]],
+                ].map(([title, tone, cards]) => (
+                  <div class="col">
+                    <div class="col-head">
+                      <span><i class={`cdot cdot-${tone}`}></i>{title}</span>
+                      <span class="count">{(cards as string[][]).length}</span>
+                    </div>
+                    {(cards as string[][]).map(([name, value, owner, note]) => (
+                      <article class="deal">
+                        <span class="deal-name">{name}</span>
+                        <span class="deal-value">{value}</span>
+                        <span class="deal-meta">{owner}</span>
+                        <span class="deal-note">{note}</span>
+                      </article>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </article>
+
+        {/* ---------------------------------------------------------- team */}
+        <article class="chapter" data-story-chapter="team" id="tour-team">
+          <p class="chap-copy"><strong>{chapters[4].lead}</strong> {chapters[4].body}</p>
+          <div class="chap-visual">
+            <div class="pane pane-ask">
+              <p class="ask">Which wholesale orders are at risk of missing their promised date?</p>
+              <div class="answer">
+                <div class="answer-head">
+                  <span class="tools">3 records checked</span>
+                  <span class="muted">Orders · work orders · component stock</span>
+                </div>
+                <p class="answer-body">
+                  Two of the eleven open wholesale orders are at risk. Both are waiting on the same
+                  component, and one has a promised date inside its lead time.
+                </p>
+                <table class="grid">
+                  <thead><tr><th>Order</th><th>Customer</th><th>Blocked by</th><th>Promised</th><th>Risk</th></tr></thead>
+                  <tbody>
+                    <tr class="is-flagged">
+                      <td class="strong">#3039</td><td>Harbor Hotel Group</td><td class="muted">Walnut veneer · 21 day lead</td><td>Apr 22</td>
+                      <td><span class="chip is-bad">High</span></td>
+                    </tr>
+                    <tr class="is-flagged">
+                      <td class="strong">#3028</td><td>Brightfield Hospitality</td><td class="muted">Walnut veneer · 21 day lead</td><td>May 06</td>
+                      <td><span class="chip is-warn">Medium</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="answer-foot">
+                  <span class="chip is-info">Suggested</span>
+                  <span>Raise PO-1187 with Timberline Mills today and both dates hold.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const story = document.querySelector<HTMLElement>('[data-story]');
+
+  if (story) {
+    const links = [...story.querySelectorAll<HTMLButtonElement>('[data-story-link]')];
+    const chapters = [...story.querySelectorAll<HTMLElement>('[data-story-chapter]')];
+
+    const setActive = (key: string) => {
+      links.forEach((l) => l.setAttribute('aria-current', String(l.dataset.storyLink === key)));
+    };
+
+    // A zero-height band across the middle of the viewport: whichever chapter crosses it is the
+    // one being read, which tracks scrolling far more honestly than "topmost visible".
+    const spy = new IntersectionObserver(
+      (entries) => {
+        const hit = entries.find((e) => e.isIntersecting);
+        if (hit) setActive((hit.target as HTMLElement).dataset.storyChapter!);
+      },
+      { rootMargin: '-50% 0px -50% 0px', threshold: 0 }
+    );
+    chapters.forEach((c) => spy.observe(c));
+
+    links.forEach((link) =>
+      link.addEventListener('click', () => {
+        const target = story.querySelector<HTMLElement>(`[data-story-chapter="${link.dataset.storyLink}"]`);
+        if (!target) return;
+        const smooth = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+        target.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' });
+      })
+    );
+  }
+</script>
+
+<style>
+  .story { background: var(--bg-subtle); }
+
+  .story-grid {
+    display: grid;
+    grid-template-columns: 196px minmax(0, 1fr);
+    gap: clamp(24px, 4vw, 56px);
+    align-items: start;
+  }
+
+  /* ---------------------------------------------------------------- rail */
+
+  .rail { position: sticky; top: 108px; }
+  .rail ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+  .rail button {
+    position: relative;
+    width: 100%;
+    padding: 8px 0 8px 16px;
+    border: 0;
+    border-left: 2px solid var(--border);
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    text-align: left;
+    transition: color 0.18s var(--ease), border-color 0.18s var(--ease);
+  }
+  .rail button:hover { color: var(--text); }
+  .rail button[aria-current='true'] {
+    color: var(--text);
+    border-left-color: var(--accent);
+    font-weight: 600;
+  }
+
+  /* ---------------------------------------------------------------- chapters */
+
+  .chapters { display: flex; flex-direction: column; min-width: 0; }
+  .chapter {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    padding: clamp(40px, 6vw, 72px) 0;
+    border-top: 1px solid var(--border);
+    scroll-margin-top: 96px;
+  }
+  .chapter:first-child { border-top: 0; padding-top: 0; }
+
+  .chap-copy {
+    max-width: 46ch;
+    font-size: clamp(1.0625rem, 1.5vw, 1.25rem);
+    line-height: 1.45;
+    color: var(--text-muted);
+  }
+  .chap-copy strong { color: var(--text); font-weight: 600; }
+
+  .chap-visual { min-width: 0; }
+  .chap-visual.two {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  /* ---------------------------------------------------------------- panes */
+
+  .pane {
+    min-width: 0;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .pane-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.78rem;
+    color: var(--text-muted);
+  }
+  .head-chip { margin-left: auto; }
+  .dot-row { display: inline-flex; gap: 4px; }
+  .dot-row i { width: 7px; height: 7px; border-radius: 50%; background: var(--border-strong); }
+  .pane-foot {
+    padding: 10px 14px;
+    border-top: 1px solid var(--border);
+    font-size: 0.78rem;
+    color: var(--text-muted);
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 9px;
+    border-radius: 999px;
+    background: var(--bg-muted);
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .chip.is-ok { background: var(--accent-soft); color: var(--accent-strong); }
+  .chip.is-warn { background: #fdf0dc; color: #b45309; }
+  .chip.is-bad { background: #fdeaea; color: #b91c1c; }
+  .chip.is-info { background: #e7eeff; color: #2563eb; }
+
+  /* ---------------------------------------------------------------- order queue */
+
+  .queue { list-style: none; margin: 0; padding: 0; }
+  .queue li {
+    display: grid;
+    grid-template-columns: 74px minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .queue li:last-child { border-bottom: 0; }
+  .chan {
+    padding: 2px 7px;
+    border-radius: 5px;
+    background: var(--bg-muted);
+    color: var(--text-muted);
+    font-size: 0.66rem;
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: 0.01em;
+  }
+  .chan-wholesale { background: #e7eeff; color: #2563eb; }
+  .chan-web { background: var(--accent-soft); color: var(--accent-strong); }
+  .q-main { display: flex; flex-direction: column; min-width: 0; }
+  .q-who { font-size: 0.86rem; font-weight: 500; color: var(--text); }
+  .q-item {
+    font-size: 0.74rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .q-total { font-size: 0.84rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+  /* ---------------------------------------------------------------- orbit */
+
+  .pane-center { display: flex; flex-direction: column; }
+  .orbit { flex: 1 1 auto; display: grid; place-items: center; padding: 14px; }
+  .orbit svg { width: 100%; height: auto; }
+  .ring { fill: none; stroke: var(--border); stroke-width: 1; }
+  .hub { fill: var(--bg); stroke: var(--border-strong); stroke-width: 1.5; }
+  .hub-mark { stroke: var(--accent-strong); stroke-width: 2; stroke-linecap: round; }
+  .node rect { fill: var(--bg); stroke: var(--border-strong); stroke-width: 1; }
+  .node text {
+    fill: var(--text);
+    font-size: 11px;
+    font-weight: 500;
+    text-anchor: middle;
+  }
+  .node-ok rect { fill: var(--accent-soft); stroke: var(--accent); }
+  .node-ok text { fill: var(--accent-strong); }
+  .node-info rect { fill: #e7eeff; stroke: #b9cdff; }
+  .node-info text { fill: #2563eb; }
+  .node-warn rect { fill: #fdf0dc; stroke: #f0d3a8; }
+  .node-warn text { fill: #b45309; }
+
+  /* ---------------------------------------------------------------- tables */
+
+  .grid { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+  .grid th {
+    padding: 8px 14px;
+    background: var(--bg-subtle);
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 0.66rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-align: left;
+    white-space: nowrap;
+  }
+  .grid td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  .grid tbody tr:last-child td { border-bottom: 0; }
+  .grid .n { text-align: right; font-variant-numeric: tabular-nums; }
+  .grid .strong { font-weight: 600; }
+  .grid .muted { color: var(--text-muted); }
+  .grid tr.is-flagged td { background: color-mix(in srgb, #fdf0dc 45%, transparent); }
+
+  /* ---------------------------------------------------------------- flow canvas */
+
+  .pane-canvas { background: var(--bg); }
+  .pane-canvas svg { width: 100%; height: auto; display: block; }
+  .dot { fill: var(--border-strong); opacity: 0.5; }
+  .arrow { fill: var(--border-strong); }
+  .wire path { fill: none; stroke: var(--border-strong); stroke-width: 1.4; }
+  .wire .wire-alt { stroke-dasharray: 4 4; }
+  .step rect { fill: var(--bg); stroke: var(--border-strong); stroke-width: 1; }
+  .step[data-tone='trigger'] rect { stroke: var(--accent); }
+  .step[data-tone='live'] rect { stroke: #2563eb; }
+  .step[data-tone='alt'] rect { stroke-dasharray: 4 3; }
+  .step[data-tone='idle'] rect { fill: var(--bg-subtle); }
+  .s-title { fill: var(--text); font-size: 12.5px; font-weight: 600; }
+  .s-sub { fill: var(--text-muted); font-size: 10.5px; }
+  .s-tag { fill: var(--text-muted); font-size: 10px; font-weight: 600; }
+  .s-ok { fill: var(--accent-strong); font-size: 10px; font-weight: 600; }
+  .s-run { fill: #2563eb; font-size: 10px; font-weight: 600; }
+
+  /* ---------------------------------------------------------------- board */
+
+  .pane-board { background: var(--bg-subtle); }
+  .board {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(196px, 1fr);
+    gap: 12px;
+    padding: 14px;
+    overflow-x: auto;
+  }
+  .col { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .col-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+  .col-head span:first-child { display: inline-flex; align-items: center; gap: 7px; }
+  .cdot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+  .cdot-q { background: #f59e0b; }
+  .cdot-s { background: #2563eb; }
+  .cdot-p { background: #a855f7; }
+  .cdot-w { background: var(--accent); }
+  .count { color: var(--text-muted); font-weight: 500; }
+  .deal {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 10px 11px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .deal-name { font-size: 0.82rem; font-weight: 600; }
+  .deal-value { font-size: 0.82rem; font-variant-numeric: tabular-nums; color: var(--text); }
+  .deal-meta, .deal-note { font-size: 0.72rem; color: var(--text-muted); }
+
+  /* ---------------------------------------------------------------- ask */
+
+  .pane-ask {
+    background: var(--bg);
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .ask {
+    align-self: flex-end;
+    max-width: 44ch;
+    padding: 9px 14px;
+    border-radius: 14px;
+    background: var(--bg-muted);
+    font-size: 0.88rem;
+    color: var(--text);
+  }
+  .answer {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .answer-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.74rem;
+  }
+  .tools {
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--bg-muted);
+    font-weight: 600;
+    color: var(--text);
+  }
+  .answer-head .muted { color: var(--text-muted); }
+  .answer-body { padding: 12px 14px; font-size: 0.86rem; max-width: none; }
+  .answer-foot {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 11px 14px;
+    border-top: 1px solid var(--border);
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+
+  /* ---------------------------------------------------------------- responsive */
+
+  @media (max-width: 1024px) {
+    .chap-visual.two { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (max-width: 860px) {
+    .story-grid { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+    /* the rail turns into a scrollable strip that stays under the site nav */
+    .rail {
+      position: sticky;
+      top: 64px;
+      z-index: 2;
+      margin: 0 calc(-1 * var(--gutter));
+      padding: 8px var(--gutter);
+      background: var(--bg-subtle);
+      border-bottom: 1px solid var(--border);
+    }
+    .rail ul { flex-direction: row; gap: 4px; overflow-x: auto; scrollbar-width: none; }
+    .rail ul::-webkit-scrollbar { display: none; }
+    .rail button {
+      width: auto;
+      padding: 6px 12px;
+      border-left: 0;
+      border-radius: 999px;
+      white-space: nowrap;
+      font-size: 0.875rem;
+    }
+    .rail button[aria-current='true'] { background: var(--bg-muted); }
+    .chapter { scroll-margin-top: 124px; }
+  }
+  @media (max-width: 560px) {
+    .queue li { grid-template-columns: minmax(0, 1fr) auto; row-gap: 6px; }
+    .chan, .q-total { grid-column: 1; justify-self: start; }
+    .grid th, .grid td { padding-inline: 10px; }
+    .pane:has(.grid) { overflow-x: auto; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rail button { transition: none; }
+  }
+</style>

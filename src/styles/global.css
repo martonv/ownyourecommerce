@@ -388,6 +388,49 @@ p { margin: 0; color: var(--text-body); max-width: 60ch; }
   [data-reveal] { opacity: 1; transform: none; }
 }
 
+/* ===== Boxed page frame =====
+   Every page but the home page sits in a bounded column: two rails running the full height of the
+   page and a hairline between sections. Section fills are painted inside the frame instead of
+   bleeding edge to edge, so nothing crosses a rail. The rails collapse to the viewport edges once
+   the window is narrower than the frame. */
+
+.boxed { position: relative; }
+
+.boxed::before,
+.boxed::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--border);
+  pointer-events: none;
+  z-index: 1;
+}
+.boxed::before { left: max(0px, calc(50% - var(--max-w) / 2)); }
+.boxed::after { right: max(0px, calc(50% - var(--max-w) / 2)); }
+
+/* a divider above every section, drawn only across the frame */
+.boxed > * {
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-image: linear-gradient(var(--border), var(--border));
+  background-size: min(var(--max-w), 100%) 1px;
+}
+.boxed > :first-child { background-image: none; }
+
+/* the alternating fill stops at the rails too */
+.boxed .section-subtle {
+  background-color: transparent;
+  border-top: 0;
+  border-bottom: 0;
+  background-image:
+    linear-gradient(var(--border), var(--border)),
+    linear-gradient(var(--bg-subtle), var(--bg-subtle));
+  background-size: min(var(--max-w), 100%) 1px, min(var(--max-w), 100%) 100%;
+  background-position: center top, center center;
+}
+
 /* ===== Utility ===== */
 
 .text-accent {

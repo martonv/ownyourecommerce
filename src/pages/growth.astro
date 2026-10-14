@@ -2,7 +2,6 @@
 import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
-import PageHero from '../components/PageHero.astro';
 import CtaBand from '../components/CtaBand.astro';
 
 const channels = [
@@ -96,13 +95,7 @@ const convert = [
   description="Integrations that put your catalog where buyers are, and agents that work the queues your team never gets to, all on the same data as your orders."
 >
   <Nav />
-  <main id="main" tabindex="-1">
-    <PageHero
-      label="Growth"
-      title="Connected systems sell more."
-      lead="Every integration puts your catalog, stock and customers where buyers already are. Every agent works a queue your team never gets to. Both run on the same records as your orders, so nothing is guessing from a stale export."
-    />
-
+  <main id="main" tabindex="-1" class="boxed">
     <section class="section">
       <div class="container">
         <div class="section-head" data-reveal>

@@ -1,0 +1,308 @@
+---
+/**
+ * The one dark band on the page.
+ *
+ * The visual is a floor plan rather than a diagram of connected boxes: one perimeter, rooms that
+ * share walls. That is the actual claim — these are not separate products bridged together, they
+ * are rooms in one building — and it keeps the section away from the glowing-horizon look every
+ * other platform is using.
+ *
+ * Shared walls come from a 1px grid gap over a wall-coloured background, so every divider is
+ * exactly one line and no two rooms ever double up on a border.
+ */
+const rooms = [
+  { area: 'store', label: 'Storefront', note: 'Catalog, cart, checkout' },
+  { area: 'orders', label: 'Orders', note: 'Every channel, one queue' },
+  { area: 'inv', label: 'Inventory' },
+  { area: 'prod', label: 'Production', note: 'Work orders and capacity' },
+  { area: 'crm', label: 'CRM' },
+  { area: 'support', label: 'Support' },
+  { area: 'mkt', label: 'Marketing' },
+  { area: 'purch', label: 'Purchasing' },
+  { area: 'team', label: 'Team ops', note: 'Tickets, time, approvals' },
+  { area: 'field', label: 'Field service' },
+  { area: 'custom', label: 'Your custom work', note: 'Built in, not bolted on', accent: true },
+];
+
+const cells = [
+  {
+    icon: 'M12 3l8 3v6c0 5-3.4 8-8 9-4.6-1-8-4-8-9V6zM9 12l2 2 4-4',
+    title: 'One login.',
+    body: 'Every team, every screen, one account and one set of permissions.',
+  },
+  {
+    icon: 'M12 3c4.4 0 8 1.3 8 3s-3.6 3-8 3-8-1.3-8-3 3.6-3 8-3zM4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3',
+    title: 'One database.',
+    body: 'An order, its stock, its build and its customer are the same record.',
+  },
+  {
+    icon: 'M4 5h16v14H4zM4 10h16M10 10v9',
+    title: 'One way of working.',
+    body: 'Every screen behaves the same, so training is one conversation.',
+  },
+  {
+    icon: 'M12 3l1.8 4.9L19 9.7l-5.2 1.8L12 16.4l-1.8-4.9L5 9.7l5.2-1.8zM18 15l.9 2.4 2.4.9-2.4.9-.9 2.4-.9-2.4-2.4-.9 2.4-.9z',
+    title: 'One place to ask.',
+    body: 'The AI reads your real records and acts inside the rules you set.',
+  },
+  {
+    icon: 'M6 3h9l3.5 3.5V21H6zM15 3v3.5h3.5M9.5 11.5h5M9.5 15h5',
+    title: 'One bill.',
+    body: 'Pay once. No per-seat licences, no app store, no connector fees.',
+  },
+];
+---
+
+<section class="env" id="environment">
+  <div class="container env-top">
+    <div class="env-copy">
+      <p class="env-eyebrow" data-reveal>The whole business, one place</p>
+      <h2 data-reveal>One environment</h2>
+      <p class="env-lead" data-reveal>
+        Every application and workflow operating inside one cohesive ecosystem. Simple and
+        understandable.
+      </p>
+      <p class="env-sub" data-reveal>
+        Not six products joined by connectors. One perimeter, rooms that share walls, and a record
+        that walks between them without being copied.
+      </p>
+    </div>
+
+    <div class="env-planwrap" data-reveal>
+      <div class="env-bloom" aria-hidden="true"></div>
+      <div class="env-frame">
+        <div class="env-plan" role="img" aria-label="A floor plan of one building: storefront, orders, inventory, production, CRM, support, marketing, purchasing, team ops, field service and your custom work, all sharing walls inside a single perimeter.">
+          {rooms.map((r) => (
+            <div class="room" style={`grid-area:${r.area}`} data-accent={r.accent ? 'true' : undefined}>
+              <span class="room-label">{r.label}</span>
+              {r.note && <span class="room-note">{r.note}</span>}
+            </div>
+          ))}
+        </div>
+      </div>
+      <p class="env-caption">One perimeter · eleven rooms · no walls between the data</p>
+    </div>
+  </div>
+
+  <ul class="env-grid">
+    {cells.map((c) => (
+      <li data-reveal>
+        <span class="env-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d={c.icon} />
+          </svg>
+        </span>
+        <p class="env-title">{c.title}</p>
+        <p class="env-body">{c.body}</p>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .env {
+    --env-bg: #0a0a0c;
+    --env-room: rgba(17, 17, 21, 0.9);
+    --env-wall: rgba(255, 255, 255, 0.11);
+    --env-line: rgba(255, 255, 255, 0.09);
+    --env-text: #f5f6f7;
+    --env-muted: #9aa0a8;
+    --env-dim: #6e747c;
+    --env-accent: #4ade80;
+
+    position: relative;
+    background: var(--env-bg);
+    color: var(--env-text);
+    overflow: hidden;
+  }
+
+  /* ---------------------------------------------------------------- top */
+
+  .env-top {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: clamp(32px, 5vw, 72px);
+    align-items: center;
+    padding: clamp(64px, 8vw, 104px) var(--gutter) clamp(56px, 7vw, 92px);
+  }
+
+  .env-copy { display: flex; flex-direction: column; gap: 16px; }
+  .env-eyebrow {
+    margin: 0;
+    max-width: none;
+    font-size: 0.9375rem;
+    color: var(--env-dim);
+  }
+  .env h2 {
+    max-width: 11ch;
+    font-size: clamp(2.5rem, 5.4vw, 4.25rem);
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    color: var(--env-text);
+  }
+  .env-lead {
+    max-width: 42ch;
+    font-size: clamp(1rem, 1.4vw, 1.125rem);
+    color: var(--env-muted);
+  }
+  .env-sub {
+    max-width: 42ch;
+    padding-top: 14px;
+    border-top: 1px solid var(--env-line);
+    font-size: 0.9375rem;
+    color: var(--env-dim);
+  }
+
+  /* ---------------------------------------------------------------- floor plan */
+
+  .env-planwrap { position: relative; min-width: 0; }
+  /* A single warm pool of light behind the plan, rather than a glowing edge around it. */
+  .env-bloom {
+    position: absolute;
+    inset: -14% -8%;
+    background: radial-gradient(
+      58% 58% at 62% 42%,
+      rgba(22, 163, 74, 0.42),
+      rgba(22, 163, 74, 0.12) 50%,
+      transparent 74%
+    );
+    filter: blur(14px);
+    pointer-events: none;
+  }
+
+  /* 1px of gradient showing through as the outer wall */
+  .env-frame {
+    position: relative;
+    padding: 1px;
+    border-radius: 19px;
+    background: linear-gradient(
+      142deg,
+      rgba(74, 222, 128, 0.55),
+      rgba(255, 255, 255, 0.16) 38%,
+      rgba(255, 255, 255, 0.07) 62%,
+      rgba(8, 145, 178, 0.4)
+    );
+  }
+  .env-plan {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-auto-rows: minmax(76px, auto);
+    grid-template-areas:
+      'store store store orders orders inv'
+      'store store store orders orders inv'
+      'prod  prod  crm   crm    support mkt'
+      'purch team  team  field  custom  custom';
+    gap: 1px;
+    border-radius: 18px;
+    background: var(--env-wall);
+    overflow: hidden;
+  }
+
+  .room {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 3px;
+    padding: 12px 13px;
+    /* slightly translucent so the pool of light behind the plan reads through the rooms */
+    background: var(--env-room);
+    min-width: 0;
+  }
+  .room-label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--env-text);
+    letter-spacing: -0.005em;
+  }
+  .room-note {
+    font-size: 0.7rem;
+    line-height: 1.35;
+    color: var(--env-dim);
+  }
+  .room[data-accent] {
+    background: linear-gradient(180deg, rgba(22, 163, 74, 0.2), rgba(22, 163, 74, 0.08));
+  }
+  .room[data-accent] .room-label { color: var(--env-accent); }
+  .room[data-accent] .room-note { color: rgba(167, 243, 208, 0.72); }
+
+  .env-caption {
+    margin: 14px 0 0;
+    max-width: none;
+    text-align: center;
+    font-size: 0.8125rem;
+    color: var(--env-dim);
+  }
+
+  /* ---------------------------------------------------------------- feature row */
+
+  .env-grid {
+    position: relative;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    border-top: 1px solid var(--env-line);
+  }
+  .env-grid li {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: clamp(22px, 2.6vw, 32px) clamp(18px, 2vw, 28px) clamp(28px, 3.4vw, 42px);
+    border-left: 1px solid var(--env-line);
+    min-width: 0;
+  }
+  .env-grid li:first-child { border-left: 0; }
+  .env-icon { color: var(--env-dim); margin-bottom: clamp(14px, 2.4vw, 30px); }
+  .env-title {
+    margin: 0;
+    max-width: none;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--env-text);
+  }
+  .env-body {
+    margin: 0;
+    max-width: none;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--env-muted);
+  }
+
+  /* ---------------------------------------------------------------- responsive */
+
+  @media (max-width: 1024px) {
+    .env-top { grid-template-columns: minmax(0, 1fr); align-items: start; }
+    .env h2 { max-width: none; }
+    .env-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    /* restart the divider each row so no cell is left with a stray left edge */
+    .env-grid li:nth-child(3n + 1) { border-left: 0; }
+    .env-grid li:nth-child(n + 4) { border-top: 1px solid var(--env-line); }
+  }
+
+  @media (max-width: 720px) {
+    /* the plan keeps its shared walls but drops to a simple two-across arrangement */
+    .env-plan {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-areas: none;
+      grid-auto-rows: minmax(72px, auto);
+    }
+    .room { grid-area: auto !important; }
+    .room[data-accent] { grid-column: span 2; }
+  }
+
+  @media (max-width: 680px) {
+    .env-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .env-grid li:nth-child(3n + 1) { border-left: 1px solid var(--env-line); }
+    .env-grid li:nth-child(odd) { border-left: 0; }
+    .env-grid li:nth-child(n + 3) { border-top: 1px solid var(--env-line); }
+  }
+
+  @media (max-width: 460px) {
+    .env-grid { grid-template-columns: minmax(0, 1fr); }
+    .env-grid li { border-left: 0 !important; }
+    .env-grid li + li { border-top: 1px solid var(--env-line); }
+    .env-icon { margin-bottom: 4px; }
+  }
+</style>

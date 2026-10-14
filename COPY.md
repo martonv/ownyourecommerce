@@ -174,7 +174,7 @@ Order placed → Stock reserved → Work order released → Picked and packed �
 **H2:** Fixed scope. Fixed price. No surprises.
 
 **Step 1: Stack review (free)**
-A 45-minute call where we map your tools, data flows and where things break. You get the map whether or not you hire us.
+A 45-minute call with your team. We map out your business's software dependencies and see what we can replace with a custom solution to save you money and time.
 
 **Step 2: Scope and price**
 A written scope, a fixed price and a timeline. Nothing starts until you agree to all three.
