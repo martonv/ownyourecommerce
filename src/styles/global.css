@@ -419,6 +419,11 @@ p { margin: 0; color: var(--text-body); max-width: 60ch; }
 }
 .boxed > :first-child { background-image: none; }
 
+/* A full-bleed band opts out of the frame: it paints over the rails and draws its own edges, so
+   the section after it must not add a second line directly under the band's bottom border. */
+.boxed .frame-bleed { position: relative; z-index: 2; }
+.boxed .frame-bleed + * { background-image: none; }
+
 /* the alternating fill stops at the rails too */
 .boxed .section-subtle {
   background-color: transparent;

@@ -1,5 +1,5 @@
 ---
-import HeroDemo from './hero/HeroDemo';
+import HeroAdmin from './HeroAdmin.astro';
 ---
 
 <section class="hero" id="top">
@@ -25,8 +25,8 @@ import HeroDemo from './hero/HeroDemo';
   </div>
 
   <div class="container frame-wrap">
-    {/* Hydrates only on wide screens; narrow ones keep the server-rendered still. */}
-    <HeroDemo client:media="(min-width: 1024px)" />
+    {/* The real admin, scaled into the frame. See HeroAdmin.astro. */}
+    <HeroAdmin />
   </div>
 </section>
 

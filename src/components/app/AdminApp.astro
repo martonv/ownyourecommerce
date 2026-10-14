@@ -13,6 +13,20 @@ import { TENANT, counts, chatChannels, chatMessages, notifications } from './see
 import { VIEWS } from './views';
 import { ICON, icon, badge, btn, esc } from './ui';
 
+interface Props {
+  /**
+   * Render only these views. The hero uses it so the home page ships the handful of screens it
+   * actually shows instead of all thirty-four; the demo page omits it and gets everything.
+   */
+  only?: string[];
+  /** Non-interactive: the hero is a picture of the product, not the product. */
+  still?: boolean;
+}
+
+const { only, still = false } = Astro.props;
+const views = only ? Object.entries(VIEWS).filter(([k]) => only.includes(k)) : Object.entries(VIEWS);
+const firstView = views[0]?.[0] ?? 'dashboard';
+
 const defaultRole = ROLES[0];
 
 const badgeCounts: Record<string, number> = {
@@ -29,7 +43,7 @@ const sensitive = Object.fromEntries(ROLES.map((r) => [r.key, r.sensitive]));
 const people = Object.fromEntries(ROLES.map((r) => [r.key, { ...r.person, role: r.name, dept: r.department }]));
 ---
 
-<div class="oa" data-oa data-oa-theme="light">
+<div class="oa" data-oa data-oa-theme="light" data-oa-still={still ? 'true' : undefined}>
   <div class="oa-shell" data-oa-shell data-collapsed="false">
     <!-- ------------------------------------------------------------ sidebar -->
     <aside class="oa-side">
@@ -130,8 +144,8 @@ const people = Object.fromEntries(ROLES.map((r) => [r.key, { ...r.person, role: 
 
       <!-- ---------------------------------------------------------- views -->
       <main class="oa-content" data-oa-content tabindex="-1">
-        {Object.entries(VIEWS).map(([key, render]) => (
-          <section class="oa-view" data-oa-view={key} hidden={key !== 'dashboard'} set:html={render()} />
+        {views.map(([key, render]) => (
+          <section class="oa-view" data-oa-view={key} hidden={key !== firstView} set:html={render()} />
         ))}
 
         <section class="oa-view" data-oa-view="__noaccess" hidden>
@@ -760,7 +774,8 @@ const people = Object.fromEntries(ROLES.map((r) => [r.key, { ...r.person, role: 
     } catch {
       setTheme('light');
     }
-    restoreGroups();
+    // The hero is a fixed picture of the product, so it ignores whatever the demo page remembered.
+    if (root.dataset.oaStill !== 'true') restoreGroups();
     applyRole();
   }
 </script>
