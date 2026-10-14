@@ -6,7 +6,9 @@ import HeroAdmin from './HeroAdmin.astro';
   <div class="dots" aria-hidden="true"></div>
 
   <div class="container hero-inner">
-    <p class="eyebrow" data-reveal>For companies running their store, CRM and inventory in separate tools</p>
+    <p class="hero-pill" data-reveal>
+      <span class="pill-text">For companies running their store, CRM and inventory in separate tools</span>
+    </p>
 
     <h1 data-reveal>Building the new standard for eCommerce businesses.</h1>
 
@@ -37,6 +39,62 @@ import HeroAdmin from './HeroAdmin.astro';
 </div>
 
 <style>
+  /* A thread of light runs the perimeter of the pill. The conic gradient is rotated by animating a
+     registered custom property, which is the only way to tween an angle; the inner fill covers all
+     but a hairline of it, so what shows is a travelling edge rather than a glowing block. */
+  @property --laser {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+  }
+
+  .hero-pill {
+    position: relative;
+    isolation: isolate;
+    display: inline-flex;
+    align-items: center;
+    max-width: none;
+    margin-bottom: 4px;
+    padding: 7px 17px;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    line-height: 1.35;
+    color: var(--text-body);
+  }
+  .hero-pill::before {
+    content: '';
+    position: absolute;
+    z-index: -2;
+    inset: -1.5px;
+    border-radius: inherit;
+    background:
+      conic-gradient(
+        from var(--laser),
+        transparent 0deg 286deg,
+        rgba(22, 163, 74, 0.25) 300deg,
+        var(--accent) 338deg,
+        #bbf7d0 350deg,
+        var(--accent) 356deg,
+        transparent 360deg
+      ),
+      /* the resting ring, so the pill is never edgeless between passes */
+      linear-gradient(var(--border-strong), var(--border-strong));
+    animation: hero-laser 3.6s linear infinite;
+  }
+  .hero-pill::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--bg-subtle);
+  }
+  .pill-text { position: relative; }
+
+  @keyframes hero-laser {
+    to { --laser: 360deg; }
+  }
+
   .hero {
     position: relative;
     padding: clamp(56px, 7vw, 96px) 0 0;
@@ -116,5 +174,6 @@ import HeroAdmin from './HeroAdmin.astro';
 
   @media (prefers-reduced-motion: reduce) {
     .hero-cta .arrow { transition: none; }
+    .hero-pill::before { animation: none; }
   }
 </style>

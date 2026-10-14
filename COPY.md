@@ -71,7 +71,7 @@ Connectors, Zaps and CSV exports hold it all together until an update breaks one
 
 **Label:** One system
 
-**H2:** One database. Every team works from it.
+**H2:** The Solution? One custom platform that has all your systems.
 
 **Body:**
 When an order comes in, stock is reserved, a work order is released if you need to build it, the customer record updates, and the books follow. No sync. No middleware. One record, from first click to shipped.

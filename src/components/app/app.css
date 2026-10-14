@@ -21,6 +21,9 @@
   --oa-accent-strong: #15803d;
   --oa-accent-soft: #e8f6ed;
   --oa-accent-fg: #ffffff;
+  --oa-btn-ink: #18181b;
+  --oa-btn-ink-hover: #2a2a30;
+  --oa-btn-ink-fg: #ffffff;
 
   --oa-info: #2563eb;
   --oa-info-soft: #e7eeff;
@@ -60,6 +63,9 @@
   --oa-accent-strong: #2bbd6e;
   --oa-accent-soft: #102a1c;
   --oa-accent-fg: #06130c;
+  --oa-btn-ink: #f2f3f5;
+  --oa-btn-ink-hover: #ffffff;
+  --oa-btn-ink-fg: #121216;
 
   --oa-info: #7aa5ff;
   --oa-info-soft: #152039;
@@ -184,13 +190,14 @@
   min-width: 18px;
   padding: 0 5px;
   border-radius: 99px;
-  background: var(--oa-accent-strong);
-  color: var(--oa-accent-fg);
+  background: var(--oa-surface-3);
+  color: var(--oa-text-2);
   font-size: 0.66rem;
-  font-weight: 700;
+  font-weight: 600;
   text-align: center;
   line-height: 17px;
 }
+.oa-link[aria-current='page'] .oa-count { background: var(--oa-accent-strong); color: var(--oa-accent-fg); }
 .oa-shell[data-collapsed='true'] .oa-group-btn { grid-template-columns: 18px; }
 .oa-shell[data-collapsed='true'] .oa-group-btn > :not(svg) { display: none; }
 .oa-shell[data-collapsed='true'] .oa-subnav { display: none !important; }
@@ -241,12 +248,13 @@
 .oa-icon-btn svg { width: 16px; height: 16px; }
 .oa-icon-btn[aria-expanded='true'] { background: var(--oa-surface-3); color: var(--oa-text); }
 .oa-dot {
-  position: absolute; top: 3px; right: 3px;
-  min-width: 15px; height: 15px; padding: 0 3px;
+  position: absolute; top: 1px; right: 0;
+  min-width: 14px; height: 14px; padding: 0 3px;
   border-radius: 99px;
-  background: var(--oa-danger);
-  color: #fff;
-  font-size: 0.6rem; font-weight: 700; line-height: 15px;
+  border: 1.5px solid var(--oa-surface);
+  background: var(--oa-text);
+  color: var(--oa-surface);
+  font-size: 0.58rem; font-weight: 600; line-height: 11px;
   text-align: center;
 }
 .oa-search {
@@ -288,9 +296,10 @@
   width: 24px; height: 24px;
   border-radius: 50%;
   display: grid; place-items: center;
-  background: var(--oa-accent-strong); color: var(--oa-accent-fg);
-  font-size: 0.66rem; font-weight: 700;
+  background: var(--oa-surface-3); color: var(--oa-text);
+  font-size: 0.66rem; font-weight: 600;
 }
+.oa-initials { display: block; line-height: 1; letter-spacing: 0.01em; }
 .oa-presence {
   position: absolute; right: -1px; bottom: -1px;
   width: 8px; height: 8px; border-radius: 50%;
@@ -317,7 +326,7 @@
 .oa-head p { margin-top: 3px; font-size: 0.82rem; color: var(--oa-text-2); max-width: 70ch; }
 .oa-head-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 
-.oa-btn {
+.oa .oa-btn {
   display: inline-flex; align-items: center; gap: 7px;
   height: 30px; padding: 0 12px;
   border: 1px solid var(--oa-border-strong);
@@ -328,16 +337,18 @@
   white-space: nowrap;
   transition: background 0.14s var(--oa-ease), border-color 0.14s var(--oa-ease);
 }
-.oa-btn:hover { background: var(--oa-surface-2); }
-.oa-btn svg { width: 14px; height: 14px; }
-.oa-btn-primary {
-  background: var(--oa-accent-strong);
-  border-color: var(--oa-accent-strong);
-  color: var(--oa-accent-fg);
+.oa .oa-btn:hover { background: var(--oa-surface-2); }
+.oa .oa-btn svg { width: 14px; height: 14px; }
+/* Ink, not accent. Green is reserved for state (paid, in stock, on track) so it keeps meaning
+   something; a green Save button drains it. */
+.oa .oa-btn-primary {
+  background: var(--oa-btn-ink);
+  border-color: var(--oa-btn-ink);
+  color: var(--oa-btn-ink-fg);
 }
-.oa-btn-primary:hover { background: var(--oa-accent); border-color: var(--oa-accent); }
-.oa-btn-danger { color: var(--oa-danger); border-color: var(--oa-border-strong); }
-.oa-btn-sm { height: 25px; padding: 0 9px; font-size: 0.74rem; }
+.oa .oa-btn-primary:hover { background: var(--oa-btn-ink-hover); border-color: var(--oa-btn-ink-hover); }
+.oa .oa-btn-danger { color: var(--oa-danger); border-color: var(--oa-border-strong); }
+.oa .oa-btn-sm { height: 25px; padding: 0 9px; font-size: 0.74rem; }
 
 .oa-seg {
   display: inline-flex; gap: 2px; padding: 2px;

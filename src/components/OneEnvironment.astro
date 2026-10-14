@@ -69,7 +69,6 @@ const cells = [
     </div>
 
     <div class="env-planwrap" data-reveal>
-      <div class="env-bloom" aria-hidden="true"></div>
       <div class="env-frame">
         <div class="env-plan" role="img" aria-label="A floor plan of one building: storefront, orders, inventory, production, CRM, support, marketing, purchasing, team ops, field service and your custom work, all sharing walls inside a single perimeter.">
           {rooms.map((r) => (
@@ -79,6 +78,7 @@ const cells = [
             </div>
           ))}
         </div>
+        <span class="env-glow" aria-hidden="true"></span>
       </div>
       <p class="env-caption">One perimeter · eleven rooms · no walls between the data</p>
     </div>
@@ -102,7 +102,7 @@ const cells = [
 <style>
   .env {
     --env-bg: #0a0a0c;
-    --env-room: rgba(17, 17, 21, 0.9);
+    --env-room: #121216;
     --env-wall: rgba(255, 255, 255, 0.11);
     --env-line: rgba(255, 255, 255, 0.09);
     --env-text: #f5f6f7;
@@ -157,23 +157,24 @@ const cells = [
   /* ---------------------------------------------------------------- floor plan */
 
   .env-planwrap { position: relative; min-width: 0; }
-  /* A single warm pool of light behind the plan, rather than a glowing edge around it. */
-  .env-bloom {
+
+  /* Ambient spill under the frame, so the panel sits in the dark rather than floating on it.
+     Kept well below the frame's own light and blurred hard, so it never reads as a second shape. */
+  .env-planwrap::before {
+    content: '';
     position: absolute;
-    inset: -14% -8%;
-    background: radial-gradient(
-      58% 58% at 62% 42%,
-      rgba(22, 163, 74, 0.42),
-      rgba(22, 163, 74, 0.12) 50%,
-      transparent 74%
-    );
-    filter: blur(14px);
+    inset: 32% -4% -12% 10%;
+    background: radial-gradient(52% 100% at 74% 100%, rgba(22, 163, 74, 0.26), transparent 70%);
+    filter: blur(34px);
     pointer-events: none;
   }
 
   /* 1px of gradient showing through as the outer wall */
   .env-frame {
     position: relative;
+    z-index: 1;
+    /* contains the blend below, so the glow can only light this panel */
+    isolation: isolate;
     padding: 1px;
     border-radius: 0;
     background: linear-gradient(
@@ -199,13 +200,28 @@ const cells = [
     overflow: hidden;
   }
 
+  /* The light now sits above the rooms, so they can be solid and keep their text crisp. */
+  .env-glow {
+    position: absolute;
+    inset: 1px;
+    pointer-events: none;
+    mix-blend-mode: screen;
+    background:
+      radial-gradient(
+        44% 62% at 81% 88%,
+        rgba(45, 212, 128, 0.5),
+        rgba(22, 163, 74, 0.16) 42%,
+        transparent 72%
+      ),
+      radial-gradient(64% 72% at 10% 4%, rgba(148, 163, 184, 0.08), transparent 66%);
+  }
+
   .room {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     gap: 3px;
     padding: 12px 13px;
-    /* slightly translucent so the pool of light behind the plan reads through the rooms */
     background: var(--env-room);
     min-width: 0;
   }
@@ -221,7 +237,7 @@ const cells = [
     color: var(--env-dim);
   }
   .room[data-accent] {
-    background: linear-gradient(180deg, rgba(22, 163, 74, 0.2), rgba(22, 163, 74, 0.08));
+    background: linear-gradient(180deg, rgba(22, 163, 74, 0.16), rgba(22, 163, 74, 0.06));
   }
   .room[data-accent] .room-label { color: var(--env-accent); }
   .room[data-accent] .room-note { color: rgba(167, 243, 208, 0.72); }

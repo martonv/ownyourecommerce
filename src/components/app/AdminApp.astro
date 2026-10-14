@@ -131,8 +131,10 @@ const people = Object.fromEntries(ROLES.map((r) => [r.key, { ...r.person, role: 
         </button>
 
         <button type="button" class="oa-user" data-oa-menu="user" aria-expanded="false">
-          <span class="oa-avatar" data-oa-initials>
-            {defaultRole.person.initials}
+          <span class="oa-avatar">
+            {/* its own element: as a bare text node it also held the template's whitespace,
+                which widened the centred box and shifted the initials left */}
+            <span class="oa-initials" data-oa-initials>{defaultRole.person.initials}</span>
             <span class="oa-presence" data-state="online" data-oa-presence></span>
           </span>
           <span class="oa-user-text">
@@ -402,7 +404,7 @@ const people = Object.fromEntries(ROLES.map((r) => [r.key, { ...r.person, role: 
       const who = people[role];
       one('[data-oa-person]').textContent = who.name;
       one('[data-oa-role]').textContent = who.role;
-      one('[data-oa-initials]').firstChild.textContent = who.initials;
+      one('[data-oa-initials]').textContent = who.initials;
       one('[data-oa-ai-as]').textContent = `Acting as ${who.name} · ${who.role}`;
 
       // Hide what this role cannot open, and empty groups with it.
