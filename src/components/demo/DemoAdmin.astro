@@ -26,13 +26,24 @@ const catalog = products.map(({ sku, name, price }) => ({ sku, name, price }));
 interface Props {
   /** Which module the admin opens on. Defaults to the dashboard. */
   initialView?: string;
+  /**
+   * Draw the app chrome (top bar and module sidebar). Off for the homepage walkthrough, where the
+   * page's own tabs do the switching and one screen at full width reads better than a shrunken app.
+   * The chrome still renders so the script keeps its tablist and title; CSS hides it.
+   */
+  chrome?: boolean;
 }
 
-const { initialView } = Astro.props;
+const { initialView, chrome = true } = Astro.props;
 ---
 
 {/* The admin itself. The page section around it lives in Walkthrough.astro and demo.astro. */}
-<div class="demo" data-demo data-catalog={JSON.stringify(catalog)} data-initial={initialView}>
+<div
+  class:list={['demo', { 'is-bare': !chrome }]}
+  data-demo
+  data-catalog={JSON.stringify(catalog)}
+  data-initial={initialView}
+>
       <div class="demo-top">
         <div class="demo-brand"><span class="demo-mark" aria-hidden="true">J</span>{business}</div>
         <div class="demo-title" data-demo-title>Dashboard</div>

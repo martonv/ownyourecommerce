@@ -2,9 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
-import PageHero from '../components/PageHero.astro';
-import ProductFrame from '../components/ProductFrame.astro';
-import HeroDashboard from '../components/HeroDashboard.astro';
+import Integrations from '../components/Integrations.astro';
 import CtaBand from '../components/CtaBand.astro';
 
 const systems = [
@@ -97,12 +95,6 @@ const earns = [
 >
   <Nav />
   <main id="main" tabindex="-1">
-    <PageHero
-      label="Systems"
-      title="Every system, one database."
-      lead="Storefront, inventory, production, CRM and the internal tools your team uses all day stop being separate products. One record moves through all of them, so nobody retypes anything and nothing drifts out of sync."
-    />
-
     <section class="section">
       <div class="container">
         <div class="section-head" data-reveal>
@@ -134,26 +126,7 @@ const earns = [
       </div>
     </section>
 
-    <section class="section section-subtle">
-      <div class="container">
-        <div class="section-head" data-reveal>
-          <p class="eyebrow">Seeing it</p>
-          <h2>The same admin your team would use.</h2>
-          <p class="lead">
-            Every module above is one tab of the same back office. This is a still of it. The demo is
-            the real thing, running on sample data.
-          </p>
-        </div>
-        <div data-reveal>
-          <ProductFrame>
-            <HeroDashboard />
-          </ProductFrame>
-        </div>
-        <p class="frame-note" data-reveal>
-          <a href="/demo">Open the full demo <span aria-hidden="true">→</span></a>
-        </p>
-      </div>
-    </section>
+    <Integrations />
 
     <section class="section">
       <div class="container">
@@ -239,9 +212,6 @@ const earns = [
     color: var(--text);
   }
   .points svg { flex: none; margin-top: 3px; color: var(--text-muted); }
-
-  .frame-note { margin-top: 16px; font-size: 0.9375rem; }
-  .frame-note a { color: var(--text); font-weight: 500; }
 
   .two-up {
     display: grid;

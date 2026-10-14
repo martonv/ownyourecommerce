@@ -1,59 +1,22 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
-import Footer from '../components/Footer.astro';
-import ProductFrame from '../components/ProductFrame.astro';
-import DemoAdmin from '../components/demo/DemoAdmin.astro';
+import AdminApp from '../components/app/AdminApp.astro';
 import { site } from '../data/site';
 ---
 
 <Layout
-  title={`Sample admin | ${site.name}`}
-  description="Click around a working sample of the admin we build: orders, inventory, production, customers, marketing, support and internal ops on one system."
+  title={`Live demo | ${site.name}`}
+  description="A working sample of the platform we build: commerce, CRM and support, growth, inventory and production, field service, internal team tools and an AI assistant, all on one database."
 >
   <Nav />
-  <main id="main" tabindex="-1" class="demo-page">
-    <div class="container">
-      <div class="head">
-        <h1>Sample admin</h1>
-        <p class="lead">
-          This is the back office we build, running on sample data for a fictional workshop. Click
-          anything. Nothing you do here is saved, and Reset puts it back.
-        </p>
-      </div>
-
-      <ProductFrame>
-        <DemoAdmin />
-      </ProductFrame>
-
-      <p class="foot">
-        Every screen, field and rule is built around how you work.
-        <a href="/#contact">Tell us what yours needs <span aria-hidden="true">→</span></a>
-      </p>
-    </div>
+  {/* Full bleed under the site nav: the admin is the page, not a screenshot inside it. */}
+  <main id="main" tabindex="-1" class="demo-main">
+    <AdminApp />
   </main>
-  <Footer />
 </Layout>
 
 <style>
-  .demo-page {
-    padding: clamp(40px, 6vw, 72px) 0 clamp(64px, 8vw, 96px);
-    background: var(--bg-subtle);
-    min-height: 60vh;
-  }
-  .head {
-    max-width: 640px;
-    margin-bottom: clamp(24px, 3vw, 36px);
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
-  .head h1 { font-size: clamp(2rem, 4vw, 2.75rem); }
-  .foot {
-    margin-top: 20px;
-    font-size: 0.9375rem;
-    color: var(--text-muted);
-    max-width: none;
-  }
-  .foot a { color: var(--text); font-weight: 500; }
+  /* No Footer and no container: the app owns the viewport below the nav, the way the real one would. */
+  .demo-main { display: block; }
 </style>

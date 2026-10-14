@@ -1,0 +1,766 @@
+---
+/**
+ * The sample admin.
+ *
+ * Every view is server-rendered and toggled with [hidden], so switching modules is instant and the
+ * whole thing works from a static file. Permissions, theme, panels and the router run in the small
+ * script at the bottom; the markup it needs is all here.
+ */
+import './app.css';
+import { DASHBOARD, GROUPS, ICONS, ALL_ITEMS } from './nav';
+import { ROLES, LEVELS, levelFor } from './roles';
+import { TENANT, counts, chatChannels, chatMessages, notifications } from './seed';
+import { VIEWS } from './views';
+import { ICON, icon, badge, btn, esc } from './ui';
+
+const defaultRole = ROLES[0];
+
+const badgeCounts: Record<string, number> = {
+  toFulfill: counts.toFulfill,
+  needsHuman: counts.needsHuman,
+  lowStock: counts.lowStock,
+  openTickets: counts.openTickets,
+};
+
+const perms = Object.fromEntries(
+  ROLES.map((r) => [r.key, Object.fromEntries(ALL_ITEMS.map((i) => [i.key, i.perm === '__always' ? 3 : levelFor(r, i.perm)]))])
+);
+const sensitive = Object.fromEntries(ROLES.map((r) => [r.key, r.sensitive]));
+const people = Object.fromEntries(ROLES.map((r) => [r.key, { ...r.person, role: r.name, dept: r.department }]));
+---
+
+<div class="oa" data-oa data-oa-theme="light">
+  <div class="oa-shell" data-oa-shell data-collapsed="false">
+    <!-- ------------------------------------------------------------ sidebar -->
+    <aside class="oa-side">
+      <div class="oa-brand">
+        <span class="oa-mark" aria-hidden="true">{TENANT.initials}</span>
+        <span class="oa-brand-text">
+          <span class="oa-brand-name">{TENANT.name}</span>
+          <span class="oa-brand-sub">Sample data</span>
+        </span>
+      </div>
+
+      <nav class="oa-nav" data-oa-nav aria-label="Admin">
+        <button type="button" class="oa-link" data-oa-link={DASHBOARD.key} aria-current="page">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={ICONS.home} /></svg>
+          <span class="oa-link-label">{DASHBOARD.label}</span>
+          <span></span>
+        </button>
+
+        {GROUPS.map((g) => (
+          <div class="oa-group" data-oa-group={g.key} data-open={g.key === 'commerce' ? 'true' : 'false'}>
+            <button type="button" class="oa-group-btn" data-oa-group-btn={g.key} aria-expanded={g.key === 'commerce'}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={g.icon} /></svg>
+              <span class="oa-link-label">{g.label}</span>
+              <svg class="oa-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={ICON.chevron} /></svg>
+            </button>
+            <div class="oa-subnav">
+              {g.items.map((item) => (
+                <button type="button" class="oa-link" data-oa-link={item.key} data-oa-perm={item.perm ?? item.key}>
+                  <span class="oa-link-label">{item.label}</span>
+                  {item.badge && badgeCounts[item.badge] ? (
+                    <span class="oa-count">{badgeCounts[item.badge]}</span>
+                  ) : (
+                    <span></span>
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+      </nav>
+
+      <div class="oa-side-foot">
+        <button type="button" class="oa-collapse" data-oa-collapse>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={ICON.back} /></svg>
+          <span>Collapse</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- ------------------------------------------------------------ main -->
+    <div class="oa-main">
+      <header class="oa-top">
+        <button type="button" class="oa-icon-btn" data-oa-mobile-nav aria-label="Open navigation">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
+        </button>
+        <button type="button" class="oa-icon-btn" data-oa-back aria-label="Back">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={ICON.back} /></svg>
+        </button>
+
+        <button type="button" class="oa-search" data-oa-palette-open>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d={ICON.search} /></svg>
+          <span>Search orders, people, anything</span>
+          <span class="oa-kbd">Ctrl K</span>
+        </button>
+
+        <span class="oa-spacer"></span>
+
+        <button type="button" class="oa-btn oa-btn-primary oa-btn-sm" data-oa-panel="ai">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={ICON.sparkle} /></svg>
+          Ask AI
+        </button>
+
+        <button type="button" class="oa-icon-btn" data-oa-panel="chat" aria-label="Team chat">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={ICON.chat} /></svg>
+          <span class="oa-dot">5</span>
+        </button>
+
+        <button type="button" class="oa-icon-btn" data-oa-menu="notifications" aria-label="Notifications" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={ICON.bell} /></svg>
+          <span class="oa-dot">{notifications.length}</span>
+        </button>
+
+        <button type="button" class="oa-icon-btn" data-oa-theme-toggle aria-label="Switch theme">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-oa-theme-icon><path d={ICON.moon} /></svg>
+        </button>
+
+        <button type="button" class="oa-user" data-oa-menu="user" aria-expanded="false">
+          <span class="oa-avatar" data-oa-initials>
+            {defaultRole.person.initials}
+            <span class="oa-presence" data-state="online" data-oa-presence></span>
+          </span>
+          <span class="oa-user-text">
+            <span class="oa-user-name" data-oa-person>{defaultRole.person.name}</span>
+            <span class="oa-user-role" data-oa-role>{defaultRole.name}</span>
+          </span>
+        </button>
+      </header>
+
+      <!-- ---------------------------------------------------------- views -->
+      <main class="oa-content" data-oa-content tabindex="-1">
+        {Object.entries(VIEWS).map(([key, render]) => (
+          <section class="oa-view" data-oa-view={key} hidden={key !== 'dashboard'} set:html={render()} />
+        ))}
+
+        <section class="oa-view" data-oa-view="__noaccess" hidden>
+          <div class="oa-noaccess">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={ICON.lock} /></svg>
+            <h3>You do not have access to this</h3>
+            <p>
+              Your role does not include this module. The sidebar normally hides what you cannot
+              open; this page exists for the times a link reaches you anyway.
+            </p>
+            <button type="button" class="oa-btn" data-oa-go="dashboard">Back to the dashboard</button>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- ------------------------------------------------------------ overlays -->
+    <div class="oa-scrim" data-oa-scrim hidden></div>
+
+    <!-- AI assistant -->
+    <aside class="oa-panel" data-oa-panel-el="ai" hidden aria-label="AI assistant">
+      <div class="oa-panel-head">
+        <div>
+          <h3>AI assistant</h3>
+          <p style="font-size:0.72rem;color:var(--oa-text-3)" data-oa-ai-as>Acting as Dana Whitfield · Super Admin</p>
+        </div>
+        <button type="button" class="oa-btn oa-btn-sm" data-oa-close>Close</button>
+      </div>
+      <div class="oa-panel-body" data-oa-ai-log>
+        <div class="oa-ai-msg" data-from="assistant">
+          <span class="oa-ai-who">Assistant</span>
+          <div class="oa-ai-bubble">
+            I can read and draft straight away. Anything that writes, sends, refunds or changes a
+            price comes back as an approval card with a before and after, and only you can approve it.
+            I only ever use the tools your role allows.
+            <br /><br />
+            <span class="oa-badge" data-tone="warn">Limited mode</span> no model key is set, so these
+            replies come from templates.
+          </div>
+        </div>
+      </div>
+      <div class="oa-panel-foot">
+        <div class="oa-ai-input">
+          <textarea placeholder="Ask about orders, stock, a customer…" aria-label="Ask the assistant" data-oa-ai-input></textarea>
+          <button type="button" class="oa-btn oa-btn-primary" data-oa-ai-send>Send</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Team chat -->
+    <aside class="oa-panel" data-oa-panel-el="chat" hidden aria-label="Team chat">
+      <div class="oa-panel-head">
+        <h3>Team chat</h3>
+        <button type="button" class="oa-btn oa-btn-sm" data-oa-close>Close</button>
+      </div>
+      <div class="oa-panel-body" style="padding:0">
+        <div class="oa-chat" style="height:100%">
+          <div class="oa-chat-rail">
+            {chatChannels.map((c, i) => (
+              <button type="button" aria-pressed={i === 1} data-oa-pick="channel">
+                # {c.name}
+                {c.unread ? <span class="oa-count">{c.unread}</span> : null}
+              </button>
+            ))}
+          </div>
+          <div class="oa-chat-main">
+            <div class="oa-chat-msgs">
+              {chatMessages.map((m) => (
+                <div class="oa-msg" data-me={String(m.me)}>
+                  <span class="oa-avatar" aria-hidden="true">{m.who.split(' ').map((p) => p[0]).slice(0, 2).join('')}</span>
+                  <span class="oa-msg-body">
+                    <span class="oa-msg-who">{m.who} · {m.when}</span>
+                    <span class="oa-msg-text">{m.text}</span>
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="oa-panel-foot">
+        <div class="oa-ai-input">
+          <textarea placeholder="Message #shop-floor" aria-label="Message"></textarea>
+          <button type="button" class="oa-btn oa-btn-primary" data-oa-toast="Message sent to #shop-floor">Send</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- AI editor -->
+    <aside class="oa-panel" data-wide="true" data-oa-panel-el="ai-editor" hidden aria-label="AI editor">
+      <div class="oa-panel-head">
+        <div>
+          <h3 data-oa-editor-title>Page editor</h3>
+          <p style="font-size:0.72rem;color:var(--oa-text-3)">Live preview beside an AI chat that takes image attachments</p>
+        </div>
+        <button type="button" class="oa-btn oa-btn-sm" data-oa-close>Close</button>
+      </div>
+      <div class="oa-panel-body">
+        <div style="border:1px solid var(--oa-border);border-radius:var(--oa-r-lg);overflow:hidden">
+          <div style="padding:7px 11px;border-bottom:1px solid var(--oa-border);font-size:0.72rem;color:var(--oa-text-3);display:flex;justify-content:space-between">
+            <span>Preview</span><span class="oa-badge" data-tone="warn">Draft</span>
+          </div>
+          <div style="padding:16px;background:var(--oa-surface-2);display:flex;flex-direction:column;gap:9px">
+            <span style="font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--oa-accent-strong);font-weight:700">New arrivals</span>
+            <span style="font-size:1.25rem;font-weight:650;letter-spacing:-0.02em">The walnut collection</span>
+            <span style="font-size:0.8rem;color:var(--oa-text-2)">Six pieces, one species, built to order in the Portland shop.</span>
+            <span style="display:inline-flex;width:fit-content;padding:6px 14px;border-radius:var(--oa-r);background:var(--oa-accent-strong);color:var(--oa-accent-fg);font-size:0.78rem;font-weight:600">Shop the collection</span>
+          </div>
+        </div>
+        <div class="oa-ai-msg" data-from="user">
+          <span class="oa-ai-who">You</span>
+          <div class="oa-ai-bubble">Make the hero warmer and use the photo I attached. Keep the button copy.</div>
+        </div>
+        <div class="oa-ai-msg" data-from="assistant">
+          <span class="oa-ai-who">Assistant</span>
+          <div class="oa-ai-bubble">
+            Done in the draft: background warmed, eyebrow kept, button copy untouched. The change is
+            a page-scoped style layer, so nothing else on the site moves.
+          </div>
+        </div>
+        <div class="oa-approve">
+          <div class="oa-approve-head">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={ICON.warning} /></svg>
+            Publishing needs your approval
+          </div>
+          <div class="oa-diff">
+            <div class="oa-diff-row"><span>Hero background</span><span><span class="oa-was">#f6f7f9</span> → <span class="oa-now">#f3ece2</span></span></div>
+            <div class="oa-diff-row"><span>Hero image</span><span><span class="oa-was">none</span> → <span class="oa-now">walnut-room.webp</span></span></div>
+            <div class="oa-diff-row"><span>Button copy</span><span class="oa-now">Unchanged</span></div>
+            <div class="oa-diff-row"><span>Brand voice</span><span class="oa-now">Passes</span></div>
+          </div>
+          <div class="oa-approve-foot">
+            <button type="button" class="oa-btn oa-btn-sm">Discard</button>
+            <button type="button" class="oa-btn oa-btn-sm oa-btn-primary" data-oa-toast="Published. Previous version kept for revert.">Approve and publish</button>
+          </div>
+        </div>
+      </div>
+      <div class="oa-panel-foot">
+        <div class="oa-ai-input">
+          <textarea placeholder="Describe a change, or attach an image…" aria-label="Describe a change"></textarea>
+          <button type="button" class="oa-btn oa-btn-primary" data-oa-toast="Draft updated">Send</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Record drawer -->
+    <aside class="oa-panel" data-oa-panel-el="order" hidden aria-label="Order">
+      <div class="oa-panel-head">
+        <div>
+          <h3 data-oa-order-title>Order</h3>
+          <p style="font-size:0.72rem;color:var(--oa-text-3)">Timeline, payments and internal notes</p>
+        </div>
+        <button type="button" class="oa-btn oa-btn-sm" data-oa-close>Close</button>
+      </div>
+      <div class="oa-panel-body">
+        <ul class="oa-list" style="border:1px solid var(--oa-border);border-radius:var(--oa-r-lg)">
+          <li><span>Payment</span><span class="oa-badge" data-tone="ok">Paid</span></li>
+          <li><span>Fulfilment</span><span class="oa-badge" data-tone="warn">Unfulfilled</span></li>
+          <li><span>Production</span><span class="oa-badge" data-tone="info">WO-1184, stage 2 of 3</span></li>
+          <li><span>Ships from</span><span>Main warehouse</span></li>
+        </ul>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <span style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--oa-text-3)">Timeline</span>
+          <span style="font-size:0.8rem">Today, 9:14 am · Work order released by Alice Nowak</span>
+          <span style="font-size:0.8rem">Today, 8:02 am · Stock reserved automatically</span>
+          <span style="font-size:0.8rem">Yesterday, 4:41 pm · Payment captured</span>
+          <span style="font-size:0.8rem">Yesterday, 4:40 pm · Order placed on the storefront</span>
+        </div>
+      </div>
+      <div class="oa-panel-foot">
+        <button type="button" class="oa-btn" data-oa-sensitive="refunds">Refund</button>
+        <button type="button" class="oa-btn">Packing slip</button>
+        <button type="button" class="oa-btn oa-btn-primary" data-oa-toast="Order fulfilled and stock deducted">Fulfil</button>
+      </div>
+    </aside>
+
+    <!-- Notifications -->
+    <div class="oa-menu" data-oa-menu-el="notifications" hidden style="top:52px;right:118px">
+      <h4>Notifications</h4>
+      {notifications.map((n) => (
+        <button type="button">
+          <span style="display:flex;flex-direction:column;gap:1px">
+            <span>{n.text}</span>
+            <span style="font-size:0.7rem;color:var(--oa-text-3)">{n.when} ago</span>
+          </span>
+        </button>
+      ))}
+      <hr />
+      <button type="button" data-oa-toast="All caught up">Mark all as read</button>
+    </div>
+
+    <!-- User menu, including the demo role switcher -->
+    <div class="oa-menu" data-oa-menu-el="user" hidden style="top:52px;right:12px;min-width:268px">
+      <h4>Presence</h4>
+      <button type="button" data-oa-presence-set="online">Online</button>
+      <button type="button" data-oa-presence-set="away">Away</button>
+      <button type="button" data-oa-presence-set="dnd">Do not disturb</button>
+      <hr />
+      <h4>View admin as</h4>
+      <p class="oa-menu-note">Demo only. Switching role re-filters the sidebar and every guarded action immediately.</p>
+      {ROLES.map((r) => (
+        <button type="button" data-oa-role-set={r.key}>
+          <span style="display:flex;flex-direction:column;gap:1px">
+            <span>{r.name}</span>
+            <span style="font-size:0.7rem;color:var(--oa-text-3)">{r.person.name} · {r.department}</span>
+          </span>
+        </button>
+      ))}
+    </div>
+
+    <!-- Command palette -->
+    <div class="oa-palette" data-oa-palette hidden role="dialog" aria-label="Search">
+      <input type="search" placeholder="Search modules, orders, people…" data-oa-palette-input aria-label="Search" />
+      <div class="oa-palette-list" data-oa-palette-list></div>
+    </div>
+
+    <div class="oa-toasts" data-oa-toasts aria-live="polite"></div>
+  </div>
+</div>
+
+<script define:vars={{ perms, sensitive, people, items: ALL_ITEMS, levels: LEVELS }}>
+  const root = document.querySelector('[data-oa]');
+  if (root) initAdmin(root);
+
+  function initAdmin(root) {
+    const shell = root.querySelector('[data-oa-shell]');
+    const content = root.querySelector('[data-oa-content]');
+    const scrim = root.querySelector('[data-oa-scrim]');
+    const one = (sel, scope = root) => scope.querySelector(sel);
+    const all = (sel, scope = root) => [...scope.querySelectorAll(sel)];
+
+    let role = 'super';
+    let view = 'dashboard';
+    const history = [];
+
+    // ---------------------------------------------------------- toasts
+
+    const toast = (text) => {
+      const host = one('[data-oa-toasts]');
+      const el = document.createElement('div');
+      el.className = 'oa-toast';
+      el.innerHTML =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg>';
+      el.append(Object.assign(document.createElement('span'), { textContent: text }));
+      host.append(el);
+      setTimeout(() => el.remove(), 3200);
+    };
+
+    // ---------------------------------------------------------- permissions
+
+    const can = (key) => (perms[role]?.[key] ?? 0) > 0;
+
+    const applyRole = () => {
+      const who = people[role];
+      one('[data-oa-person]').textContent = who.name;
+      one('[data-oa-role]').textContent = who.role;
+      one('[data-oa-initials]').firstChild.textContent = who.initials;
+      one('[data-oa-ai-as]').textContent = `Acting as ${who.name} · ${who.role}`;
+
+      // Hide what this role cannot open, and empty groups with it.
+      all('[data-oa-link]').forEach((link) => {
+        const key = link.dataset.oaLink;
+        link.hidden = key !== 'dashboard' && !can(key);
+      });
+      all('[data-oa-group]').forEach((group) => {
+        const visible = all('[data-oa-link]', group).some((l) => !l.hidden);
+        group.hidden = !visible;
+      });
+
+      // Sensitive actions stay visible but refuse, which is closer to how the real app behaves.
+      const allowed = sensitive[role] ?? [];
+      all('[data-oa-sensitive]').forEach((el) => {
+        const need = el.dataset.oaSensitive;
+        const ok = allowed.includes(need);
+        el.dataset.oaBlocked = String(!ok);
+        el.style.opacity = ok ? '' : '0.55';
+        el.title = ok ? '' : `Your role cannot ${need.replace(/_/g, ' ')}`;
+      });
+
+      if (view !== 'dashboard' && !can(view)) show('__noaccess');
+    };
+
+    // ---------------------------------------------------------- router
+
+    const show = (key, record = true) => {
+      const target = key === '__noaccess' || key === 'dashboard' || can(key) ? key : '__noaccess';
+      const panel = one(`[data-oa-view="${target}"]`);
+      if (!panel) return;
+      if (record && view !== target) history.push(view);
+      view = target;
+      all('[data-oa-view]').forEach((v) => (v.hidden = v !== panel));
+      all('[data-oa-link]').forEach((l) =>
+        l.setAttribute('aria-current', l.dataset.oaLink === target ? 'page' : 'false')
+      );
+      // Open the group that owns the current page, and keep the sidebar where it was.
+      const link = one(`[data-oa-link="${target}"]`);
+      const group = link?.closest('[data-oa-group]');
+      if (group) openGroup(group, true);
+      content.scrollTop = 0;
+      shell.dataset.mobileNav = 'false';
+    };
+
+    const openGroup = (group, open) => {
+      group.dataset.open = String(open);
+      one('[data-oa-group-btn]', group)?.setAttribute('aria-expanded', String(open));
+      saveGroups();
+    };
+
+    // Remember which groups are open, the way a real admin would.
+    const GROUP_KEY = 'oa.groups';
+    const saveGroups = () => {
+      try {
+        const open = all('[data-oa-group]').filter((g) => g.dataset.open === 'true').map((g) => g.dataset.oaGroup);
+        localStorage.setItem(GROUP_KEY, JSON.stringify(open));
+      } catch {}
+    };
+    const restoreGroups = () => {
+      try {
+        const open = JSON.parse(localStorage.getItem(GROUP_KEY) || 'null');
+        if (!Array.isArray(open)) return;
+        all('[data-oa-group]').forEach((g) => openGroup(g, open.includes(g.dataset.oaGroup)));
+      } catch {}
+    };
+
+    // ---------------------------------------------------------- theme
+
+    const THEME_KEY = 'oa.theme';
+    const setTheme = (next) => {
+      root.dataset.oaTheme = next;
+      const path = next === 'dark'
+        ? 'M12 17a5 5 0 100-10 5 5 0 000 10zM12 1v3M12 20v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M1 12h3M20 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1'
+        : 'M20 14.5A8.5 8.5 0 019.5 4a8.5 8.5 0 1010.5 10.5z';
+      one('[data-oa-theme-icon]').querySelector('path').setAttribute('d', path);
+      try { localStorage.setItem(THEME_KEY, next); } catch {}
+    };
+
+    // ---------------------------------------------------------- overlays
+
+    const closeOverlays = () => {
+      all('[data-oa-panel-el]').forEach((p) => (p.hidden = true));
+      all('[data-oa-menu-el]').forEach((m) => (m.hidden = true));
+      all('[data-oa-menu]').forEach((b) => b.setAttribute('aria-expanded', 'false'));
+      one('[data-oa-palette]').hidden = true;
+      scrim.hidden = true;
+    };
+
+    const openPanel = (name) => {
+      closeOverlays();
+      const panel = one(`[data-oa-panel-el="${name}"]`);
+      if (!panel) return;
+      panel.hidden = false;
+      scrim.hidden = false;
+      panel.querySelector('textarea, button')?.focus();
+    };
+
+    // ---------------------------------------------------------- palette
+
+    const palette = one('[data-oa-palette]');
+    const paletteInput = one('[data-oa-palette-input]');
+    const paletteList = one('[data-oa-palette-list]');
+
+    const renderPalette = (q = '') => {
+      const needle = q.trim().toLowerCase();
+      const matches = items
+        .filter((i) => i.key === 'dashboard' || can(i.key))
+        .filter((i) => !needle || i.label.toLowerCase().includes(needle) || i.group.toLowerCase().includes(needle))
+        .slice(0, 12);
+      paletteList.innerHTML = matches.length
+        ? matches
+            .map(
+              (m, i) =>
+                `<button type="button" data-oa-go="${m.key}" class="${i === 0 ? 'is-active' : ''}"><span>${m.label}</span><span class="oa-pal-group">${m.group}</span></button>`
+            )
+            .join('')
+        : '<div style="padding:16px;font-size:0.8rem;color:var(--oa-text-3)">Nothing matches that.</div>';
+    };
+
+    const openPalette = () => {
+      closeOverlays();
+      palette.hidden = false;
+      scrim.hidden = false;
+      paletteInput.value = '';
+      renderPalette();
+      paletteInput.focus();
+    };
+
+    // ---------------------------------------------------------- AI
+
+    const aiReply = (question) => {
+      const q = question.toLowerCase();
+      const log = one('[data-oa-ai-log]');
+      const add = (html) => {
+        const el = document.createElement('div');
+        el.innerHTML = html;
+        log.append(el.firstElementChild);
+        log.scrollTop = log.scrollHeight;
+      };
+
+      add(`<div class="oa-ai-msg" data-from="user"><span class="oa-ai-who">You</span><div class="oa-ai-bubble">${escapeHtml(question)}</div></div>`);
+
+      // Read-only answers come straight back; anything that writes becomes an approval card.
+      const writes = /refund|cancel|price|discount|publish|send|delete|approve|reorder|purchase|raise|order more/.test(q);
+      setTimeout(() => {
+        if (writes) {
+          add(
+            `<div class="oa-ai-msg" data-from="assistant"><span class="oa-ai-who">Assistant</span><div class="oa-ai-bubble">
+              <span class="oa-tool">Tool: purchasing.draft_po</span><br><br>
+              That one writes, so here is what I would do. Nothing happens until you approve it.
+            </div></div>` +
+              ''
+          );
+          add(`<div class="oa-approve">
+            <div class="oa-approve-head">Needs your approval</div>
+            <div class="oa-diff">
+              <div class="oa-diff-row"><span>Action</span><span class="oa-now">Draft purchase order</span></div>
+              <div class="oa-diff-row"><span>Supplier</span><span>Timberline Mills</span></div>
+              <div class="oa-diff-row"><span>Lines</span><span><span class="oa-was">0</span> → <span class="oa-now">3</span></span></div>
+              <div class="oa-diff-row"><span>Value</span><span><span class="oa-was">$0</span> → <span class="oa-now">$8,420</span></span></div>
+              <div class="oa-diff-row"><span>Audited as</span><span>${people[role].name} via AI assistant</span></div>
+            </div>
+            <div class="oa-approve-foot">
+              <button type="button" class="oa-btn oa-btn-sm">Discard</button>
+              <button type="button" class="oa-btn oa-btn-sm oa-btn-primary" data-oa-toast="PO-1187 drafted and logged">Approve</button>
+            </div>
+          </div>`);
+        } else {
+          const answer = /stock|inventory|low/.test(q)
+            ? 'Nine items are below their reorder point. Walnut veneer sheet is the tightest: 12 days of cover against a 21-day lead time.'
+            : /order|ship|fulfil/.test(q)
+              ? 'Two orders are waiting to be fulfilled and one is in production. #3039 is the one with a date to watch, planned to ship April 22.'
+              : /customer|harbor|account/.test(q)
+                ? 'Harbor Hotel Group has placed 14 orders worth $186,400, is on Trade tier 2, and has one conversation open in the inbox.'
+                : 'I can read anything your role can see: orders, stock, customers, production, tickets. Ask me to change something and you will get an approval card first.';
+          add(
+            `<div class="oa-ai-msg" data-from="assistant"><span class="oa-ai-who">Assistant</span><div class="oa-ai-bubble"><span class="oa-tool">Tool: read</span><br><br>${answer}<br><br><span class="oa-badge" data-tone="warn">Limited mode</span></div></div>`
+          );
+        }
+      }, 420);
+    };
+
+    const escapeHtml = (s) =>
+      s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+    // ---------------------------------------------------------- events
+
+    root.addEventListener('click', (e) => {
+      const t = e.target;
+
+      // A sensitive action this role does not hold refuses, rather than silently doing nothing.
+      const guarded = t.closest('[data-oa-sensitive]');
+      if (guarded && guarded.dataset.oaBlocked === 'true') {
+        e.preventDefault();
+        e.stopPropagation();
+        toast(`Blocked: your role cannot ${guarded.dataset.oaSensitive.replace(/_/g, ' ')}`);
+        return;
+      }
+
+      const link = t.closest('[data-oa-link]');
+      if (link) return show(link.dataset.oaLink);
+
+      const go = t.closest('[data-oa-go]');
+      if (go) {
+        closeOverlays();
+        return show(go.dataset.oaGo);
+      }
+
+      const groupBtn = t.closest('[data-oa-group-btn]');
+      if (groupBtn) {
+        const group = groupBtn.closest('[data-oa-group]');
+        return openGroup(group, group.dataset.open !== 'true');
+      }
+
+      if (t.closest('[data-oa-collapse]')) {
+        shell.dataset.collapsed = shell.dataset.collapsed === 'true' ? 'false' : 'true';
+        return;
+      }
+      if (t.closest('[data-oa-mobile-nav]')) {
+        shell.dataset.mobileNav = shell.dataset.mobileNav === 'true' ? 'false' : 'true';
+        return;
+      }
+      if (t.closest('[data-oa-back]')) return show(history.pop() ?? 'dashboard', false);
+      if (t.closest('[data-oa-theme-toggle]')) return setTheme(root.dataset.oaTheme === 'dark' ? 'light' : 'dark');
+      if (t.closest('[data-oa-palette-open]')) return openPalette();
+
+      const panelBtn = t.closest('[data-oa-panel]');
+      if (panelBtn) return openPanel(panelBtn.dataset.oaPanel);
+
+      const drawer = t.closest('[data-oa-drawer]');
+      if (drawer) {
+        const kind = drawer.dataset.oaDrawer;
+        if (kind === 'order') one('[data-oa-order-title]').textContent = `Order #${drawer.dataset.oaId}`;
+        if (kind === 'ai-editor') {
+          const titles = { page: 'Page editor', blog: 'Blog editor', email: 'Email editor' };
+          one('[data-oa-editor-title]').textContent = titles[drawer.dataset.oaId] ?? 'Editor';
+        }
+        return openPanel(kind);
+      }
+
+      const menuBtn = t.closest('[data-oa-menu]');
+      if (menuBtn) {
+        const name = menuBtn.dataset.oaMenu;
+        const menu = one(`[data-oa-menu-el="${name}"]`);
+        const open = menu.hidden;
+        closeOverlays();
+        menu.hidden = !open;
+        menuBtn.setAttribute('aria-expanded', String(open));
+        if (open) scrim.hidden = false;
+        return;
+      }
+
+      const roleBtn = t.closest('[data-oa-role-set]');
+      if (roleBtn) {
+        role = roleBtn.dataset.oaRoleSet;
+        applyRole();
+        closeOverlays();
+        return toast(`Now viewing as ${people[role].role}`);
+      }
+
+      const presenceBtn = t.closest('[data-oa-presence-set]');
+      if (presenceBtn) {
+        one('[data-oa-presence]').dataset.state = presenceBtn.dataset.oaPresenceSet;
+        closeOverlays();
+        return;
+      }
+
+      if (t.closest('[data-oa-close]') || t === scrim) return closeOverlays();
+      if (t.closest('[data-oa-ai-send]')) {
+        const input = one('[data-oa-ai-input]');
+        const text = input.value.trim();
+        if (!text) return input.focus();
+        input.value = '';
+        return aiReply(text);
+      }
+
+      const clockBtn = t.closest('[data-oa-clock-toggle]');
+      if (clockBtn) {
+        const on = clockBtn.dataset.oaIn !== 'true';
+        clockBtn.dataset.oaIn = String(on);
+        clockBtn.lastChild.textContent = on ? 'Clock out' : 'Clock in';
+        const chip = one('[data-oa-clock-chip]');
+        chip.textContent = on ? 'On the clock' : 'Clocked out';
+        chip.dataset.tone = on ? 'ok' : 'neutral';
+        one('[data-oa-clock-meta]').textContent = on ? 'Clocked in just now · Shop floor' : 'You are clocked out';
+        return toast(on ? 'Clocked in' : 'Clocked out');
+      }
+
+      // Segmented controls, tabs and list pickers are presentational in the demo.
+      const segBtn = t.closest('[data-oa-seg]');
+      if (segBtn) {
+        [...segBtn.parentElement.children].forEach((b) => b.setAttribute('aria-pressed', String(b === segBtn)));
+        return;
+      }
+      const tabBtn = t.closest('[data-oa-tab]');
+      if (tabBtn) {
+        [...tabBtn.parentElement.children].forEach((b) => b.setAttribute('aria-selected', String(b === tabBtn)));
+        return;
+      }
+      const pick = t.closest('[data-oa-pick]');
+      if (pick) {
+        [...pick.parentElement.children].forEach((b) => b.setAttribute?.('aria-pressed', String(b === pick)));
+      }
+
+      const toaster = t.closest('[data-oa-toast]');
+      if (toaster) return toast(toaster.dataset.oaToast);
+    });
+
+    // Drag and drop for the kanban boards and the production calendar.
+    let dragged = null;
+    root.addEventListener('dragstart', (e) => {
+      const card = e.target.closest('[data-oa-kb-card], [data-oa-cal-chip]');
+      if (!card) return;
+      dragged = card;
+      card.classList.add('is-drag');
+      e.dataTransfer.effectAllowed = 'move';
+      // Firefox needs data set for a drag to start at all.
+      e.dataTransfer.setData('text/plain', card.dataset.oaKbCard ?? card.dataset.oaCalChip ?? '');
+    });
+    root.addEventListener('dragend', () => {
+      dragged?.classList.remove('is-drag');
+      all('.is-over').forEach((el) => el.classList.remove('is-over'));
+      dragged = null;
+    });
+    root.addEventListener('dragover', (e) => {
+      const zone = e.target.closest('[data-oa-kb-col], [data-oa-cal-day]');
+      if (!zone || !dragged) return;
+      e.preventDefault();
+      all('.is-over').forEach((el) => el.classList.remove('is-over'));
+      zone.classList.add('is-over');
+    });
+    root.addEventListener('drop', (e) => {
+      const zone = e.target.closest('[data-oa-kb-col], [data-oa-cal-day]');
+      if (!zone || !dragged) return;
+      e.preventDefault();
+      zone.classList.remove('is-over');
+      if (zone.dataset.oaKbCol !== undefined) {
+        zone.querySelector('.oa-kb-list').append(dragged);
+        // Column counts are part of what makes a board believable, so keep them honest.
+        all('[data-oa-kb-col]').forEach((col) => {
+          col.querySelector('.oa-kb-head span:last-child').textContent = col.querySelectorAll('.oa-kb-card').length;
+        });
+        toast(`Moved to ${zone.querySelector('.oa-kb-head span').textContent}`);
+      } else {
+        zone.append(dragged);
+        toast(`${dragged.dataset.oaCalChip} rescheduled`);
+      }
+    });
+
+    paletteInput.addEventListener('input', () => renderPalette(paletteInput.value));
+    paletteInput.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter') return;
+      const first = paletteList.querySelector('button');
+      if (first) first.click();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        openPalette();
+      }
+      if (e.key === 'Escape') closeOverlays();
+    });
+
+    try {
+      const saved = localStorage.getItem(THEME_KEY);
+      setTheme(saved === 'dark' ? 'dark' : 'light');
+    } catch {
+      setTheme('light');
+    }
+    restoreGroups();
+    applyRole();
+  }
+</script>

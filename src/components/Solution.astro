@@ -1,8 +1,25 @@
 ---
 // COPY.md §3. The diagram is inline SVG so it inherits the tokens and stays sharp.
 const flow = ['Order placed', 'Stock reserved', 'Work order released', 'Picked and packed', 'Shipped', 'Books updated'];
-const before = ['Shopify', 'Fishbowl', 'HubSpot', 'QuickBooks'];
+
+// The before diagram cycles through real stacks rather than naming one vendor set, because the
+// problem is the shape of the stack, not which products are in it. The script reads this list.
+const stacks = [
+  ['Shopify', 'Fishbowl', 'HubSpot', 'QuickBooks'],
+  ['WooCommerce', 'Cin7', 'Zoho CRM', 'Xero'],
+  ['BigCommerce', 'Katana', 'Salesforce', 'NetSuite'],
+  ['Magento', 'Brightpearl', 'Pipedrive', 'Sage'],
+];
+const before = stacks[0];
 const after = ['Storefront', 'Inventory', 'Production', 'CRM', 'Team ops'];
+
+// Geometry, kept in one place so nothing lands on the viewBox edge and gets its stroke clipped.
+const bW = 116;
+const bStep = 156;
+const bX = (i: number) => 8 + i * bStep;
+const aW = 104;
+const aStep = 120;
+const aX = (i: number) => 8 + i * aStep;
 ---
 
 <section class="section solution" id="solution">
@@ -18,46 +35,53 @@ const after = ['Storefront', 'Inventory', 'Production', 'CRM', 'Team ops'];
         </p>
       </div>
 
-      <div class="diagram" data-reveal>
-        <div class="toggle" role="group" aria-label="Diagram view">
-          <button type="button" data-diagram="before" aria-pressed="false">Before</button>
-          <button type="button" data-diagram="after" aria-pressed="true">After</button>
+      <div class="diagram" data-diagram-group data-stacks={JSON.stringify(stacks)} data-reveal>
+        <div class="dhead">
+          <p class="state" data-state="after">
+            <span class="state-word" data-state-word>After</span>
+            <span class="state-note" data-state-note>One database. Nothing to sync.</span>
+          </p>
+
+          <div class="toggle" role="group" aria-label="Diagram view">
+            <button type="button" data-diagram="before" aria-pressed="false">Before</button>
+            <button type="button" data-diagram="after" aria-pressed="true">After</button>
+          </div>
         </div>
 
         <div class="canvas">
-          <div data-diagram-panel="before" hidden>
-            <svg viewBox="0 0 600 180" role="img" aria-label="Before: Shopify, Fishbowl, HubSpot and QuickBooks joined by three connectors, each one a point of failure.">
+          <div class="panel" data-diagram-panel="before" aria-hidden="true">
+            <svg viewBox="0 0 600 110" role="img" aria-label="Before: four separate systems joined by three connectors, each one a point of failure.">
               {before.map((name, i) => (
                 <g>
-                  <rect x={i * 160} y={56} width={120} height={44} rx={8} class="box" />
-                  <text x={i * 160 + 60} y={83} class="box-label">{name}</text>
+                  <rect x={bX(i)} y={22} width={bW} height={52} rx={8} class="box" />
+                  <text x={bX(i) + bW / 2} y={53} class="box-label" data-stack-slot={i}>{name}</text>
                 </g>
               ))}
               {[0, 1, 2].map((i) => (
                 <g>
-                  <line x1={i * 160 + 122} y1={78} x2={i * 160 + 158} y2={78} class="wire" />
-                  <circle cx={i * 160 + 140} cy={78} r={5} class="warn" />
-                  <text x={i * 160 + 140} y={112} class="wire-label">connector</text>
+                  <line x1={bX(i) + bW + 5} y1={48} x2={bX(i + 1) - 5} y2={48} class="wire" />
+                  <circle cx={bX(i) + bW + 20} cy={48} r={5} class="warn" />
+                  <text x={bX(i) + bW + 20} y={92} class="wire-label">connector</text>
                 </g>
               ))}
             </svg>
           </div>
 
-          <div data-diagram-panel="after">
-            <svg viewBox="0 0 600 250" role="img" aria-label="After: storefront, inventory, production, CRM and team ops all on one database, with QuickBooks syncing out.">
+          <div class="panel is-on" data-diagram-panel="after">
+            <svg viewBox="0 0 600 250" role="img" aria-label="After: storefront, inventory, production, CRM and team ops all on one database, with your accounting package syncing out.">
               {after.map((name, i) => (
                 <g>
-                  <rect x={i * 123} y={4} width={108} height={34} rx={8} class="box" />
-                  <text x={i * 123 + 54} y={26} class="box-label">{name}</text>
-                  <line x1={i * 123 + 54} y1={38} x2={i * 123 + 54} y2={96} class="spoke" />
+                  <rect x={aX(i)} y={6} width={aW} height={36} rx={8} class="box" />
+                  <text x={aX(i) + aW / 2} y={29} class="box-label">{name}</text>
+                  <line x1={aX(i) + aW / 2} y1={42} x2={aX(i) + aW / 2} y2={96} class="spoke" />
                 </g>
               ))}
-              <rect x={0} y={96} width={600} height={56} rx={12} class="core" />
+              <rect x={8} y={96} width={584} height={56} rx={12} class="core" />
               <text x={300} y={130} class="core-label">One database</text>
               <line x1={300} y1={152} x2={300} y2={196} class="wire" />
               <text x={318} y={178} class="wire-label wire-label-left">syncs out</text>
-              <rect x={246} y={196} width={108} height={34} rx={8} class="box" />
-              <text x={300} y={218} class="box-label">QuickBooks</text>
+              <rect x={240} y={196} width={120} height={36} rx={8} class="box" />
+              <text x={300} y={219} class="box-label" data-books-slot>{before[3]}</text>
             </svg>
           </div>
         </div>
@@ -76,16 +100,97 @@ const after = ['Storefront', 'Inventory', 'Production', 'CRM', 'Team ops'];
 </section>
 
 <script>
-  for (const group of document.querySelectorAll<HTMLElement>('.diagram')) {
+  const NOTES: Record<string, string> = {
+    before: 'Four subscriptions. Three connectors to maintain.',
+    after: 'One database. Nothing to sync.',
+  };
+  // How long each side holds before the diagram flips itself.
+  const DWELL: Record<string, number> = { before: 3200, after: 4400 };
+
+  for (const group of document.querySelectorAll<HTMLElement>('[data-diagram-group]')) {
     const buttons = [...group.querySelectorAll<HTMLButtonElement>('[data-diagram]')];
+    const panels = [...group.querySelectorAll<HTMLElement>('[data-diagram-panel]')];
+    const state = group.querySelector<HTMLElement>('.state')!;
+    const word = group.querySelector<HTMLElement>('[data-state-word]')!;
+    const note = group.querySelector<HTMLElement>('[data-state-note]')!;
+    const slots = [...group.querySelectorAll<SVGTextElement>('[data-stack-slot]')];
+    const books = group.querySelector<SVGTextElement>('[data-books-slot]');
+    const stacks: string[][] = JSON.parse(group.dataset.stacks || '[]');
+
+    let view = 'after';
+    let stack = 0;
+    let timer = 0;
+    let auto = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let paused = false;
+
+    const show = (next: string) => {
+      view = next;
+      buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.diagram === next)));
+      panels.forEach((p) => {
+        const on = p.dataset.diagramPanel === next;
+        p.classList.toggle('is-on', on);
+        p.setAttribute('aria-hidden', String(!on));
+      });
+      state.dataset.state = next;
+      word.textContent = next === 'before' ? 'Before' : 'After';
+      note.textContent = NOTES[next];
+    };
+
+    // Swapping the vendor names between cycles keeps the point on the shape of the stack.
+    const setStack = (i: number) => {
+      stack = i % stacks.length;
+      slots.forEach((slot, s) => (slot.textContent = stacks[stack][s]));
+      if (books) books.textContent = stacks[stack][3];
+    };
+
+    const stop = () => {
+      window.clearTimeout(timer);
+      timer = 0;
+    };
+
+    const queue = () => {
+      stop();
+      if (!auto || paused) return;
+      timer = window.setTimeout(() => {
+        if (view === 'after') setStack(stack + 1);
+        show(view === 'after' ? 'before' : 'after');
+        queue();
+      }, DWELL[view]);
+    };
+
     buttons.forEach((btn) =>
       btn.addEventListener('click', () => {
-        buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
-        group
-          .querySelectorAll<HTMLElement>('[data-diagram-panel]')
-          .forEach((panel) => (panel.hidden = panel.dataset.diagramPanel !== btn.dataset.diagram));
+        // Clicking is taking control, so the diagram stops flipping on its own.
+        auto = false;
+        stop();
+        show(btn.dataset.diagram!);
       })
     );
+
+    // Hovering or tabbing in holds the current side so it can be read.
+    const hold = (on: boolean) => {
+      paused = on;
+      if (on) stop();
+      else queue();
+    };
+    group.addEventListener('pointerenter', () => hold(true));
+    group.addEventListener('pointerleave', () => hold(false));
+    group.addEventListener('focusin', () => hold(true));
+    group.addEventListener('focusout', () => hold(false));
+    document.addEventListener('visibilitychange', () => hold(document.hidden));
+
+    // Start on Before once it is actually on screen, so the flip is never missed above the fold.
+    if (auto) {
+      new IntersectionObserver(
+        (entries, obs) => {
+          if (!entries.some((e) => e.isIntersecting)) return;
+          obs.disconnect();
+          show('before');
+          queue();
+        },
+        { threshold: 0.35 }
+      ).observe(group);
+    }
   }
 </script>
 
@@ -101,8 +206,40 @@ const after = ['Storefront', 'Inventory', 'Production', 'CRM', 'Team ops'];
   .copy { display: flex; flex-direction: column; gap: 18px; }
 
   .diagram { display: flex; flex-direction: column; gap: 16px; }
+
+  .dhead {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .state { display: flex; flex-direction: column; gap: 2px; max-width: none; }
+  .state-word {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: clamp(1.5rem, 2.6vw, 1.875rem);
+    font-weight: 650;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    color: var(--text-muted);
+    transition: color 0.3s var(--ease);
+  }
+  .state-word::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  .state[data-state='after'] .state-word { color: var(--accent-strong); }
+  .state-note {
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+  }
+
   .toggle {
-    align-self: flex-end;
     display: inline-flex;
     gap: 2px;
     padding: 3px;
@@ -126,14 +263,28 @@ const after = ['Storefront', 'Inventory', 'Production', 'CRM', 'Team ops'];
     box-shadow: var(--shadow-xs);
   }
 
+  /* Both panels stay in the layout and cross-fade, stacked in one grid cell: the canvas then keeps
+     the taller one's height and nothing jumps as the diagram flips itself. */
   .canvas {
+    display: grid;
     padding: 24px;
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     background: var(--bg-subtle);
   }
-  .canvas [hidden] { display: none; }
-  .canvas svg { width: 100%; height: auto; }
+  .panel {
+    grid-area: 1 / 1;
+    align-self: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s var(--ease), visibility 0s linear 0.4s;
+  }
+  .panel.is-on {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s, 0s;
+  }
+  .canvas svg { width: 100%; height: auto; display: block; }
 
   .box { fill: var(--bg); stroke: var(--border-strong); stroke-width: 1; }
   .box-label {
@@ -196,10 +347,13 @@ const after = ['Storefront', 'Inventory', 'Production', 'CRM', 'Team ops'];
 
   @media (max-width: 1024px) {
     .grid { grid-template-columns: 1fr; align-items: start; }
-    .toggle { align-self: flex-start; }
   }
   @media (max-width: 640px) {
     .canvas { padding: 14px; }
     .flow { justify-content: flex-start; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .panel { transition: none; }
+    .state-word { transition: none; }
   }
 </style>

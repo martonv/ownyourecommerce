@@ -2,32 +2,47 @@
 import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
-import PageHero from '../components/PageHero.astro';
 import CtaBand from '../components/CtaBand.astro';
+
+// 24x24 stroke paths, drawn inline so they take the page's colour tokens.
+const icons = {
+  sales: 'M4 18l5-6 4 3 6-8M19 7h2v2',
+  warehouse: 'M4 7l8-4 8 4-8 4zM4 7v10l8 4V11M20 7v10l-8 4',
+  production: 'M3 20h18M5 20V10l5 3v-3l5 3v-3l4 2.5V20',
+  support: 'M4 5h16v11H9l-5 4zM8.5 10.5h.01M12 10.5h.01M15.5 10.5h.01',
+  finance: 'M6 3h9l3.5 3.5V21H6zM15 3v3.5h3.5M9.5 11.5h5M9.5 15h5M9.5 18h3',
+  leadership: 'M9 11a3.5 3.5 0 100-7 3.5 3.5 0 000 7zM3 20c.7-3.2 3.1-5 6-5s5.3 1.8 6 5M16 4.3a3.5 3.5 0 010 6.4M18 15.2c1.6.7 2.6 2.3 3 4.8',
+};
 
 const teams = [
   {
     team: 'Sales and wholesale',
+    icon: icons.sales,
     maps: 'How quotes, pricing tiers and net terms work today, and what reps have to ask someone else to answer.',
   },
   {
     team: 'Warehouse',
+    icon: icons.warehouse,
     maps: 'How stock is counted, where it lives, what gets picked first, and which numbers nobody trusts.',
   },
   {
     team: 'Production',
+    icon: icons.production,
     maps: 'What triggers a build, how materials are checked, and where a job waits longer than it should.',
   },
   {
     team: 'Customer support',
+    icon: icons.support,
     maps: 'The questions that come in daily, what the team has to open three tabs to answer, and what should never reach a person.',
   },
   {
     team: 'Finance',
+    icon: icons.finance,
     maps: 'Which records have to match the books, what gets exported by hand, and when the month-end reconciliation gets painful.',
   },
   {
     team: 'Leadership',
+    icon: icons.leadership,
     maps: 'The numbers you run the business on, how long they take to produce, and how much of that is someone building a spreadsheet.',
   },
 ];
@@ -67,13 +82,40 @@ const steps = [
 >
   <Nav />
   <main id="main" tabindex="-1">
-    <PageHero
-      label="Process"
-      title="We start with your teams, not your software."
-      lead="Before anything is scoped, we talk to the people doing the work: what they retype, what they wait on, and which number they do not trust. The system gets built around that, and whatever software you want to keep, we connect to it."
-    />
-
     <section class="section">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow">Process</p>
+          <h2>Fixed scope. Fixed price. Weekly demos.</h2>
+          <p class="lead">
+            Six steps from the first call to software your team works in. You know the price and the
+            timeline before anything is built.
+          </p>
+        </div>
+
+        <ol class="steps" data-reveal>
+          {steps.map((s, i) => (
+            <li class="step">
+              <div class="node">
+                <span class="num">{i + 1}</span>
+                <span class="line" aria-hidden="true">
+                  <svg viewBox="0 0 10 10" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 1.5L7 5l-4 3.5" />
+                  </svg>
+                </span>
+              </div>
+              <h3>
+                {s.title}
+                {s.free && <span class="chip">Free</span>}
+              </h3>
+              <p>{s.body}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+
+    <section class="section section-subtle">
       <div class="container">
         <div class="section-head" data-reveal>
           <p class="eyebrow">Discovery</p>
@@ -86,35 +128,17 @@ const steps = [
 
         <ul class="teams">
           {teams.map((t) => (
-            <li data-reveal>
+            <li class="team" data-reveal>
+              <span class="team-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d={t.icon} />
+                </svg>
+              </span>
               <h3>{t.team}</h3>
               <p>{t.maps}</p>
             </li>
           ))}
         </ul>
-      </div>
-    </section>
-
-    <section class="section section-subtle">
-      <div class="container">
-        <div class="section-head" data-reveal>
-          <p class="eyebrow">How it runs</p>
-          <h2>Fixed scope. Fixed price. Weekly demos.</h2>
-        </div>
-
-        <ol class="steps" data-reveal>
-          {steps.map((s, i) => (
-            <li>
-              <span class="marker" aria-hidden="true"></span>
-              <span class="step-label">
-                Step {i + 1}
-                {s.free && <span class="chip">Free</span>}
-              </span>
-              <h3>{s.title}</h3>
-              <p>{s.body}</p>
-            </li>
-          ))}
-        </ol>
       </div>
     </section>
 
@@ -142,65 +166,103 @@ const steps = [
 </Layout>
 
 <style>
+  /* ---- Discovery tiles ---- */
   .teams {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 0 clamp(24px, 4vw, 48px);
+    gap: 16px;
   }
-  .teams li {
-    padding: 22px 0;
-    border-top: 1px solid var(--border);
+  .team {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 24px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    transition: border-color 0.18s var(--ease), transform 0.18s var(--ease),
+      box-shadow 0.18s var(--ease);
   }
-  .teams li:nth-child(-n + 3) { border-top: 0; padding-top: 0; }
-  .teams h3 { font-size: 1.0625rem; margin-bottom: 4px; }
-  .teams p { font-size: 0.9375rem; }
+  .team:hover {
+    border-color: var(--border-strong);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm, 0 6px 20px -12px rgba(0, 0, 0, 0.28));
+  }
+  .team-icon {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+  }
+  .team h3 { font-size: 1.0625rem; }
+  .team p { font-size: 0.9375rem; }
 
+  /* ---- Horizontal flow chart ---- */
   .steps {
+    --flow-cols: 6;
     list-style: none;
     margin: 0;
-    padding: 0 0 0 28px;
-    position: relative;
-    max-width: 760px;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(var(--flow-cols), minmax(0, 1fr));
+    gap: 0 18px;
   }
-  .steps::before {
-    content: '';
-    position: absolute;
-    top: 6px;
-    bottom: 6px;
-    left: 5px;
-    width: 1px;
-    background: var(--border-strong);
-  }
-  .steps li {
-    position: relative;
-    padding-bottom: 28px;
-  }
-  .steps li:last-child { padding-bottom: 0; }
-  .marker {
-    position: absolute;
-    top: 6px;
-    left: -28px;
-    width: 11px;
-    height: 11px;
+  .step { display: flex; flex-direction: column; gap: 8px; }
+  /* the node row carries the badge and the connector that runs to the next step */
+  .node { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .num {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
-    background: var(--bg);
     border: 1px solid var(--border-strong);
+    background: var(--bg);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
   }
-  .steps li:first-child .marker {
-    background: var(--accent);
-    border-color: var(--accent);
+  .step:first-child .num {
+    background: var(--accent-strong);
+    border-color: var(--accent-strong);
+    color: var(--btn-accent-fg, #fff);
   }
-  .step-label {
-    display: inline-flex;
+  .line {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    color: var(--border-strong);
+    /* reaches across the grid gap so the chart reads as one continuous flow */
+    margin-right: -18px;
+  }
+  .line::before {
+    content: '';
+    flex: 1 1 auto;
+    height: 1px;
+    background: currentColor;
+  }
+  .line svg { flex: none; }
+  /* no connector off the end of a row, or off the last step */
+  .step:nth-child(6n) .line,
+  .step:last-child .line { display: none; }
+
+  .step h3 {
+    display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 0.8125rem;
-    font-weight: 500;
-    color: var(--text-muted);
+    flex-wrap: wrap;
+    font-size: 1rem;
   }
+  .step p { font-size: 0.875rem; }
   .chip {
     padding: 1px 8px;
     border-radius: 999px;
@@ -209,15 +271,27 @@ const steps = [
     font-size: 0.6875rem;
     font-weight: 600;
   }
-  .steps h3 { font-size: 1.0625rem; margin: 2px 0 4px; }
-  .steps p { font-size: 0.9375rem; }
 
   .keep { display: flex; flex-direction: column; align-items: flex-start; }
   .keep .section-head { margin-bottom: 24px; }
 
+  @media (max-width: 1180px) {
+    .steps { --flow-cols: 3; gap: 32px 18px; }
+    .step:nth-child(6n) .line { display: flex; }
+    .step:nth-child(3n) .line { display: none; }
+  }
   @media (max-width: 900px) {
+    .teams { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 680px) {
     .teams { grid-template-columns: 1fr; }
-    .teams li:nth-child(-n + 3) { border-top: 1px solid var(--border); padding-top: 22px; }
-    .teams li:first-child { border-top: 0; padding-top: 0; }
+    .steps { --flow-cols: 2; }
+    .step:nth-child(3n) .line { display: flex; }
+    .step:nth-child(2n) .line { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .team { transition: none; }
+    .team:hover { transform: none; }
   }
 </style>

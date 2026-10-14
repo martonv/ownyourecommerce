@@ -213,7 +213,8 @@ p { margin: 0; color: var(--text-body); max-width: 60ch; }
 }
 
 .section {
-  padding: clamp(80px, 9vw, 128px) 0;
+  /* a third tighter than the original clamp(80px, 9vw, 128px) */
+  padding: clamp(54px, 6vw, 86px) 0;
   position: relative;
   scroll-margin-top: 64px; /* clears the sticky nav when jumping to #anchors */
 }

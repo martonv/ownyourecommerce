@@ -110,7 +110,7 @@ const tabs = [
         <div class="stage">
           <div class="live">
             <ProductFrame>
-              <DemoAdmin initialView="orders" />
+              <DemoAdmin initialView="orders" chrome={false} />
             </ProductFrame>
           </div>
 
@@ -223,15 +223,14 @@ const tabs = [
 
   .body {
     display: grid;
-    grid-template-columns: 4fr 8fr;
-    gap: clamp(24px, 4vw, 48px);
+    grid-template-columns: minmax(0, clamp(320px, 40%, 460px)) minmax(0, 1fr);
+    gap: clamp(24px, 4vw, 56px);
     padding-top: clamp(28px, 4vw, 40px);
-    align-items: start;
+    align-items: center;
   }
 
   .panel { display: flex; flex-direction: column; gap: 12px; }
   .panel[hidden] { display: none; }
-  .panel h3 { max-width: 20ch; }
   .panel p { font-size: 0.9375rem; }
   .panel ul {
     list-style: none;
@@ -251,6 +250,13 @@ const tabs = [
   .panel li svg { flex: none; margin-top: 3px; color: var(--text-muted); }
 
   .stage { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+  /* The frame runs out to the window edge rather than stopping at the container. Kept inside the
+     grid it would have to take its width from the copy, and then both are cramped. The offset is
+     the distance from the container's edge to the window's, so a gutter is still left on the right;
+     100vw ignores the scrollbar, which only eats into that gutter and never overflows. */
+  @media (min-width: 1024px) {
+    .stage { margin-right: calc(-1 * max(0px, (100vw - var(--max-w)) / 2)); }
+  }
   .still { display: none; }
   .caption {
     max-width: none;

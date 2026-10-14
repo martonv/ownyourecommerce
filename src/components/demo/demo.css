@@ -126,6 +126,17 @@
 .demo .demo-main { padding: 18px 20px 22px; min-width: 0; }
 .demo .demo-view { display: flex; flex-direction: column; gap: 14px; animation: demo-in 0.25s var(--ease); }
 
+/* Bare mode (DemoAdmin chrome={false}): one screen, no top bar and no module sidebar, so the
+   view gets the whole frame instead of being squeezed beside chrome the page already duplicates.
+   The markup stays put — the script needs its tablist and title — so this only hides it. */
+.demo.is-bare .demo-top,
+.demo.is-bare .demo-nav { display: none; }
+.demo.is-bare .demo-body { grid-template-columns: minmax(0, 1fr); }
+.demo.is-bare .demo-main { padding: 20px 22px 24px; }
+/* Wider customer column: with the chrome gone there is room for the channel and time to stay on
+   one line, which is the last cell that was wrapping. Scoped so the demo page keeps its ratios. */
+.demo.is-bare .orders-cols .dv-tr { grid-template-columns: 0.55fr 1.75fr 1.55fr 0.7fr 1fr 0.7fr; }
+
 /* View building blocks */
 .demo .dv-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .demo .dv-head h3 { font-size: 1.2rem; }

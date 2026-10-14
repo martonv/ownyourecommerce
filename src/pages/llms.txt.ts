@@ -13,7 +13,7 @@ export const GET: APIRoute = ({ site }) => {
 - Custom storefronts and checkout, with Helcim payments and FedEx, UPS, USPS, and DHL shipping
 - Inventory and warehousing: multi-warehouse stock, barcode receiving and picking, purchase orders, lot and serial tracking
 - Production and manufacturing: bills of materials, work orders, material checks, routing, and capacity planning
-- CRM: contacts, companies, deal pipelines, order history, and HubSpot or Salesforce sync
+- CRM: contacts, companies, deal pipelines, order history, and two-way sync with HubSpot, Salesforce, Zoho or Pipedrive
 - Prebuilt growth modules: AI marketing, SEO and AEO, Google Ads and Merchant Center, server-side pixels, social commerce, international selling, affiliates and influencers, email and SMS flows, A/B testing, fraud screening, gift cards, pre-orders, and bundles, reviews and loyalty, an AI shopping assistant, live chat, custom shipping, and accessibility to WCAG 2.2 AA
 - Custom builds: B2B portals, quotes, product configurators, subscriptions, customer portals, returns, marketplace sync, point of sale, and EDI
 
