@@ -67,6 +67,51 @@ const VIEWS = ['dashboard', 'orders', 'production', 'inbox'];
       timer = 0;
     };
 
+    /**
+     * Replay the panel's entrance. A CSS animation only runs once per element, so the class is
+     * removed and a reflow forced before re-adding it, otherwise revisiting a screen is silent.
+     */
+    const enter = (view: string) => {
+      const panel = canvas.querySelector<HTMLElement>(`[data-oa-view="${view}"]`);
+      if (!panel || reduced.matches) return;
+      panel.classList.remove('ha-enter');
+      void panel.offsetWidth;
+      panel.classList.add('ha-enter');
+      countUp(panel);
+    };
+
+    /** Stat tiles count toward their real value, so the numbers feel live rather than printed. */
+    const countUp = (panel: HTMLElement) => {
+      panel.querySelectorAll<HTMLElement>('.oa-tile-value').forEach((el) => {
+        const finalText = el.dataset.final ?? (el.dataset.final = el.textContent!.trim());
+        const parts = finalText.match(/^(\D*?)([\d][\d,]*(?:\.\d+)?)(.*)$/);
+        if (!parts) return;
+        const [, prefix, digits, suffix] = parts;
+        const target = Number(digits.replace(/,/g, ''));
+        if (!Number.isFinite(target)) return;
+        const decimals = (digits.split('.')[1] ?? '').length;
+        const from = target * 0.78;
+        const started = performance.now();
+        const DUR = 900;
+
+        const frame = (now: number) => {
+          const t = Math.min(1, (now - started) / DUR);
+          const eased = 1 - Math.pow(1 - t, 3);
+          const value = from + (target - from) * eased;
+          el.textContent =
+            prefix +
+            value.toLocaleString('en-US', {
+              minimumFractionDigits: decimals,
+              maximumFractionDigits: decimals,
+            }) +
+            suffix;
+          if (t < 1) requestAnimationFrame(frame);
+          else el.textContent = finalText;
+        };
+        requestAnimationFrame(frame);
+      });
+    };
+
     // The pointer travels to the sidebar entry, then the app's own router does the rest, so the
     // loop drives the real UI instead of a copy of it.
     const goto = (index: number) => {
@@ -94,6 +139,7 @@ const VIEWS = ['dashboard', 'orders', 'production', 'inbox'];
         window.setTimeout(() => {
           cursor.dataset.click = 'true';
           link.click();
+          enter(step.view);
           window.setTimeout(() => (cursor.dataset.click = 'false'), 260);
         }, 520);
       });
@@ -111,7 +157,9 @@ const VIEWS = ['dashboard', 'orders', 'production', 'inbox'];
 
     new IntersectionObserver(
       (entries) => {
+        const wasIn = inView;
         inView = entries.some((e) => e.isIntersecting);
+        if (inView && !wasIn) enter(steps[i].view);
         if (inView) tick();
         else stop();
       },
@@ -182,10 +230,49 @@ const VIEWS = ['dashboard', 'orders', 'production', 'inbox'];
     100% { opacity: 0; transform: scale(1.6); }
   }
 
+  /* Panel contents rise in on every switch, a beat behind the click. */
+  .ha-canvas :global(.ha-enter) > * {
+    animation: ha-rise 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  }
+  .ha-canvas :global(.ha-enter) > *:nth-child(2) { animation-delay: 0.05s; }
+  .ha-canvas :global(.ha-enter) > *:nth-child(3) { animation-delay: 0.1s; }
+  .ha-canvas :global(.ha-enter) > *:nth-child(4) { animation-delay: 0.16s; }
+  .ha-canvas :global(.ha-enter) > *:nth-child(5) { animation-delay: 0.22s; }
+  .ha-canvas :global(.ha-enter) > *:nth-child(n + 6) { animation-delay: 0.28s; }
+  /* the tiles inside a row cascade across, not together */
+  .ha-canvas :global(.ha-enter) .oa-tile {
+    animation: ha-rise 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  }
+  .ha-canvas :global(.ha-enter) .oa-tile:nth-child(2) { animation-delay: 0.09s; }
+  .ha-canvas :global(.ha-enter) .oa-tile:nth-child(3) { animation-delay: 0.15s; }
+  .ha-canvas :global(.ha-enter) .oa-tile:nth-child(4) { animation-delay: 0.21s; }
+  .ha-canvas :global(.ha-enter) .oa-tile:nth-child(5) { animation-delay: 0.27s; }
+  /* table rows wipe down behind them */
+  .ha-canvas :global(.ha-enter) .oa-table tbody tr {
+    animation: ha-row 0.42s ease-out backwards;
+  }
+  .ha-canvas :global(.ha-enter) .oa-table tbody tr:nth-child(2) { animation-delay: 0.05s; }
+  .ha-canvas :global(.ha-enter) .oa-table tbody tr:nth-child(3) { animation-delay: 0.09s; }
+  .ha-canvas :global(.ha-enter) .oa-table tbody tr:nth-child(4) { animation-delay: 0.13s; }
+  .ha-canvas :global(.ha-enter) .oa-table tbody tr:nth-child(5) { animation-delay: 0.17s; }
+  .ha-canvas :global(.ha-enter) .oa-table tbody tr:nth-child(n + 6) { animation-delay: 0.21s; }
+
+  @keyframes ha-rise {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes ha-row {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: none; }
+  }
+
   @media (max-width: 860px) {
     .ha-cursor { display: none; }
   }
   @media (prefers-reduced-motion: reduce) {
     .ha-cursor { display: none; }
+    .ha-canvas :global(.ha-enter) > *,
+    .ha-canvas :global(.ha-enter) .oa-tile,
+    .ha-canvas :global(.ha-enter) .oa-table tbody tr { animation: none; }
   }
 </style>

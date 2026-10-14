@@ -74,10 +74,11 @@
   --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 
   /* Layout: 8px buttons and inputs, 12px cards, 16px product frame */
-  --radius-sm: 6px;
-  --radius: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
+  /* Square by design. Circles (50%) and pills (999px) are set explicitly where they belong. */
+  --radius-sm: 0px;
+  --radius: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
 
   --shadow-xs: 0 1px 2px rgba(9, 9, 11, 0.04);
   --shadow-sm: 0 1px 3px rgba(9, 9, 11, 0.05), 0 1px 2px rgba(9, 9, 11, 0.03);
@@ -371,13 +372,17 @@ p { margin: 0; color: var(--text-body); max-width: 60ch; }
 
 [data-reveal] {
   opacity: 0;
-  transform: translateY(14px);
-  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+  transform: translateY(18px);
+  /* the delay is set per element in Layout.astro so a group cascades instead of snapping in */
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
 }
 [data-reveal].is-visible {
   opacity: 1;
   transform: none;
 }
+/* once it has arrived, stop promoting it to its own layer */
+[data-reveal].is-visible { will-change: auto; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -394,7 +399,13 @@ p { margin: 0; color: var(--text-body); max-width: 60ch; }
    bleeding edge to edge, so nothing crosses a rail. The rails collapse to the viewport edges once
    the window is narrower than the frame. */
 
-.boxed { position: relative; }
+.boxed {
+  position: relative;
+  /* The gutters outside the frame carry a faint dot grid; each section paints its own band over
+     it, so the texture only ever shows in the space around the content. */
+  background-image: radial-gradient(circle at 1px 1px, var(--border-strong) 1px, transparent 0);
+  background-size: 9px 9px;
+}
 
 .boxed::before,
 .boxed::after {
@@ -410,19 +421,29 @@ p { margin: 0; color: var(--text-body); max-width: 60ch; }
 .boxed::before { left: max(0px, calc(50% - var(--max-w) / 2)); }
 .boxed::after { right: max(0px, calc(50% - var(--max-w) / 2)); }
 
-/* a divider above every section, drawn only across the frame */
+/* every section paints a band of page colour inside the frame, plus a divider along its top */
 .boxed > * {
   background-repeat: no-repeat;
-  background-position: center top;
-  background-image: linear-gradient(var(--border), var(--border));
-  background-size: min(var(--max-w), 100%) 1px;
+  background-position: center top, center center;
+  background-image:
+    linear-gradient(var(--border), var(--border)),
+    linear-gradient(var(--bg), var(--bg));
+  background-size: min(var(--max-w), 100%) 1px, min(var(--max-w), 100%) 100%;
 }
-.boxed > :first-child { background-image: none; }
+.boxed > :first-child {
+  background-image: linear-gradient(var(--bg), var(--bg));
+  background-size: min(var(--max-w), 100%) 100%;
+  background-position: center center;
+}
 
 /* A full-bleed band opts out of the frame: it paints over the rails and draws its own edges, so
    the section after it must not add a second line directly under the band's bottom border. */
 .boxed .frame-bleed { position: relative; z-index: 2; }
-.boxed .frame-bleed + * { background-image: none; }
+.boxed .frame-bleed + * {
+  background-image: linear-gradient(var(--bg), var(--bg));
+  background-size: min(var(--max-w), 100%) 100%;
+  background-position: center center;
+}
 
 /* the alternating fill stops at the rails too */
 .boxed .section-subtle {

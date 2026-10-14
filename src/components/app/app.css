@@ -29,9 +29,9 @@
   --oa-danger: #b91c1c;
   --oa-danger-soft: #fdeaea;
 
-  --oa-r: 8px;
-  --oa-r-lg: 12px;
-  --oa-r-xl: 16px;
+  --oa-r: 0px;
+  --oa-r-lg: 0px;
+  --oa-r-xl: 0px;
   --oa-shadow: 0 1px 2px rgba(9, 9, 11, 0.05);
   --oa-shadow-lg: 0 18px 48px -16px rgba(9, 9, 11, 0.22), 0 2px 8px rgba(9, 9, 11, 0.06);
   --oa-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -88,7 +88,7 @@
 .oa p { color: var(--oa-text-2); max-width: none; }
 .oa a { color: inherit; }
 .oa ul, .oa ol { list-style: none; }
-.oa :focus-visible { outline: 2px solid var(--oa-accent); outline-offset: 2px; border-radius: 4px; }
+.oa :focus-visible { outline: 2px solid var(--oa-accent); outline-offset: 2px; border-radius: 0; }
 .oa .oa-sr {
   position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
   overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
@@ -129,7 +129,7 @@
 .oa-mark {
   flex: none;
   width: 26px; height: 26px;
-  border-radius: 7px;
+  border-radius: 0;
   display: grid; place-items: center;
   background: var(--oa-text); color: var(--oa-surface);
   font-size: 0.78rem; font-weight: 700;
@@ -268,7 +268,7 @@
   margin-left: auto;
   padding: 1px 5px;
   border: 1px solid var(--oa-border);
-  border-radius: 4px;
+  border-radius: 0;
   background: var(--oa-surface);
   font-size: 0.66rem;
   font-family: var(--font-mono, ui-monospace, monospace);
@@ -346,7 +346,7 @@
 }
 .oa-seg button {
   height: 24px; padding: 0 10px;
-  border: 0; border-radius: 6px;
+  border: 0; border-radius: 0;
   background: transparent; color: var(--oa-text-3);
   font-size: 0.75rem; font-weight: 500;
 }
@@ -366,7 +366,7 @@
 .oa-tabs button[aria-selected='true'] { color: var(--oa-text); }
 .oa-tabs button[aria-selected='true']::after {
   content: ''; position: absolute; left: 8px; right: 8px; bottom: -1px;
-  height: 2px; background: var(--oa-accent); border-radius: 2px;
+  height: 2px; background: var(--oa-accent); border-radius: 0;
 }
 
 /* ---------------------------------------------------------------- cards + tiles */
@@ -508,18 +508,18 @@
 .oa-bar-2 { fill: var(--oa-border-strong); }
 
 .oa-barlist { display: flex; flex-direction: column; gap: 7px; }
-.oa-barlist li { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 5px 9px; border-radius: 6px; font-size: 0.78rem; overflow: hidden; }
-.oa-barlist .oa-barfill { position: absolute; inset: 0 auto 0 0; background: var(--oa-accent-soft); border-radius: 6px; }
+.oa-barlist li { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 5px 9px; border-radius: 0; font-size: 0.78rem; overflow: hidden; }
+.oa-barlist .oa-barfill { position: absolute; inset: 0 auto 0 0; background: var(--oa-accent-soft); border-radius: 0; }
 .oa-barlist span { position: relative; }
 .oa-barlist .oa-num { color: var(--oa-text-2); font-variant-numeric: tabular-nums; }
 
 .oa-funnel { display: flex; flex-direction: column; gap: 6px; }
 .oa-funnel li { display: grid; grid-template-columns: 150px minmax(0, 1fr) 90px; gap: 10px; align-items: center; font-size: 0.78rem; }
-.oa-funnel .oa-fbar { height: 24px; border-radius: 5px; background: var(--oa-accent-strong); }
+.oa-funnel .oa-fbar { height: 24px; border-radius: 0; background: var(--oa-accent-strong); }
 .oa-funnel .oa-fmeta { text-align: right; color: var(--oa-text-3); font-variant-numeric: tabular-nums; }
 
 .oa-heat { display: grid; grid-template-columns: repeat(13, 1fr); gap: 3px; }
-.oa-heat i { aspect-ratio: 1; border-radius: 3px; background: var(--oa-accent-strong); display: block; }
+.oa-heat i { aspect-ratio: 1; border-radius: 0; background: var(--oa-accent-strong); display: block; }
 
 /* ---------------------------------------------------------------- panels, dialogs, toasts */
 
@@ -562,7 +562,7 @@
 .oa-menu button, .oa-menu a {
   display: flex; align-items: center; gap: 9px;
   width: 100%; padding: 7px 9px;
-  border: 0; border-radius: 6px;
+  border: 0; border-radius: 0;
   background: transparent; text-align: left;
   font-size: 0.8rem; color: var(--oa-text);
 }
@@ -667,7 +667,7 @@
 .oa-chat-rail { border-right: 1px solid var(--oa-border); padding: 8px; overflow-y: auto; }
 .oa-chat-rail button {
   width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 6px;
-  padding: 6px 8px; border: 0; border-radius: 6px; background: transparent;
+  padding: 6px 8px; border: 0; border-radius: 0; background: transparent;
   font-size: 0.78rem; color: var(--oa-text-2); text-align: left;
 }
 .oa-chat-rail button:hover { background: var(--oa-surface-2); }
@@ -715,7 +715,7 @@
 .oa-cal-day.is-over { outline: 2px dashed var(--oa-accent); outline-offset: -3px; }
 .oa-cal-num { font-size: 0.68rem; color: var(--oa-text-3); font-variant-numeric: tabular-nums; }
 .oa-cal-chip {
-  padding: 3px 6px; border-radius: 5px;
+  padding: 3px 6px; border-radius: 0;
   background: var(--oa-accent-soft); color: var(--oa-accent-strong);
   font-size: 0.66rem; font-weight: 600;
   cursor: grab; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;

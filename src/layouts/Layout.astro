@@ -78,7 +78,23 @@ const schema = {
 
     <script>
       const reveal = () => {
-        const els = document.querySelectorAll('[data-reveal]');
+        const els = document.querySelectorAll<HTMLElement>('[data-reveal]');
+
+        // Stagger within each section: a row of cards should cascade, not land all at once.
+        // Grouping by section keeps the delay small no matter how long the page gets.
+        const groups = new Map<Element, HTMLElement[]>();
+        els.forEach((el) => {
+          const key = el.closest('section, footer') ?? document.body;
+          const list = groups.get(key) ?? [];
+          list.push(el);
+          groups.set(key, list);
+        });
+        groups.forEach((list) =>
+          list.forEach((el, i) => {
+            el.style.transitionDelay = `${Math.min(i * 70, 420)}ms`;
+          })
+        );
+
         const io = new IntersectionObserver(
           (entries) => {
             entries.forEach((e) => {
