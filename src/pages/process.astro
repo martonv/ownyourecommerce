@@ -83,7 +83,18 @@ const steps = [
 >
   <Nav />
   <main id="main" tabindex="-1" class="boxed">
-    <section class="section">
+    <section class="section page-top">
+      <span class="page-bg" aria-hidden="true">
+        <svg viewBox="0 0 1200 420" focusable="false">
+          <defs>
+            <pattern id="process-arrows" width="150" height="62" patternUnits="userSpaceOnUse">
+              <path class="shaft" d="M10 31h104" />
+              <path class="head" d="M114 25.5l6.5 5.5-6.5 5.5" />
+            </pattern>
+          </defs>
+          <rect width="1200" height="420" fill="url(#process-arrows)" />
+        </svg>
+      </span>
       <div class="container">
         <div class="section-head" data-reveal>
           <p class="eyebrow">Process</p>
@@ -167,6 +178,37 @@ const steps = [
 </Layout>
 
 <style>
+  /* Page motif: a faded drawing behind the opening section, masked so it dissolves before the
+     content below it. Decorative only, so it is hidden from assistive tech and never catches a click. */
+  .page-top { position: relative; overflow: hidden; }
+  .page-top > .container { position: relative; z-index: 1; }
+  .page-bg {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    /* Held to the content frame rather than the section box, so the motif stops at the rails
+       instead of running out across the dotted gutters to the edge of the window. */
+    left: 50%;
+    width: min(var(--max-w), 100%);
+    transform: translateX(-50%);
+    z-index: 0;
+    pointer-events: none;
+    -webkit-mask-image: linear-gradient(180deg, #000 6%, rgba(0, 0, 0, 0.55) 55%, transparent 94%);
+    mask-image: linear-gradient(180deg, #000 6%, rgba(0, 0, 0, 0.55) 55%, transparent 94%);
+  }
+  .page-bg svg { width: 100%; height: 100%; display: block; }
+
+  /* Rows of arrows running the way the process does, left to right. */
+  .page-bg .shaft { fill: none; stroke: var(--border-strong); stroke-width: 1; opacity: 0.34; }
+  .page-bg .head {
+    fill: none;
+    stroke: var(--border-strong);
+    stroke-width: 1.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0.46;
+  }
+
   /* ---- Discovery tiles ---- */
   .teams {
     list-style: none;
@@ -291,8 +333,4 @@ const steps = [
     .step:nth-child(2n) .line { display: none; }
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .team { transition: none; }
-    .team:hover { transform: none; }
-  }
 </style>

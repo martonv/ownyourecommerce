@@ -27,7 +27,7 @@ const aX = (i: number) => 8 + i * aStep;
     <div class="grid">
       <div class="copy" data-reveal>
         <p class="eyebrow">One system</p>
-        <h2>The Solution? One custom platform that has all your systems.</h2>
+        <h2>The solution? All of your systems built into one custom platform.</h2>
         <p>
           When an order comes in, stock is reserved, a work order is released if you need to build it,
           the customer record updates, and the books follow. No sync. No middleware. One record, from
@@ -120,7 +120,7 @@ const aX = (i: number) => 8 + i * aStep;
     let view = 'after';
     let stack = 0;
     let timer = 0;
-    let auto = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let auto = true;
     let paused = false;
 
     const show = (next: string) => {
@@ -180,7 +180,7 @@ const aX = (i: number) => 8 + i * aStep;
     document.addEventListener('visibilitychange', () => hold(document.hidden));
 
     // Start on Before once it is actually on screen, so the flip is never missed above the fold.
-    if (auto) {
+    {
       new IntersectionObserver(
         (entries, obs) => {
           if (!entries.some((e) => e.isIntersecting)) return;
@@ -351,9 +351,5 @@ const aX = (i: number) => 8 + i * aStep;
   @media (max-width: 640px) {
     .canvas { padding: 14px; }
     .flow { justify-content: flex-start; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .panel { transition: none; }
-    .state-word { transition: none; }
   }
 </style>

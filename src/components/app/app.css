@@ -764,8 +764,3 @@
   .oa-funnel .oa-fmeta { display: none; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .oa-view, .oa-panel, .oa-toast, .oa-scrim { animation: none; }
-  .oa-chev, .oa-btn, .oa-link, .oa-group-btn { transition: none; }
-  .oa-content { scroll-behavior: auto; }
-}

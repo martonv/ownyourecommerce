@@ -355,8 +355,7 @@ const chapters = [
       link.addEventListener('click', () => {
         const target = story.querySelector<HTMLElement>(`[data-story-chapter="${link.dataset.storyLink}"]`);
         if (!target) return;
-        const smooth = !matchMedia('(prefers-reduced-motion: reduce)').matches;
-        target.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' });
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       })
     );
   }
@@ -699,7 +698,4 @@ const chapters = [
     .pane:has(.grid) { overflow-x: auto; }
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .rail button { transition: none; }
-  }
 </style>

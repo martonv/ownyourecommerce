@@ -96,7 +96,16 @@ const convert = [
 >
   <Nav />
   <main id="main" tabindex="-1" class="boxed">
-    <section class="section">
+    <section class="section page-top">
+      <span class="page-bg growth-chart" aria-hidden="true">
+        <svg viewBox="0 0 1200 420" preserveAspectRatio="none" focusable="false">
+          {[1, 2, 3, 4].map((i) => (
+            <line class="rule" x1="0" x2="1200" y1={i * 84} y2={i * 84} />
+          ))}
+          <polygon class="area" points="0,420 0,392 60,380 120,360 180,370 240,342 300,352 360,322 420,300 480,314 540,284 600,266 660,276 720,244 780,220 840,234 900,200 960,174 1020,188 1080,150 1140,120 1200,86 1200,420" />
+          <polyline class="line" points="0,392 60,380 120,360 180,370 240,342 300,352 360,322 420,300 480,314 540,284 600,266 660,276 720,244 780,220 840,234 900,200 960,174 1020,188 1080,150 1140,120 1200,86" />
+        </svg>
+      </span>
       <div class="container">
         <div class="section-head" data-reveal>
           <p class="eyebrow">Reach</p>
@@ -173,6 +182,45 @@ const convert = [
 </Layout>
 
 <style>
+  /* Page motif: a faded drawing behind the opening section, masked so it dissolves before the
+     content below it. Decorative only, so it is hidden from assistive tech and never catches a click. */
+  .page-top { position: relative; overflow: hidden; }
+  .page-top > .container { position: relative; z-index: 1; }
+  .page-bg {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    /* Held to the content frame rather than the section box, so the motif stops at the rails
+       instead of running out across the dotted gutters to the edge of the window. */
+    left: 50%;
+    width: min(var(--max-w), 100%);
+    transform: translateX(-50%);
+    z-index: 0;
+    pointer-events: none;
+    -webkit-mask-image: linear-gradient(180deg, #000 6%, rgba(0, 0, 0, 0.55) 55%, transparent 94%);
+    mask-image: linear-gradient(180deg, #000 6%, rgba(0, 0, 0, 0.55) 55%, transparent 94%);
+  }
+  .page-bg svg { width: 100%; height: 100%; display: block; }
+
+  /* The line is stretched to the section, so the stroke is kept at a true width. */
+  .page-bg .line {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 2;
+    stroke-linejoin: round;
+    opacity: 0.3;
+    vector-effect: non-scaling-stroke;
+  }
+  .page-bg .area { fill: var(--accent-soft); opacity: 0.6; }
+  /* Held to the open band above the cards: stretched over the whole section the climb sits behind
+     them and only a corner of it is ever visible. */
+  .growth-chart { bottom: auto; height: clamp(300px, 46vw, 430px); }
+  .page-bg .rule {
+    stroke: var(--border);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+  }
+
   .grid {
     list-style: none;
     margin: 0;

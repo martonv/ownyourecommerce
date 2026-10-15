@@ -60,7 +60,6 @@ const VIEWS = ['dashboard', 'orders', 'production', 'inbox'];
     let i = 0;
     let timer = 0;
     let inView = false;
-    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 
     const stop = () => {
       window.clearTimeout(timer);
@@ -73,7 +72,7 @@ const VIEWS = ['dashboard', 'orders', 'production', 'inbox'];
      */
     const enter = (view: string) => {
       const panel = canvas.querySelector<HTMLElement>(`[data-oa-view="${view}"]`);
-      if (!panel || reduced.matches) return;
+      if (!panel) return;
       panel.classList.remove('ha-enter');
       void panel.offsetWidth;
       panel.classList.add('ha-enter');
@@ -147,7 +146,7 @@ const VIEWS = ['dashboard', 'orders', 'production', 'inbox'];
 
     const tick = () => {
       stop();
-      if (!inView || document.hidden || reduced.matches) return;
+      if (!inView || document.hidden) return;
       timer = window.setTimeout(() => {
         i = (i + 1) % steps.length;
         goto(i);
@@ -167,7 +166,6 @@ const VIEWS = ['dashboard', 'orders', 'production', 'inbox'];
     ).observe(host);
 
     document.addEventListener('visibilitychange', () => (document.hidden ? stop() : tick()));
-    reduced.addEventListener('change', () => (reduced.matches ? stop() : tick()));
   }
 </script>
 
@@ -268,11 +266,5 @@ const VIEWS = ['dashboard', 'orders', 'production', 'inbox'];
 
   @media (max-width: 860px) {
     .ha-cursor { display: none; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .ha-cursor { display: none; }
-    .ha-canvas :global(.ha-enter) > *,
-    .ha-canvas :global(.ha-enter) .oa-tile,
-    .ha-canvas :global(.ha-enter) .oa-table tbody tr { animation: none; }
   }
 </style>

@@ -272,10 +272,6 @@ const { initialView, chrome = true } = Astro.props;
     let typing = 0;
     const typeOut = (el: HTMLElement, text: string) => {
       window.clearInterval(typing);
-      if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        el.textContent = text;
-        return;
-      }
       let shown = 0;
       el.textContent = '';
       typing = window.setInterval(() => {
@@ -448,8 +444,7 @@ const { initialView, chrome = true } = Astro.props;
       if (click.metaKey || click.ctrlKey || click.shiftKey || click.altKey || click.button !== 0) return;
       e.preventDefault();
       show(opener.dataset.demoOpen!);
-      const smooth = !matchMedia('(prefers-reduced-motion: reduce)').matches;
-      document.getElementById('demo')?.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' });
+            document.getElementById('demo')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
 
     revenueToday = Number(one('[data-count="revenue"]')!.textContent!.replace(/\D/g, ''));
