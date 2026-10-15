@@ -5,7 +5,7 @@
 <section class="section problem" id="problem">
   <div class="container">
     <div class="section-head" data-reveal>
-      <p class="eyebrow problem-mark"><span>The problem</span></p>
+      <p class="eyebrow problem-mark">The problem</p>
       <h2>Your systems disagree with each other.</h2>
       <p class="lead">Every tool is good at its job. The trouble is everything in between.</p>
     </div>
@@ -69,25 +69,12 @@
 <style>
   .problem { --problem-red: #dc2626; background: var(--bg-subtle); }
 
-  /* The label strikes through in red as the section arrives: the rule wipes left to right, keyed
-     off the reveal class the section head already gets, so it fires in step with the fade. */
-  /* .eyebrow sets display:block; this has to outrank it or the rule spans the column */
-  .eyebrow.problem-mark { position: relative; display: inline-block; color: var(--problem-red); }
-  .problem-mark span { position: relative; }
-  .problem-mark::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0.12em;
-    height: 2px;
-    background: var(--problem-red);
-    transform: scaleX(0);
-    transform-origin: left center;
-    transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.25s;
+  /* The label warms from the standard eyebrow grey into red as the section arrives, keyed off
+     the reveal class the section head already gets, so it fires in step with the fade. */
+  .eyebrow.problem-mark {
+    transition: color 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.25s;
   }
-  .section-head.is-visible .problem-mark::after { transform: scaleX(1); }
-
+  .section-head.is-visible .problem-mark { color: var(--problem-red); }
 
   .cards {
     display: grid;
