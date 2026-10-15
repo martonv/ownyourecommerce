@@ -71,7 +71,8 @@
 
   /* The label strikes through in red as the section arrives: the rule wipes left to right, keyed
      off the reveal class the section head already gets, so it fires in step with the fade. */
-  .problem-mark { position: relative; display: inline-block; color: var(--problem-red); }
+  /* .eyebrow sets display:block; this has to outrank it or the rule spans the column */
+  .eyebrow.problem-mark { position: relative; display: inline-block; color: var(--problem-red); }
   .problem-mark span { position: relative; }
   .problem-mark::after {
     content: '';

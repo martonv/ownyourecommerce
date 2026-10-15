@@ -26,7 +26,7 @@ const aX = (i: number) => 8 + i * aStep;
   <div class="container">
     <div class="grid">
       <div class="copy" data-reveal>
-        <p class="eyebrow">One system</p>
+        <p class="eyebrow solution-mark"><span>The solution</span></p>
         <h2>The solution? All of your systems built into one custom platform.</h2>
         <p>
           When an order comes in, stock is reserved, a work order is released if you need to build it,
@@ -195,7 +195,33 @@ const aX = (i: number) => 8 + i * aStep;
 </script>
 
 <style>
-  .solution { background: var(--bg); }
+  .solution { --solution-green: #15803d; background: var(--bg); }
+
+  /* Mirrors the red strike on "The problem": same wipe, the other colour, so the two sections
+     read as a pair when you scroll from one into the other. */
+  /* .eyebrow sets display:block; this has to outrank it or the rule spans the column */
+  /* .copy is a flex column with the default align-items:stretch, so the mark also has to opt
+     out of stretching or it fills the column however it is displayed. */
+  .eyebrow.solution-mark {
+    position: relative;
+    display: inline-block;
+    align-self: flex-start;
+    color: var(--solution-green);
+  }
+  .solution-mark span { position: relative; }
+  .solution-mark::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0.12em;
+    height: 2px;
+    background: var(--solution-green);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.25s;
+  }
+  .copy.is-visible .solution-mark::after { transform: scaleX(1); }
 
   .grid {
     display: grid;

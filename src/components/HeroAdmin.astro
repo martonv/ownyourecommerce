@@ -22,11 +22,6 @@ const VIEWS = ['dashboard', 'orders', 'production', 'inbox'];
       <div class="ha-canvas" data-ha-canvas>
         <AdminApp only={VIEWS} still={true} />
       </div>
-      <span class="ha-cursor" data-ha-cursor aria-hidden="true">
-        <svg viewBox="0 0 24 24" width="20" height="20">
-          <path d="M5 2l14 9-6.2 1.3L10 19z" fill="#fff" stroke="#0e0e11" stroke-width="1.4" stroke-linejoin="round" />
-        </svg>
-      </span>
     </div>
   </ProductFrame>
 </div>
@@ -39,13 +34,10 @@ const VIEWS = ['dashboard', 'orders', 'production', 'inbox'];
     const CANVAS_H = 810;
     const scaleBox = host.querySelector<HTMLElement>('[data-ha-scale]')!;
     const canvas = host.querySelector<HTMLElement>('[data-ha-canvas]')!;
-    const cursor = host.querySelector<HTMLElement>('[data-ha-cursor]')!;
 
     // Lay the app out at a fixed size and scale it, rather than letting it reflow to the container.
     const fit = () => {
-      const scale = scaleBox.clientWidth / CANVAS_W;
-      canvas.style.transform = `scale(${scale})`;
-      scaleBox.style.setProperty('--ha-scale', String(scale));
+      canvas.style.transform = `scale(${scaleBox.clientWidth / CANVAS_W})`;
     };
     fit();
     new ResizeObserver(fit).observe(scaleBox);
@@ -111,37 +103,14 @@ const VIEWS = ['dashboard', 'orders', 'production', 'inbox'];
       });
     };
 
-    // The pointer travels to the sidebar entry, then the app's own router does the rest, so the
-    // loop drives the real UI instead of a copy of it.
+    // The page moves through itself: clicking the real sidebar entry means the app's own router
+    // runs, so the highlight, the breadcrumb and the open group all follow for free.
     const goto = (index: number) => {
       const step = steps[index];
       const link = canvas.querySelector<HTMLElement>(`[data-oa-link="${step.view}"]`);
       if (!link) return;
-
-      // A module inside a collapsed group has no box to aim at, so open it before measuring.
-      const group = link.closest<HTMLElement>('[data-oa-group]');
-      if (group && group.dataset.open !== 'true') {
-        group.dataset.open = 'true';
-        group.querySelector('[data-oa-group-btn]')?.setAttribute('aria-expanded', 'true');
-      }
-
-      requestAnimationFrame(() => {
-        const box = link.getBoundingClientRect();
-        const frame = canvas.getBoundingClientRect();
-        const scale = Number(scaleBox.style.getPropertyValue('--ha-scale')) || 1;
-        if (!box.width) return;
-        // positions are measured on screen, then converted back into unscaled canvas space
-        const x = (box.left - frame.left) / scale + box.width / scale - 24;
-        const y = (box.top - frame.top) / scale + box.height / scale / 2;
-
-        cursor.style.transform = `translate(${x}px, ${y}px)`;
-        window.setTimeout(() => {
-          cursor.dataset.click = 'true';
-          link.click();
-          enter(step.view);
-          window.setTimeout(() => (cursor.dataset.click = 'false'), 260);
-        }, 520);
-      });
+      link.click();
+      enter(step.view);
     };
 
     const tick = () => {
@@ -195,39 +164,6 @@ const VIEWS = ['dashboard', 'orders', 'production', 'inbox'];
     border-top: 0;
   }
 
-  .ha-cursor {
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: block;
-    transform: translate(300px, 300px);
-    transition: transform 0.72s cubic-bezier(0.22, 0.61, 0.36, 1);
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-    /* scales with the canvas so the pointer keeps its on-screen size */
-    scale: calc(1 / var(--ha-scale, 1) * var(--ha-scale, 1));
-    will-change: transform;
-  }
-  .ha-cursor::after {
-    content: '';
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    width: 26px;
-    height: 26px;
-    margin: -13px 0 0 -13px;
-    border-radius: 50%;
-    background: var(--accent);
-    opacity: 0;
-    transform: scale(0.4);
-  }
-  .ha-cursor[data-click='true']::after {
-    animation: ha-ripple 0.5s var(--ease);
-  }
-  @keyframes ha-ripple {
-    0% { opacity: 0.45; transform: scale(0.4); }
-    100% { opacity: 0; transform: scale(1.6); }
-  }
-
   /* Panel contents rise in on every switch, a beat behind the click. */
   .ha-canvas :global(.ha-enter) > * {
     animation: ha-rise 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
@@ -264,7 +200,4 @@ const VIEWS = ['dashboard', 'orders', 'production', 'inbox'];
     to { opacity: 1; transform: none; }
   }
 
-  @media (max-width: 860px) {
-    .ha-cursor { display: none; }
-  }
 </style>
