@@ -4,39 +4,6 @@ import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import CtaBand from '../components/CtaBand.astro';
 
-const channels = [
-  {
-    title: 'Google Ads and Merchant Center',
-    body: 'A product feed synced from live inventory, free listings, Shopping and Performance Max campaigns, and conversion tracking from day one.',
-    tags: ['Live feed', 'Performance Max'],
-  },
-  {
-    title: 'Search and answer engines',
-    body: 'Fast pages, structured data and answer-ready content, so you rank on Google and get recommended by the assistants people now ask what to buy.',
-    tags: ['Schema markup', 'llms.txt'],
-  },
-  {
-    title: 'Social commerce',
-    body: 'TikTok Shop, Instagram, Facebook and YouTube catalogs synced with your stock, with their orders landing in the same queue as your site.',
-    tags: ['Catalog sync', 'One order queue'],
-  },
-  {
-    title: 'International selling',
-    body: 'Local currencies, translated storefronts, and duties and taxes calculated at checkout, so international shoppers see the full price up front.',
-    tags: ['Multi-currency', 'Duties at checkout'],
-  },
-  {
-    title: 'Affiliates and creators',
-    body: 'Referral links, creator codes and commission tracking, with payouts calculated from real orders that were not returned.',
-    tags: ['Creator codes', 'Payout reports'],
-  },
-  {
-    title: 'Server-side tracking',
-    body: 'Ad platform events sent from your server rather than the browser, so campaigns keep seeing conversions, always within the shopper\'s consent choice.',
-    tags: ['Conversions API', 'Consent-aware'],
-  },
-];
-
 const agents = [
   {
     title: 'A shopping assistant on your catalog',
@@ -96,7 +63,7 @@ const convert = [
 >
   <Nav />
   <main id="main" tabindex="-1" class="boxed">
-    <section class="section page-top">
+    <section class="section section-subtle page-top">
       <span class="page-bg growth-chart" aria-hidden="true">
         <svg viewBox="0 0 1200 420" preserveAspectRatio="none" focusable="false">
           {[1, 2, 3, 4].map((i) => (
@@ -106,31 +73,6 @@ const convert = [
           <polyline class="line" points="0,392 60,380 120,360 180,370 240,342 300,352 360,322 420,300 480,314 540,284 600,266 660,276 720,244 780,220 840,234 900,200 960,174 1020,188 1080,150 1140,120 1200,86" />
         </svg>
       </span>
-      <div class="container">
-        <div class="section-head" data-reveal>
-          <p class="eyebrow">Reach</p>
-          <h2>Where your products show up.</h2>
-          <p class="lead">
-            Channels read from live inventory, and their orders come back into the same queue as your
-            website's. Adding one is a configuration, not another system to run.
-          </p>
-        </div>
-
-        <ul class="grid">
-          {channels.map((c) => (
-            <li class="card" data-reveal>
-              <h3>{c.title}</h3>
-              <p>{c.body}</p>
-              <ul class="tags">
-                {c.tags.map((t) => <li>{t}</li>)}
-              </ul>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
-
-    <section class="section section-subtle">
       <div class="container">
         <div class="section-head" data-reveal>
           <p class="eyebrow">Agents</p>
@@ -243,23 +185,6 @@ const convert = [
   .card:hover { border-color: var(--border-strong); }
   .card h3 { font-size: 1.0625rem; }
   .card p { font-size: 0.9375rem; }
-  .tags {
-    list-style: none;
-    margin: auto 0 0;
-    padding: 12px 0 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-  .tags li {
-    padding: 2px 9px;
-    border: 1px solid var(--border);
-    border-radius: 0;
-    background: var(--bg-muted);
-    font-size: 0.6875rem;
-    color: var(--text-muted);
-  }
-
   .agents {
     list-style: none;
     margin: 0;

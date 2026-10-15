@@ -273,8 +273,15 @@ const cells = [
       grid-template-areas: none;
       grid-auto-rows: minmax(72px, auto);
     }
+    /* Each room carries an inline grid-area, so clearing it needs !important. That also beat the
+       span below, which is why the accent room was sharing its row instead of taking it: the
+       override has to be !important too, and wins on the attribute selector. */
     .room { grid-area: auto !important; }
-    .room[data-accent] { grid-column: span 2; }
+    .room[data-accent] {
+      grid-column: 1 / -1 !important;
+      /* one flat tile across the bottom rather than a gradient reading as two tones */
+      background: rgba(22, 163, 74, 0.13);
+    }
   }
 
   @media (max-width: 680px) {
