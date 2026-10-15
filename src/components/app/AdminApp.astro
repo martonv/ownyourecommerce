@@ -41,6 +41,15 @@ const perms = Object.fromEntries(
 );
 const sensitive = Object.fromEntries(ROLES.map((r) => [r.key, r.sensitive]));
 const people = Object.fromEntries(ROLES.map((r) => [r.key, { ...r.person, role: r.name, dept: r.department }]));
+
+// Each notification opens the module it is about.
+const notificationView: Record<string, string> = {
+  inbox: 'inbox',
+  production: 'production',
+  approval: 'leads',
+  inventory: 'inventory',
+  email: 'email',
+};
 ---
 
 <div class="oa" data-oa data-oa-theme="light" data-oa-still={still ? 'true' : undefined}>
@@ -280,7 +289,7 @@ const people = Object.fromEntries(ROLES.map((r) => [r.key, { ...r.person, role: 
             <div class="oa-diff-row"><span>Brand voice</span><span class="oa-now">Passes</span></div>
           </div>
           <div class="oa-approve-foot">
-            <button type="button" class="oa-btn oa-btn-sm">Discard</button>
+            <button type="button" class="oa-btn oa-btn-sm" data-oa-close data-oa-toast="Draft discarded. The live page is unchanged.">Discard</button>
             <button type="button" class="oa-btn oa-btn-sm oa-btn-primary" data-oa-toast="Published. Previous version kept for revert.">Approve and publish</button>
           </div>
         </div>
@@ -319,7 +328,7 @@ const people = Object.fromEntries(ROLES.map((r) => [r.key, { ...r.person, role: 
       </div>
       <div class="oa-panel-foot">
         <button type="button" class="oa-btn" data-oa-sensitive="refunds">Refund</button>
-        <button type="button" class="oa-btn">Packing slip</button>
+        <button type="button" class="oa-btn" data-oa-toast="Packing slip sent to the warehouse printer">Packing slip</button>
         <button type="button" class="oa-btn oa-btn-primary" data-oa-toast="Order fulfilled and stock deducted">Fulfil</button>
       </div>
     </aside>
@@ -328,7 +337,7 @@ const people = Object.fromEntries(ROLES.map((r) => [r.key, { ...r.person, role: 
     <div class="oa-menu" data-oa-menu-el="notifications" hidden style="top:52px;right:118px">
       <h4>Notifications</h4>
       {notifications.map((n) => (
-        <button type="button">
+        <button type="button" data-oa-go={notificationView[n.kind] ?? 'dashboard'}>
           <span style="display:flex;flex-direction:column;gap:1px">
             <span>{n.text}</span>
             <span style="font-size:0.7rem;color:var(--oa-text-3)">{n.when} ago</span>
@@ -611,7 +620,9 @@ const people = Object.fromEntries(ROLES.map((r) => [r.key, { ...r.person, role: 
       const go = t.closest('[data-oa-go]');
       if (go) {
         closeOverlays();
-        return show(go.dataset.oaGo);
+        show(go.dataset.oaGo);
+        if (go.dataset.oaToast) toast(go.dataset.oaToast);
+        return;
       }
 
       const groupBtn = t.closest('[data-oa-group-btn]');
@@ -673,7 +684,12 @@ const people = Object.fromEntries(ROLES.map((r) => [r.key, { ...r.person, role: 
         return;
       }
 
-      if (t.closest('[data-oa-close]') || t === scrim) return closeOverlays();
+      const closer = t.closest('[data-oa-close]');
+      if (closer || t === scrim) {
+        closeOverlays();
+        if (closer?.dataset.oaToast) toast(closer.dataset.oaToast);
+        return;
+      }
       if (t.closest('[data-oa-ai-send]')) {
         const input = one('[data-oa-ai-input]');
         const text = input.value.trim();
@@ -708,10 +724,18 @@ const people = Object.fromEntries(ROLES.map((r) => [r.key, { ...r.person, role: 
       const pick = t.closest('[data-oa-pick]');
       if (pick) {
         [...pick.parentElement.children].forEach((b) => b.setAttribute?.('aria-pressed', String(b === pick)));
+        return;
       }
 
       const toaster = t.closest('[data-oa-toast]');
       if (toaster) return toast(toaster.dataset.oaToast);
+
+      // Anything else is a sample action: say so, rather than leave a button that does nothing.
+      const plain = t.closest('button');
+      if (plain && !plain.disabled) {
+        const label = (plain.textContent || plain.getAttribute('aria-label') || '').trim().replace(/\s+/g, ' ');
+        if (label) toast(`${label}: a sample action, so nothing is saved in the demo`);
+      }
     });
 
     // Drag and drop for the kanban boards and the production calendar.

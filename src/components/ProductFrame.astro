@@ -4,15 +4,18 @@
 interface Props {
   label?: string;
   class?: string;
+  /** A small chip on the right of the bar, e.g. "Demo" when the frame shows sample software. */
+  tag?: string;
 }
 
-const { label = 'app.juniperworkshop.com', class: className } = Astro.props;
+const { label = 'app.juniperworkshop.com', class: className, tag } = Astro.props;
 ---
 
 <div class:list={['frame', className]}>
   <div class="frame-bar">
     <span class="frame-dots" aria-hidden="true"><i></i><i></i><i></i></span>
     <span class="frame-url">{label}</span>
+    {tag && <span class="frame-tag"><i aria-hidden="true"></i>{tag}</span>}
   </div>
   <div class="frame-body">
     <slot />
@@ -54,6 +57,27 @@ const { label = 'app.juniperworkshop.com', class: className } = Astro.props;
     font-size: 0.75rem;
     color: var(--text-muted);
     white-space: nowrap;
+  }
+  .frame-tag {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 20px;
+    padding: 0 8px;
+    border: 1px solid var(--accent-border);
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+  }
+  .frame-tag i {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
   }
   .frame-body {
     background: var(--bg);

@@ -103,16 +103,19 @@ const chapters = [
                   <circle cx="160" cy="125" r="66" class="ring" />
                   <circle cx="160" cy="125" r="34" class="hub" />
                   <path d="M152 115h16M148 125h24M152 135h16" class="hub-mark" />
+                  {/* Pills sit on the outer ring (r=104), so the widest label still clears the edge
+                      of the card by a comfortable margin at every width. Widths start as an estimate
+                      and are trimmed to the real text width by the script below. */}
                   {[
-                    ['Web', 160, 11, 'ok'],
-                    ['Wholesale', 42, 92, 'info'],
-                    ['Marketplace', 278, 92, 'neutral'],
-                    ['Phone', 72, 214, 'warn'],
-                    ['Retail POS', 250, 214, 'neutral'],
+                    ['Web', 160, 21, 'ok'],
+                    ['Wholesale', 62, 92, 'info'],
+                    ['Marketplace', 258, 92, 'neutral'],
+                    ['Phone', 106, 214, 'warn'],
+                    ['Retail POS', 214, 214, 'neutral'],
                   ].map(([label, x, y, tone]) => {
-                    const w = String(label).length * 6.6 + 18;
+                    const w = Math.max(44, String(label).length * 6.2 + 16);
                     return (
-                      <g class={`node node-${tone}`}>
+                      <g class={`node node-${tone}`} data-orbit-node data-cx={x}>
                         <rect x={(x as number) - w / 2} y={(y as number) - 11} width={w} height={22} rx={11} />
                         <text x={x as number} y={(y as number) + 4}>{label}</text>
                       </g>
@@ -330,6 +333,22 @@ const chapters = [
 </section>
 
 <script>
+  // Fit each orbit pill to its label: 8px either side of the measured text, never narrower than 44.
+  const fitPills = () => {
+    document.querySelectorAll<SVGGElement>('[data-orbit-node]').forEach((g) => {
+      const text = g.querySelector('text');
+      const rect = g.querySelector('rect');
+      if (!text || !rect) return;
+      const len = text.getComputedTextLength();
+      if (!len) return;
+      const w = Math.max(44, Math.ceil(len) + 16);
+      rect.setAttribute('width', String(w));
+      rect.setAttribute('x', String(Number(g.dataset.cx) - w / 2));
+    });
+  };
+  fitPills();
+  document.fonts?.ready.then(fitPills);
+
   const story = document.querySelector<HTMLElement>('[data-story]');
 
   if (story) {
@@ -355,7 +374,7 @@ const chapters = [
       link.addEventListener('click', () => {
         const target = story.querySelector<HTMLElement>(`[data-story-chapter="${link.dataset.storyLink}"]`);
         if (!target) return;
-                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       })
     );
   }
@@ -506,7 +525,7 @@ const chapters = [
 
   .pane-center { display: flex; flex-direction: column; }
   .orbit { flex: 1 1 auto; display: grid; place-items: center; padding: 14px; }
-  .orbit svg { width: 100%; height: auto; }
+  .orbit svg { width: 100%; max-width: 420px; height: auto; overflow: visible; }
   .ring { fill: none; stroke: var(--border); stroke-width: 1; }
   .hub { fill: var(--bg); stroke: var(--border-strong); stroke-width: 1.5; }
   .hub-mark { stroke: var(--accent-strong); stroke-width: 2; stroke-linecap: round; }

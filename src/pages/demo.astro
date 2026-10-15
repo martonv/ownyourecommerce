@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
 import AdminApp from '../components/app/AdminApp.astro';
+import DemoBanner from '../components/DemoBanner.astro';
 import { site } from '../data/site';
 ---
 
@@ -12,6 +13,8 @@ import { site } from '../data/site';
   <Nav />
   {/* Full bleed under the site nav: the admin is the page, not a screenshot inside it. */}
   <main id="main" tabindex="-1" class="demo-main">
+    {/* Says up front that this is sample software, and that the real one is built to fit. */}
+    <DemoBanner />
     <AdminApp />
   </main>
 </Layout>

@@ -338,6 +338,8 @@
   transition: background 0.14s var(--oa-ease), border-color 0.14s var(--oa-ease);
 }
 .oa .oa-btn:hover { background: var(--oa-surface-2); }
+.oa .oa-btn:disabled { opacity: 0.45; cursor: default; }
+.oa .oa-btn:disabled:hover { background: var(--oa-surface); }
 .oa .oa-btn svg { width: 14px; height: 14px; }
 /* Ink, not accent. Green is reserved for state (paid, in stock, on track) so it keeps meaning
    something; a green Save button drains it. */

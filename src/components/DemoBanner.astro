@@ -1,0 +1,337 @@
+---
+/**
+ * The note at the top of /demo that says what the visitor is looking at: sample software on
+ * example data, and a platform that is built to look and work the way the client wants.
+ *
+ * A full-width band sits above the app. Once it scrolls away (or is hidden), a small pill keeps
+ * the reminder on screen. Hiding the band lasts for this visit only: it uses sessionStorage, so
+ * the note is back the next time someone opens the demo.
+ */
+---
+
+<section class="demo-note" data-demo-note aria-labelledby="demo-note-title">
+  <div class="dn-texture" aria-hidden="true"></div>
+  <div class="container dn-inner">
+    <span class="dn-icon" aria-hidden="true">
+      {/* sliders: the look and the workflows are settings, not fixed */}
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1" />
+        <circle cx="15" cy="6" r="2" />
+        <circle cx="9" cy="12" r="2" />
+        <circle cx="17" cy="18" r="2" />
+      </svg>
+    </span>
+
+    <div class="dn-copy">
+      <p class="dn-eyebrow"><span class="dn-dot" aria-hidden="true"></span>Demo with sample data</p>
+      <h2 class="dn-title" id="demo-note-title">You're viewing a demo.</h2>
+      <p class="dn-body">
+        Sample software on example data, so nothing you change here is saved. Your finished platform
+        is built around your business: your brand, your colors, your workflows and only the features
+        you need. Every screen is yours to shape.
+      </p>
+    </div>
+
+    <div class="dn-actions">
+      <a href="/#contact" class="dn-btn">Book a stack review</a>
+      <a href="/process" class="dn-link">How we build it <span class="arrow" aria-hidden="true">→</span></a>
+    </div>
+
+    <button type="button" class="dn-close" data-demo-note-close aria-label="Hide this note for now">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+    </button>
+  </div>
+</section>
+
+<div class="demo-pill" data-demo-pill role="note" aria-label="Demo reminder" hidden>
+  <span class="dn-dot" aria-hidden="true"></span>
+  <span class="dp-text"><span class="dp-long">You're in the demo. </span>Sample data only.</span>
+  <a href="/#contact" class="dp-link">Make it yours <span class="arrow" aria-hidden="true">→</span></a>
+</div>
+
+<script>
+  const note = document.querySelector<HTMLElement>('[data-demo-note]');
+  const pill = document.querySelector<HTMLElement>('[data-demo-pill]');
+  const KEY = 'oye.demoNote';
+
+  if (note && pill) {
+    let hidden = false;
+    try { hidden = sessionStorage.getItem(KEY) === 'hidden'; } catch {}
+
+    const setPill = (show: boolean) => {
+      if (show) {
+        pill.hidden = false;
+        requestAnimationFrame(() => pill.classList.add('is-in'));
+      } else {
+        pill.classList.remove('is-in');
+      }
+    };
+
+    if (hidden) {
+      note.hidden = true;
+      setPill(true);
+    }
+
+    // The pill takes over once most of the band has scrolled away. Not all of it: on a phone the
+    // page is only a little taller than the screen, so the band never fully leaves.
+    new IntersectionObserver(
+      ([entry]) => {
+        if (note.hidden) return;
+        setPill(entry.intersectionRatio < 0.35);
+      },
+      { rootMargin: '-64px 0px 0px 0px', threshold: [0, 0.35, 0.6, 1] }
+    ).observe(note);
+
+    note.querySelector('[data-demo-note-close]')?.addEventListener('click', () => {
+      try { sessionStorage.setItem(KEY, 'hidden'); } catch {}
+      note.hidden = true;
+      setPill(true);
+      // focus would otherwise be lost with the button; the app is the next thing to use
+      document.querySelector<HTMLElement>('[data-oa-content]')?.focus({ preventScroll: true });
+    });
+  }
+</script>
+
+<style>
+  /* ------------------------------------------------------------------ band */
+
+  .demo-note {
+    --dn-ink: #0e0e11;
+    --dn-fg: #ffffff;
+    --dn-fg-2: rgba(255, 255, 255, 0.74);
+    --dn-green: #4ade80;
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    color: var(--dn-fg);
+    /* the brand ink, warming to a trace of the brand green on the right */
+    background:
+      linear-gradient(100deg, var(--dn-ink) 0%, var(--dn-ink) 45%, #0f1d15 78%, #0f2a1a 100%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .demo-note[hidden] { display: none; }
+
+  /* a faint dot grid that fades out toward the copy, so it reads as texture and never as pattern */
+  .dn-texture {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.09) 1px, transparent 1px);
+    background-size: 16px 16px;
+    -webkit-mask-image: linear-gradient(90deg, transparent 30%, #000 100%);
+    mask-image: linear-gradient(90deg, transparent 30%, #000 100%);
+  }
+
+  .dn-inner {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 20px 24px;
+    padding-top: 26px;
+    padding-bottom: 26px;
+    padding-right: calc(var(--gutter) + 36px);
+  }
+
+  .dn-icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    align-self: start;
+    margin-top: 2px;
+    color: var(--dn-green);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+  }
+
+  .dn-copy { min-width: 0; }
+  .dn-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 4px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--dn-green);
+  }
+  .dn-dot {
+    position: relative;
+    flex: none;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--dn-green);
+  }
+  .dn-title {
+    margin: 0;
+    font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+    line-height: 1.25;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--dn-fg);
+    max-width: none;
+  }
+  .dn-body {
+    margin: 6px 0 0;
+    max-width: 68ch;
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    color: var(--dn-fg-2);
+  }
+
+  .dn-actions {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+  .dn-btn {
+    display: inline-flex;
+    align-items: center;
+    height: 40px;
+    padding: 0 16px;
+    background: #ffffff;
+    color: var(--dn-ink);
+    font-size: 0.875rem;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: background 0.18s var(--ease);
+  }
+  .dn-btn:hover { background: #e9ece9; }
+  .dn-link {
+    display: inline-flex;
+    gap: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--dn-fg);
+    white-space: nowrap;
+  }
+  .dn-link .arrow, .dp-link .arrow { display: inline-block; transition: transform 0.18s var(--ease); }
+  .dn-link:hover .arrow, .dp-link:hover .arrow { transform: translateX(2px); }
+
+  .dn-close {
+    position: absolute;
+    top: 12px;
+    right: calc(var(--gutter) - 8px);
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.7);
+    transition: color 0.18s var(--ease), background 0.18s var(--ease);
+  }
+  .dn-close:hover { color: #fff; background: rgba(255, 255, 255, 0.08); }
+
+  /* the site's green ring is too dark to see on ink, so the band uses the light green */
+  .demo-note :focus-visible,
+  .demo-pill :focus-visible {
+    outline: 2px solid var(--dn-green, #4ade80);
+    outline-offset: 2px;
+  }
+
+  /* entrance: the band settles in, then its parts follow */
+  @media (prefers-reduced-motion: no-preference) {
+    .demo-note { animation: dn-in 0.5s var(--ease) both; }
+    .dn-icon, .dn-copy, .dn-actions { animation: dn-rise 0.55s var(--ease) both; }
+    .dn-copy { animation-delay: 0.06s; }
+    .dn-actions { animation-delay: 0.12s; }
+    .dn-dot::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: inherit;
+      animation: dn-ping 2.4s ease-out infinite;
+    }
+  }
+  @keyframes dn-in { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes dn-rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  @keyframes dn-ping {
+    0% { transform: scale(1); opacity: 0.6; }
+    70%, 100% { transform: scale(2.6); opacity: 0; }
+  }
+
+  @media (max-width: 1024px) {
+    .dn-inner { grid-template-columns: auto minmax(0, 1fr); }
+    .dn-actions { grid-column: 2; }
+  }
+  @media (max-width: 560px) {
+    .dn-inner {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 14px;
+      padding-top: 20px;
+      padding-bottom: 22px;
+    }
+    .dn-icon { display: none; }
+    .dn-actions { grid-column: 1; gap: 16px; }
+    .dn-body { font-size: 0.875rem; }
+    .dn-close { top: 10px; }
+  }
+
+  /* ------------------------------------------------------------------ pill */
+
+  .demo-pill {
+    --dn-green: #4ade80;
+    position: fixed;
+    z-index: 60;
+    left: 50%;
+    bottom: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    max-width: calc(100vw - 32px);
+    padding: 8px 8px 8px 14px;
+    border-radius: 999px;
+    background: rgba(14, 14, 17, 0.92);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 30px -10px rgba(9, 9, 11, 0.45);
+    color: rgba(255, 255, 255, 0.86);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translate(-50%, 8px);
+    pointer-events: none;
+    transition: opacity 0.25s var(--ease), transform 0.25s var(--ease);
+  }
+  .demo-pill[hidden] { display: none; }
+  .demo-pill.is-in {
+    opacity: 1;
+    transform: translate(-50%, 0);
+    pointer-events: auto;
+  }
+  .dp-text { overflow: hidden; text-overflow: ellipsis; }
+  .dp-link {
+    display: inline-flex;
+    gap: 5px;
+    padding: 4px 11px;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #0e0e11;
+    font-weight: 500;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .demo-pill { transition: opacity 0.2s linear; transform: translate(-50%, 0); }
+  }
+
+  @media (max-width: 560px) {
+    /* bottom-left, clear of the cookie button on the right */
+    .demo-pill {
+      left: 16px;
+      max-width: calc(100vw - 96px);
+      transform: translateY(8px);
+    }
+    .demo-pill.is-in { transform: none; }
+    .dp-long { display: none; }
+  }
+  @media (max-width: 560px) and (prefers-reduced-motion: reduce) {
+    .demo-pill { transform: none; }
+  }
+</style>

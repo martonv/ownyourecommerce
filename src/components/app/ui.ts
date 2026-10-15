@@ -240,7 +240,11 @@ export function table(opts: {
   return card(
     `${opts.filters ? `<div class="oa-filters">${opts.filters}</div>` : ''}
 <div class="oa-table-wrap"><table class="oa-table"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>
-<div class="oa-foot"><span>${opts.foot ?? `Showing ${opts.rows.length} of ${opts.rows.length}`}</span><span class="oa-pager">${btn('Previous', { sm: true })}${btn('Next', { sm: true })}</span></div>`
+<div class="oa-foot"><span>${opts.foot ?? `Showing ${opts.rows.length} of ${opts.rows.length}`}</span><span class="oa-pager">${btn('Previous', { sm: true, attrs: 'disabled' })}${
+    opts.foot
+      ? btn('Next', { sm: true, attrs: 'data-oa-toast="The demo loads one page of sample data"' })
+      : btn('Next', { sm: true, attrs: 'disabled' })
+  }</span></div>`
   );
 }
 

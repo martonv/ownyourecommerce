@@ -168,7 +168,7 @@ ${split(
   ),
   card(
     `<ul class="oa-list">
-  <li><span>Handover friction between sales and production</span>${btn('Make a ticket', { sm: true })}</li>
+  <li><span>Handover friction between sales and production</span>${btn('Make a ticket', { sm: true, attrs: 'data-oa-go="tickets" data-oa-toast="Ticket raised from the survey"' })}</li>
   <li><span>Shop floor tablets are slow</span>${badge('Ticket T-312', 'info')}</li>
   <li><span>More notice on rush orders</span>${badge('In progress', 'info')}</li>
 </ul>`,
@@ -239,7 +239,7 @@ ${table({
     badge(t.dept),
     esc(t.manager),
     String(t.people),
-    btn('Manage', { sm: true }),
+    btn('Manage', { sm: true, attrs: 'data-oa-go="staff"' }),
   ]),
 })}
 ${card(

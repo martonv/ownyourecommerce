@@ -45,7 +45,7 @@ ${table({
       String(p.reorder),
       String(cover),
       badge(p.available === 0 ? 'Out of stock' : low ? 'Reorder' : 'In stock'),
-      low ? btn('Receive', { sm: true, attrs: `data-oa-toast="Received stock for ${esc(p.sku)}"` }) : btn('Count', { sm: true }),
+      low ? btn('Receive', { sm: true, attrs: `data-oa-toast="Received stock for ${esc(p.sku)}"` }) : btn('Count', { sm: true, attrs: `data-oa-toast="Cycle count started for ${esc(p.sku)}"` }),
     ];
   }),
   foot: `Showing 14 of ${products.length} items`,
@@ -87,7 +87,7 @@ ${split(
 </li>`
       )
       .join('')}</ul>`,
-    { title: 'Purchase orders', actions: btn('Receive', { sm: true }) }
+    { title: 'Purchase orders', actions: btn('Receive', { sm: true, attrs: 'data-oa-toast="PO received and stock updated"' }) }
   ),
   '2-1'
 )}`;
@@ -210,7 +210,7 @@ ${table({
     esc(j.state),
     money(j.value),
     badge(j.status),
-    btn('Portal', { sm: true, iconPath: ICON.external }),
+    btn('Portal', { sm: true, iconPath: ICON.external, attrs: `data-oa-toast="Customer portal link copied for ${esc(j.client)}"` }),
   ]),
 })}
 ${card(

@@ -27,7 +27,11 @@ export const settings = () => `${page({
       ([title, body]) => `<article class="oa-tile" style="gap:7px">
     <span class="oa-tile-label">${esc(title)}</span>
     <p style="font-size:0.8rem;color:var(--oa-text-2)">${esc(body)}</p>
-    <span>${btn('Open', { sm: true })}</span>
+    <span>${
+      title === 'Platform'
+        ? btn('Open', { sm: true, attrs: 'data-oa-go="staff"' })
+        : btn('Open', { sm: true, attrs: `data-oa-toast="${esc(title)} settings are editable in your build"` })
+    }</span>
   </article>`
     )
     .join('')}
